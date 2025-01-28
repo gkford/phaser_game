@@ -35,6 +35,12 @@ function create(this: Phaser.Scene): void {
     // Add background
     this.add.image(400, 300, 'sky');
     
+    // Add text in the middle of the screen
+    this.add.text(400, 200, 'Vite + Phaser is working!', {
+        color: '#ffffff',
+        fontSize: '32px'
+    }).setOrigin(0.5);
+    
     // Create player sprite
     player = this.physics.add.sprite(400, 300, 'player');
     
