@@ -1,14 +1,4 @@
 {
-  "name": "phaser_game",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "gkford <gkford@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "phaser": "^3.87.0"
-  }
-}
-{
   "name": "phaser-game",
   "version": "1.0.0",
   "type": "module",
