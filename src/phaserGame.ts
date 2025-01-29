@@ -178,12 +178,16 @@ export default class MainScene extends Phaser.Scene {
   }
 
   getResourceText(): string {
-    return `🍖 Food: ${Math.floor(this.gameState.resources.food)} | 🧠 Thought Rate: ${
-      Object.values(this.gameState.tasks).reduce(
-        (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers,
+    const totalWorkers = this.gameState.workers.level1.total + this.gameState.workers.level2.total;
+    const assignedWorkers = this.gameState.workers.level1.assigned + this.gameState.workers.level2.assigned;
+    
+    return `🍖 Food: ${Math.floor(this.gameState.resources.food)}
+    | L1 Workers: ${this.gameState.workers.level1.assigned}/${this.gameState.workers.level1.total}
+    | L2 Workers: ${this.gameState.workers.level2.assigned}/${this.gameState.workers.level2.total}
+    | 🧠 Thought Rate: ${Object.values(this.gameState.tasks).reduce(
+        (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * (t.assignedWorkers.level1 + t.assignedWorkers.level2),
         0
-      )
-    } | 👥 Total: ${this.gameState.population.total} | 🕊️ Unassigned: ${this.gameState.population.unassigned}`;
+      )}`;
   }
 
   getTaskText(taskId: string): string {
@@ -191,7 +195,7 @@ export default class MainScene extends Phaser.Scene {
     let text = `${formatTaskTitle(taskId)} - ${getTaskStateLabel(task.state)}`;
 
     if (task.state === TaskState.Discovered) {
-      text += ` | Workers: ${task.assignedWorkers}`;
+      text += ` | L1: ${task.assignedWorkers.level1} | L2: ${task.assignedWorkers.level2}`;
     }
 
     if (task.state === TaskState.Imagined) {
@@ -216,7 +220,7 @@ export default class MainScene extends Phaser.Scene {
 
   private getProductionText(taskId: string): string {
     const task = this.gameState.tasks[taskId];
-    if (task.assignedWorkers <= 0) return ""; // No workers, no production text.
+    if ((task.assignedWorkers.level1 + task.assignedWorkers.level2) <= 0) return ""; // No workers, no production text.
 
     const foodRate = (task.productionPerWorker.food ?? 0) * task.assignedWorkers;
     const thoughtRate = (task.productionPerWorker.thoughts ?? 0) * task.assignedWorkers;

@@ -17,40 +17,36 @@ export function createInitialGameState(): GameState {
   };
 }
 
-// Reassigns a worker from one task to another.
-export function reassignWorker(state: GameState, fromTaskId: string, toTaskId: string): GameState {
+export function reassignWorker(state: GameState, taskId: string, action: "add" | "remove"): GameState {
   const newState = cloneDeep(state);
+  const task = newState.tasks[taskId];
 
-  // Special handling for unassigned workers
-  if (fromTaskId === "unassigned") {
-    if (newState.population.unassigned <= 0) {
-      console.error("No unassigned workers available");
-      return state;
+  if (action === "add") {
+    // Add the first available worker among the task's accepted levels, from lowest to highest
+    for (const level of [1, 2]) {
+      if (task.acceptedWorkerLevels.includes(level)) {
+        const workerPool = newState.workers["level" + level];
+        if (workerPool.assigned < workerPool.total) {
+          workerPool.assigned++;
+          task.assignedWorkers["level" + level] += 1;
+          break;
+        }
+      }
     }
-    newState.tasks[toTaskId].assignedWorkers++;
-    newState.population.unassigned--;
-    return newState;
-  }
-
-  if (toTaskId === "unassigned") {
-    if (newState.tasks[fromTaskId].assignedWorkers <= 0) {
-      console.error(`No workers available in ${fromTaskId}`);
-      return state;
+  } else {
+    // Remove from highest to lowest
+    for (const level of [2, 1]) {
+      if (task.acceptedWorkerLevels.includes(level)) {
+        const assignedCount = task.assignedWorkers["level" + level];
+        if (assignedCount > 0) {
+          newState.workers["level" + level].assigned--;
+          task.assignedWorkers["level" + level] = assignedCount - 1;
+          break;
+        }
+      }
     }
-    newState.tasks[fromTaskId].assignedWorkers--;
-    newState.population.unassigned++;
-    return newState;
   }
 
-  // Regular task to task reassignment
-  if (newState.tasks[fromTaskId].assignedWorkers <= 0) {
-    console.error(`No workers available in ${fromTaskId}`);
-    return state;
-  }
-
-  newState.tasks[fromTaskId].assignedWorkers--;
-  newState.tasks[toTaskId].assignedWorkers++;
-  
   return newState;
 }
 
