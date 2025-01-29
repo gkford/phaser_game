@@ -145,7 +145,7 @@ export function updateTaskStates(state: GameState): GameState {
     };
 }
 
-export type Activity = keyof Omit<GameState['population'], 'total'>;
+export type Activity = 'hunting' | 'thinkingL1' | 'unassigned';
 
 export function reassignWorker(state: GameState, from: Activity, to: Activity): GameState {
     const newState = {
