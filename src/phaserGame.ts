@@ -1,10 +1,9 @@
 import Phaser from "phaser";
 import { createInitialGameState, tickGame, reassignWorker, startResearch, toggleTaskFocus } from "./game";
-import { GameState, TaskState } from "./types";
+import { GameState, TaskState, Task } from "./types";
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState;
-  private oldTasks!: Record<string, Task>;
   resourceText!: Phaser.GameObjects.Text;
   taskTexts: Record<string, Phaser.GameObjects.Text> = {};
   buttons: Record<string, Phaser.GameObjects.Text> = {};
@@ -21,7 +20,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.oldTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
     this.createUI();
     this.time.addEvent({ delay: 1000, callback: this.updateGame, callbackScope: this, loop: true });
   }
