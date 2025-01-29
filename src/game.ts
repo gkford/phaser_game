@@ -59,6 +59,12 @@ class MainScene extends Phaser.Scene {
         this.gameState = initialState;
     }
 
+    preload(): void {
+        this.load.audio('click', 'assets/click.mp3');
+        this.load.audio('error', 'assets/error.mp3');
+        this.load.audio('emergency', 'assets/emergency.mp3');
+    }
+
     private createSounds(): void {
         this.sounds = {
             click: this.sound.add('click'),
@@ -253,8 +259,14 @@ class MainScene extends Phaser.Scene {
             this.thinkingCard.minusButton.setEnabled(false);
             return;
         }
-
     
+        // Normal button state updates
+        this.huntingCard.plusButton.setEnabled(hasUnassigned);
+        this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
+        
+        this.thinkingCard.plusButton.setEnabled(hasUnassigned);
+        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
+    }
 
     preload(): void {
         this.load.audio('click', 'assets/click.mp3');
