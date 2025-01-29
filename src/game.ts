@@ -382,7 +382,7 @@ class MainScene extends Phaser.Scene {
     
 
     private updateActivityCards(): void {
-        const updateCard = (card: any, activity: string, title: string) => {
+        const updateCard = (card: any, activity: Activity, title: string) => {
             const taskState = this.gameState.taskStates[activity];
             const style = this.getCardStyle(taskState);
             
