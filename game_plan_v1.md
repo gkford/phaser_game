@@ -1,193 +1,105 @@
-# Game Plan: Early Human Tech Tree (V1)
+# Game Plan - V1: Tech Tree Implementation
 
-## I. Context & Objectives
-
-### Core Purpose
-Expand the resource management game with a tech tree progression system, introducing:
-- Task states (Unthoughtof → Imagined → Discovered)
-- Thought-based research requirements
-- New task types with varying efficiency
+## Game Overview
+Building on V0's resource management foundation, V1 adds:
+- Task state progression system
+- Research mechanics using thoughts
+- Enhanced task types with varying efficiencies
 - Visual progression through card states
 
-### Key V1 Requirements
-- Implement 3 task states with distinct UI/UX
-- Add research system with progress bars
-- Introduce new task types (Food Gathering, Thinking L1, Hunting)
-- Maintain emergency food system from V0
-- Add thought generation as a rate-based resource
-
-### Non-Negotiables
-- Fixed population of 10
-- No persistent progression (reset on refresh)
-- Desktop browser focus
-- Maintain core V0 functionality while adding new systems
-
-## II. Risks & Mitigation
-
-### Critical Risks
-#### State Complexity
-- **Risk:** Multiple task states and prerequisites creating hard-to-track bugs
-- **Mitigation:** Use finite state machine pattern for task states
-
-#### Research Timing
-- **Risk:** Progress bars desyncing from actual research time
-- **Mitigation:** Use Phaser's tween system for smooth progress bars
-
-#### UI Overload
-- **Risk:** Too many visual elements overwhelming the player
-- **Mitigation:** Progressive disclosure (only show relevant info per state)
-
-### Edge Cases
-- Research completing while in food emergency
-- Prerequisites being met/unmet during active research
-- Multiple simultaneous research projects
-
-### General Advice
-- Build state validation helpers early
-- Use debug overlays for task states and prerequisites
-- Implement systems in this order: State → Logic → UI
-
-## III. Phased Implementation
-
-### Phase 0: Foundation
-Extend `GameState` interface:
-
-```typescript
-GameState {
-  food: number
-  thoughtsPerSecond: number
-  population: {
-    total: number
-    foodGathering: number
-    thinking: number
-    hunting: number
-    unassigned: number
-  }
-  tasks: {
-    foodGathering: 'discovered'
-    thinking: 'imagined' | 'discovered'
-    hunting: 'unthoughtof' | 'imagined' | 'discovered'
-  }
-  activeResearch: null | {
-    task: 'hunting'
-    progress: number // 0-100
-  }
-}
-Phase 1: Core Systems
-Implement new systems:
-
-Task State Manager
-
-Handle state transitions
-
-Validate prerequisites
-
-Manage research progress
-
-Thought Generation
-
-Calculate thoughts/sec from Thinking workers
-
-Trigger state changes when thresholds met
-
-Enhanced Food System
-
-Different rates per task type
-
-Maintain emergency protocols
-
-Phase 2: UI Framework
-Build card templates for each state:
-
-Unthoughtof
-
-Greyed out background
-
-"????" placeholder
-
-Imagined
-
-Yellow glow effect
-
-Prerequisite display
-
-Research button
-
-Discovered
-
-Color-coded border
-
-Assignment controls
-
-Rate displays
-
-Phase 3: Research System
-Implement:
-
-Research progress bars
-
-State transition animations
-
-Prerequisite validation
-
-Research cancellation (if prerequisites unmet)
-
-Phase 4: Emergency System
-Update emergency logic:
-
-Pause active research
-
-Auto-reassign to Food Gathering
-
-Disable Thinking tasks
-
-Visual indicators for paused research
-
-Phase 5: Polishing
-Add:
-
-State transition animations
-
-Hover tooltips for prerequisites
-
-Sound effects for:
-
-State changes
-
-Research completion
-
-Emergency state
-
-IV. Conclusion
-Implementation Order
-Extended state management
-
-Task state system
-
-Research mechanics
-
-Enhanced UI
-
-Emergency system updates
-
-Polish
-
-Critical Path
-State tracking → Research system → UI integration → Emergency handling
-
-Validation Approach
-Test each state transition independently:
-
-Unthoughtof → Imagined (meet prerequisites)
-
-Imagined → Discovered (complete research)
-
-Emergency state behavior
-
-Use debug tools to:
-
-Force state changes
-
-Simulate research completion
-
-Trigger edge cases
+## Initial Game State
+- Starting population: 10 people (fixed)
+- Food Gathering: Discovered state
+- Thinking L1: Imagined state
+- Hunting: Unthoughtof state
+- Starting food: 0
+- Starting thoughts: 0/sec
+
+## Core Systems
+
+### 1. Task States
+Three progression levels:
+1. Unthoughtof
+   - Hidden mechanics
+   - No interaction possible
+   - "????" display
+
+2. Imagined
+   - Requirements visible
+   - Research option available
+   - Progress tracking
+
+3. Discovered
+   - Full functionality
+   - Worker assignment enabled
+   - Rate displays active
+
+### 2. Research System
+Prerequisites:
+- Food Gathering: None (starts discovered)
+- Thinking L1: Food > 0
+- Hunting: 1 thought/sec + Thinking L1 discovered
+
+Progress tracking:
+- Research bars (30s base duration)
+- Prerequisite validation
+- State transition handling
+
+### 3. Resource Generation
+Per-second calculations:
+1. Food
+   - Food Gathering: +1.2/worker
+   - Hunting: +2/worker
+   - Consumption: -1/person
+
+2. Thoughts
+   - Thinking: +1/worker
+   - Not stored (rate-based)
+
+## Implementation Phases
+
+### Phase 1: State Management
+- Extend GameState interface
+- Add task state tracking
+- Implement validation system
+- Set up prerequisite checks
+
+### Phase 2: Research Mechanics
+- Progress bar system
+- State transition logic
+- Prerequisite monitoring
+- Research cancellation
+
+### Phase 3: Enhanced UI
+- Card templates per state
+- Progress indicators
+- State transition effects
+- Prerequisite displays
+
+### Phase 4: Emergency System
+- Pause research during emergency
+- Auto-reassign workers
+- Visual state indicators
+- Recovery handling
+
+### Phase 5: Polish & Balance
+- Smooth transitions
+- Sound effects
+- Tooltips
+- Final validation
+
+## Testing Strategy
+1. State Transitions
+   - Unthoughtof → Imagined
+   - Imagined → Discovered
+   - Emergency interrupts
+
+2. Edge Cases
+   - Multiple research projects
+   - Prerequisite changes
+   - Emergency timing
+
+3. Balance Testing
+   - Food sustainability
+   - Research timing
+   - Worker efficiency
