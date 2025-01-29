@@ -24,15 +24,15 @@
 - [x] Add state transition logic on research completion
 
 ## Phase 2: UI Framework ⏳
-- [ ] Create card states:
-  - [ ] Unthoughtof: Greyed out with ???? display
-  - [ ] Imagined: Yellow glow + research button
-  - [ ] Discovered: Full color + assignment controls
-- [ ] Implement progress bars:
-  - [ ] Add research progress to imagined cards
-  - [ ] Add animated thought progress to header
-- [ ] Create prerequisite displays:
-  - [ ] Tooltip system for "Requires: X, Y"
+- [x] Create card states:
+  - [x] Unthoughtof: Greyed out with ???? display
+  - [x] Imagined: Yellow glow + research button
+  - [x] Discovered: Full color + assignment controls
+- [x] Implement progress bars:
+  - [x] Add research progress to imagined cards
+  - [x] Add animated thought progress to header
+- [x] Create prerequisite displays:
+  - [x] Tooltip system for "Requires: X, Y"
   - [ ] Lock icon with hover text for unmet prerequisites
 
 ## Phase 3: Research System ⏳
