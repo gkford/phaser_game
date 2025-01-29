@@ -145,7 +145,7 @@ export function updateTaskStates(state: GameState): GameState {
     };
 }
 
-export type Activity = 'hunting' | 'thinkingL1' | 'unassigned';
+export type Activity = 'hunting' | 'thinkingL1' | 'unassigned' | 'foodGathering';
 
 import { cloneDeep } from 'lodash';
 
