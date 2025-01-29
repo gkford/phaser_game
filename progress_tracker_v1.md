@@ -15,13 +15,13 @@
   - [x] Configure hunting as Unthoughtof
 
 ## Phase 1: Core Systems ⏳
-- [ ] Implement task state machine:
-  - [ ] Add updateTaskStates() called every tick
-  - [ ] Create prerequisite checks
-  - [ ] Add research mechanics
-- [ ] Create research progress bar component
-- [ ] Implement pause/resume research during emergencies
-- [ ] Add state transition logic on research completion
+- [x] Implement task state machine:
+  - [x] Add updateTaskStates() called every tick
+  - [x] Create prerequisite checks
+  - [x] Add research mechanics
+- [x] Create research progress bar component
+- [x] Implement pause/resume research during emergencies
+- [x] Add state transition logic on research completion
 
 ## Phase 2: UI Framework ⏳
 - [ ] Create card states:
