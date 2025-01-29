@@ -5,6 +5,7 @@ export const intialCards: Record<string, Card> = {
     id: 'foodGathering',
     title: '🌾 Food Gathering',
     state: CardState.Discovered,
+    type: 'task',
     assignedWorkers: {
       level1: 10,
       level2: 0,
@@ -24,6 +25,7 @@ export const intialCards: Record<string, Card> = {
     id: 'thinkingL1',
     title: '🤔 Thinking Level 1',
     state: CardState.Discovered,
+    type: 'science',
     assignedWorkers: {
       level1: 0,
       level2: 0,
@@ -43,6 +45,7 @@ export const intialCards: Record<string, Card> = {
     id: 'thinkingL2',
     title: '💡 Thinking Level 2',
     state: CardState.Discovered,
+    type: 'science',
     assignedWorkers: {
       level1: 0,
       level2: 0,
@@ -62,6 +65,7 @@ export const intialCards: Record<string, Card> = {
     id: 'hunting',
     title: '🏹 Hunting',
     state: CardState.Unthoughtof,
+    type: 'task',
     assignedWorkers: {
       level1: 0,
       level2: 0,
