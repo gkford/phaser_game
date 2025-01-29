@@ -60,13 +60,6 @@ class MainScene extends Phaser.Scene {
     }
 
 
-    private createSounds(): void {
-        this.sounds = {
-            click: this.sound.add('click'),
-            error: this.sound.add('error'),
-            emergency: this.sound.add('emergency')
-        };
-    }
 
     private updateGameState(newState: GameState): boolean {
         // Validate before updating
@@ -80,7 +73,6 @@ class MainScene extends Phaser.Scene {
     }
 
     create(): void {
-        this.createSounds();
         // Set up the 1-second game loop timer
         this.updateTimer = this.time.addEvent({
             delay: 1000,
@@ -261,12 +253,6 @@ class MainScene extends Phaser.Scene {
         
         this.thinkingCard.plusButton.setEnabled(hasUnassigned);
         this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
-    }
-
-    preload(): void {
-        this.load.audio('click', 'assets/click.mp3');
-        this.load.audio('error', 'assets/error.mp3');
-        this.load.audio('emergency', 'assets/emergency.mp3');
     }
 
     
