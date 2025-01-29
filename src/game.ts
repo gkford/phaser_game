@@ -49,7 +49,7 @@ export function createInitialGameState(): GameState {
           toImaginedCurrent: 0,
           toImaginedRequired: 50,
           toDiscoveredCurrent: 0,
-          toDiscoveredRequired: 100,
+          toDiscoveredRequired: 10,
         },
         prerequisites: ["thinkingL1"],
         isFocused: false,
