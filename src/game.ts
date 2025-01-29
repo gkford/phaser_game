@@ -7,7 +7,9 @@ import {
     calculateThoughtRate,
     Activity,
     reassignWorker,
-    allToHunting 
+    allToHunting,
+    updateTaskStates,
+    updateResearch
 } from './types';
 
 interface ActivityButton extends Phaser.GameObjects.Text {
