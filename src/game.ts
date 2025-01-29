@@ -93,11 +93,21 @@ class MainScene extends Phaser.Scene {
     private handleReassignment(from: Activity, to: Activity): void {
         const newState = reassignWorker(this.gameState, from, to);
         this.updateGameState(newState);
+        
+        // Immediately update displays after state change
+        this.updateDebugDisplay();
+        this.updateActivityCards();
+        this.updateButtonStates();
     }
 
     private handleEmergencyReset(): void {
         const newState = allToHunting(this.gameState);
         this.updateGameState(newState);
+        
+        // Immediately update displays after state change
+        this.updateDebugDisplay();
+        this.updateActivityCards();
+        this.updateButtonStates();
     }
 
     private createActivityCard(x: number, y: number, title: string, activity: 'hunting' | 'thinking'): {
