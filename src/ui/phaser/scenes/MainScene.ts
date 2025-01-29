@@ -204,7 +204,7 @@ export default class MainScene extends Phaser.Scene {
 
   getTaskText(taskId: string): string {
     const task = this.gameState.tasks[taskId];
-    let text = `${formatTaskTitle(taskId)} - ${getTaskStateLabel(task.state)}`;
+    let text = `${formatTaskTitle(this.gameState.tasks, taskId)} - ${getTaskStateLabel(task.state)}`;
 
     if (task.state === TaskState.Discovered) {
       text += ` | L1: ${task.assignedWorkers.level1} | L2: ${task.assignedWorkers.level2}`;
@@ -306,8 +306,8 @@ export default class MainScene extends Phaser.Scene {
 }
 
 // Utility Functions
-function formatTaskTitle(taskId: string): string {
-  return this.gameState.tasks[taskId]?.title || taskId;
+function formatTaskTitle(tasks: Record<string, Task>, taskId: string): string {
+  return tasks[taskId]?.title || taskId;
 }
 
 function getTaskStateLabel(state: TaskState): string {
