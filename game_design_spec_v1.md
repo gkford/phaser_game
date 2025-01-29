@@ -40,7 +40,7 @@ Both food gathering snd thinking have the initial state of "discovered" which me
 3. **Discovered**  
    - Full interaction enabled
    - green border
-   - Large emoji appears briefly in center of screen on discovery
+   - Large emoji appears briefly on the card when discovered
 
 ## Resource Mechanics
 
@@ -109,7 +109,9 @@ Thoughts Production: +1/human/second
 ```
 
 ### Card Visual Hierarchy
-1. **Icons**: Emoji (top-left)
+1. **Icons**: 
+   - Unthoughtof: "????" (top-left)
+   - Discovered: Task emoji appears with animation (top-left)
 2. **Title**: Bold header
 3. **Status**:
    - Unthoughtof: Greyed-out background
