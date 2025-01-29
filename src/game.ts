@@ -175,19 +175,23 @@ export function updateTaskAvailability(state: GameState): GameState {
   return newState;
 }
 
-// Advances game state by applying all updates in sequence.
+// Toggles focus state for a task
 export function toggleTaskFocus(state: GameState, taskId: string): GameState {
   const newState = cloneDeep(state);
+  const targetTask = newState.tasks[taskId];
   
-  // First, unfocus all tasks
-  Object.values(newState.tasks).forEach(task => {
-    task.isFocused = false;
-  });
+  // If task is already focused, just unfocus it
+  if (targetTask.isFocused) {
+    targetTask.isFocused = false;
+    return newState;
+  }
   
-  // Then toggle the selected task
-  const task = newState.tasks[taskId];
-  if (task.state === TaskState.Imagined || task.state === TaskState.Unthoughtof) {
-    task.isFocused = true;
+  // Otherwise, unfocus all tasks and focus the target task
+  if (targetTask.state === TaskState.Imagined || targetTask.state === TaskState.Unthoughtof) {
+    Object.values(newState.tasks).forEach(task => {
+      task.isFocused = false;
+    });
+    targetTask.isFocused = true;
   }
   
   return newState;
