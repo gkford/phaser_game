@@ -141,8 +141,8 @@ class MainScene extends Phaser.Scene {
         });
         
         // Create activity cards with their respective activities
-        this.huntingCard = this.createActivityCard(300, 100, 'Hunting', 'hunting');
-        this.thinkingCard = this.createActivityCard(300, 300, 'Thinking', 'thinking');
+        this.huntingCard = this.createActivityCard(300, 100, 'hunting');
+        this.thinkingCard = this.createActivityCard(300, 300, 'thinking');
         
         // Initial updates
         this.updateDebugDisplay();
@@ -205,7 +205,7 @@ class MainScene extends Phaser.Scene {
         return container;
     }
 
-    private createActivityCard(x: number, y: number, title: string, activity: 'hunting' | 'thinking'): {
+    private createActivityCard(x: number, y: number, activity: 'hunting' | 'thinking'): {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
@@ -225,8 +225,7 @@ class MainScene extends Phaser.Scene {
         border.setOrigin(0, 0);
         border.setVisible(false);
         
-        // Title (will show ???? for Unthoughtof)
-        const titleText = this.add.text(10, 10, '????', {
+        const titleText = this.add.text(10, 10, title, {
             color: '#ffffff',
             fontSize: '20px',
             fontStyle: 'bold'
@@ -307,7 +306,7 @@ class MainScene extends Phaser.Scene {
             if (this.gameState.taskStates[activity] === TaskState.Unthoughtof) {
                 const prereqs = this.gameState.prerequisites[activity];
                 const tooltipText = `Requires:\n${prereqs.join('\n')}`;
-                tooltip.getAt(1).setText(tooltipText);
+                (tooltip.getAt(1) as Phaser.GameObjects.Text).setText(tooltipText);
                 tooltip.setPosition(container.x + 210, container.y);
                 tooltip.setVisible(true);
             }
