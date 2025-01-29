@@ -1,4 +1,4 @@
-import { Task, TaskState } from "./types";
+import { Task, TaskState } from "../../types";
 
 export const initialTasks: Record<string, Task> = {
   foodGathering: {
