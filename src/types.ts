@@ -147,11 +147,10 @@ export function updateTaskStates(state: GameState): GameState {
 
 export type Activity = 'hunting' | 'thinkingL1' | 'unassigned';
 
+import { cloneDeep } from 'lodash';
+
 export function reassignWorker(state: GameState, from: Activity, to: Activity): GameState {
-    const newState = {
-        ...state,
-        population: { ...state.population }
-    };
+    const newState = cloneDeep(state);
 
     if (newState.population[from] <= 0) {
         console.error(`No workers available in ${from}`);
@@ -217,15 +216,10 @@ export function updateResearch(state: GameState, delta: number): GameState {
 }
 
 export function allToHunting(state: GameState): GameState {
-    const newState = {
-        ...state,
-        population: {
-            ...state.population,
-            hunting: state.population.total,
-            thinkingL1: 0,
-            unassigned: 0
-        }
-    };
+    const newState = cloneDeep(state);
+    newState.population.hunting = newState.population.total;
+    newState.population.thinkingL1 = 0;
+    newState.population.unassigned = 0;
 
     if (!validateGameState(newState)) {
         console.error('Invalid state after emergency reset');

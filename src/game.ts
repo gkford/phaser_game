@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { cloneDeep } from 'lodash';
 import { 
     GameState, 
     INITIAL_STATE, 
@@ -122,7 +123,7 @@ class MainScene extends Phaser.Scene {
         }
         
         // If valid, update the state
-        this.gameState = { ...newState };
+        this.gameState = cloneDeep(newState);
         return true;
     }
 
@@ -519,14 +520,12 @@ class MainScene extends Phaser.Scene {
 
         // Test food rate calculations
         console.log('Testing food rate calculations...');
-        const testState = {
-            ...INITIAL_STATE,
-            population: {
-                total: 10,
-                hunting: 5,
-                thinkingL1: 5,
-                unassigned: 0
-            }
+        const testState = cloneDeep(INITIAL_STATE);
+        testState.population = {
+            total: 10,
+            hunting: 5,
+            thinkingL1: 5,
+            unassigned: 0
         };
         const foodRate = calculateFoodRate(testState);
         console.assert(foodRate === 0, 'Food rate calculation incorrect');
