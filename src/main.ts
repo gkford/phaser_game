@@ -3,7 +3,7 @@ import MainScene from './ui/phaser/scenes/MainScene';
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1200,  // Increased from 800
     height: 600,
     parent: 'game',
     scene: MainScene,

@@ -36,99 +36,41 @@ export default class MainScene extends Phaser.Scene {
   }
 
   createUI() {
+    // Title at the top
     this.add.text(20, 20, 'Prehistoric Tech Game', {
       fontSize: '24px',
       color: '#fff',
     })
 
-    // Resource Display
-    this.resourceText = this.add.text(20, 60, this.getResourceText(), {
+    // Column headers
+    this.add.text(20, 60, 'Resources & Status', { fontSize: '20px', color: '#fff' })
+    this.add.text(420, 60, 'Tasks', { fontSize: '20px', color: '#fff' })
+    this.add.text(820, 60, 'Science', { fontSize: '20px', color: '#fff' })
+
+    // Resources column
+    this.resourceText = this.add.text(20, 100, this.getResourceText(), {
       fontSize: '18px',
       color: '#fff',
     })
 
-    // Create Card Cards
-    let yOffset = 150
-    Object.entries(this.gameState.cards).forEach(([cardId, Card]) => {
-      const cardPositionY = yOffset
-      this.cardPositions[cardId] = cardPositionY
+    // Sort cards by type
+    const taskCards = Object.entries(this.gameState.cards)
+      .filter(([_, card]) => card.type === 'task')
+    const scienceCards = Object.entries(this.gameState.cards)
+      .filter(([_, card]) => card.type === 'science')
 
-      // Create background rectangle for card
-      this.add
-        .rectangle(20, yOffset, 600, 105, 0x333333)
-        .setOrigin(0, 0)
-        .setAlpha(0.5)
+    // Create Task Cards
+    let taskYOffset = 100
+    taskCards.forEach(([cardId, card]) => {
+      this.createCardUI(cardId, card, 420, taskYOffset)
+      taskYOffset += 125
+    })
 
-      // Add Card info text
-      this.cardTexts[cardId] = this.add.text(
-        35,
-        yOffset + 15,
-        this.getcardText(cardId),
-        { fontSize: '16px', color: '#fff' }
-      )
-
-      // Add Buttons on a new line
-      if (Card.state === CardState.Discovered) {
-        this.buttons[`${cardId}-minus`] = this.add
-          .text(35, yOffset + 55, '[-]', { fontSize: '16px', color: '#f00' })
-          .setInteractive()
-          .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
-
-        this.buttons[`${cardId}-plus`] = this.add
-          .text(75, yOffset + 55, '[+]', { fontSize: '16px', color: '#0f0' })
-          .setInteractive()
-          .on('pointerdown', () => this.handleReassign(cardId, 'add'))
-
-        // Create production text, to the right of the + button:
-        this.productionTexts[cardId] = this.add.text(
-          120,
-          yOffset + 55,
-          this.getProductionText(cardId),
-          { fontSize: '16px', color: '#fff' }
-        )
-        this.productionTexts[cardId].setVisible(
-          Card.assignedWorkers.level1 + Card.assignedWorkers.level2 > 0
-        )
-      }
-
-      // Add Research Button for Imagined cards
-      if (Card.state === CardState.Imagined) {
-        this.buttons[`${cardId}-research`] = this.add
-          .text(35, yOffset + 55, '[Think About This]', {
-            fontSize: '16px',
-            color: '#00f',
-          })
-          .setInteractive()
-          .on('pointerdown', () => this.handleStartResearch(cardId))
-      }
-
-      // Add Focus Button for Imagined and Unthoughtof cards
-      if (
-        Card.state === CardState.Imagined ||
-        Card.state === CardState.Unthoughtof
-      ) {
-        const focusText = Card.isFocused ? '[Stop Focus]' : '[Focus Thinking]'
-        const prereqsMet = this.arePrerequisitesMet(cardId)
-        this.buttons[`${cardId}-focus`] = this.add
-          .text(
-            Card.state === CardState.Imagined ? 200 : 35,
-            yOffset + 55,
-            focusText,
-            {
-              fontSize: '16px',
-              color: Card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
-            }
-          )
-          .setAlpha(prereqsMet ? 1 : 0.5)
-
-        if (prereqsMet) {
-          this.buttons[`${cardId}-focus`]
-            .setInteractive()
-            .on('pointerdown', () => this.handleToggleFocus(cardId))
-        }
-      }
-
-      yOffset += 125
+    // Create Science Cards
+    let scienceYOffset = 100
+    scienceCards.forEach(([cardId, card]) => {
+      this.createCardUI(cardId, card, 820, scienceYOffset)
+      scienceYOffset += 125
     })
   }
 
@@ -397,3 +339,72 @@ function getCardStateLabel(state: CardState): string {
       return ''
   }
 }
+  private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
+    this.cardPositions[cardId] = yPos
+
+    // Create background rectangle for card
+    this.add
+      .rectangle(xPos, yPos, 380, 105, 0x333333)
+      .setOrigin(0, 0)
+      .setAlpha(0.5)
+
+    // Add Card info text
+    this.cardTexts[cardId] = this.add.text(
+      xPos + 15,
+      yPos + 15,
+      this.getcardText(cardId),
+      { fontSize: '16px', color: '#fff' }
+    )
+
+    // Add Buttons on a new line
+    if (card.state === CardState.Discovered) {
+      this.buttons[`${cardId}-minus`] = this.add
+        .text(xPos + 15, yPos + 55, '[-]', { fontSize: '16px', color: '#f00' })
+        .setInteractive()
+        .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
+
+      this.buttons[`${cardId}-plus`] = this.add
+        .text(xPos + 55, yPos + 55, '[+]', { fontSize: '16px', color: '#0f0' })
+        .setInteractive()
+        .on('pointerdown', () => this.handleReassign(cardId, 'add'))
+
+      this.productionTexts[cardId] = this.add.text(
+        xPos + 100,
+        yPos + 55,
+        this.getProductionText(cardId),
+        { fontSize: '16px', color: '#fff' }
+      )
+      this.productionTexts[cardId].setVisible(
+        card.assignedWorkers.level1 + card.assignedWorkers.level2 > 0
+      )
+    }
+
+    if (card.state === CardState.Imagined) {
+      this.buttons[`${cardId}-research`] = this.add
+        .text(xPos + 15, yPos + 55, '[Think About This]', {
+          fontSize: '16px',
+          color: '#00f',
+        })
+        .setInteractive()
+        .on('pointerdown', () => this.handleStartResearch(cardId))
+    }
+
+    if (card.state === CardState.Imagined || card.state === CardState.Unthoughtof) {
+      const focusText = card.isFocused ? '[Stop Focus]' : '[Focus Thinking]'
+      const prereqsMet = this.arePrerequisitesMet(cardId)
+      const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
+      
+      this.buttons[`${cardId}-focus`] = this.add
+        .text(xOffset, yPos + 55, focusText, {
+          fontSize: '16px',
+          color: card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
+        })
+        .setAlpha(prereqsMet ? 1 : 0.5)
+
+      if (prereqsMet) {
+        this.buttons[`${cardId}-focus`]
+          .setInteractive()
+          .on('pointerdown', () => this.handleToggleFocus(cardId))
+      }
+    }
+  }
