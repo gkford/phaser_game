@@ -182,6 +182,21 @@ class MainScene extends Phaser.Scene {
         return { container, countText, contributionText, plusButton, minusButton };
     }
 
+    private checkEmergencyState(): void {
+        const foodRate = calculateFoodRate(this.gameState);
+        
+        // Emergency conditions: food is 0 or less AND food rate is negative or zero
+        if (this.gameState.food <= 0 && foodRate <= 0) {
+            console.log('Emergency: Food shortage detected!');
+            // Reset all workers to hunting
+            this.handleEmergencyReset();
+            // Update all displays
+            this.updateDebugDisplay();
+            this.updateActivityCards();
+            this.updateButtonStates();
+        }
+    }
+
     private updateButtonStates(): void {
         const hasUnassigned = this.gameState.population.unassigned > 0;
         
@@ -247,7 +262,10 @@ class MainScene extends Phaser.Scene {
         // Update game state
         this.updateGameState(newState);
         
-        // Update debug display
+        // Check for emergency conditions
+        this.checkEmergencyState();
+        
+        // Update displays
         this.updateDebugDisplay();
         this.updateActivityCards();
         this.updateButtonStates();

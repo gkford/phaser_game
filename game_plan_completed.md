@@ -37,8 +37,8 @@
   - [x] Assignment count displays
   - [x] +/- buttons (needs handler implementation)
   - [x] Net contribution labels
-- [ ] Implement button handlers
-- [ ] Create emergency detection system
+- [x] Implement button handlers
+- [x] Create emergency detection system
 
 ## Phase 3: Emergency System ⏳
 
