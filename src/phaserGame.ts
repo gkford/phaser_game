@@ -96,7 +96,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   getResourceText(): string {
-    return `🍖 Food: ${this.gameState.resources.food} | 🧠 Thought Rate: ${
+    return `🍖 Food: ${Math.floor(this.gameState.resources.food)} | 🧠 Thought Rate: ${
       Object.values(this.gameState.tasks).reduce(
         (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers,
         0
