@@ -61,9 +61,9 @@ class MainScene extends Phaser.Scene {
             lineSpacing: 5
         });
         
-        // Create activity cards
-        this.huntingCard = this.createActivityCard(300, 100, 'Hunting');
-        this.thinkingCard = this.createActivityCard(300, 300, 'Thinking');
+        // Create activity cards with their respective activities
+        this.huntingCard = this.createActivityCard(300, 100, 'Hunting', 'hunting');
+        this.thinkingCard = this.createActivityCard(300, 300, 'Thinking', 'thinking');
         
         // Initial updates
         this.updateDebugDisplay();
@@ -80,7 +80,7 @@ class MainScene extends Phaser.Scene {
         this.updateGameState(newState);
     }
 
-    private createActivityCard(x: number, y: number, title: string): {
+    private createActivityCard(x: number, y: number, title: string, activity: 'hunting' | 'thinking'): {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
@@ -110,18 +110,36 @@ class MainScene extends Phaser.Scene {
             fontSize: '14px'
         });
         
-        // Add buttons
+        // Add buttons with handlers
         const plusButton = this.add.text(160, 50, '+', {
             color: '#ffffff',
             fontSize: '24px',
             backgroundColor: '#27ae60'
-        }).setInteractive();
+        })
+        .setInteractive()
+        .setData('activity', activity)
+        .on('pointerdown', () => {
+            // Try to move someone from unassigned to this activity
+            this.handleReassignment('unassigned', activity);
+            
+            // If no unassigned workers, try to move from the other activity
+            if (this.gameState.population.unassigned === 0) {
+                const otherActivity: Activity = activity === 'hunting' ? 'thinking' : 'hunting';
+                this.handleReassignment(otherActivity, activity);
+            }
+        });
         
         const minusButton = this.add.text(160, 80, '-', {
             color: '#ffffff',
             fontSize: '24px',
             backgroundColor: '#c0392b'
-        }).setInteractive();
+        })
+        .setInteractive()
+        .setData('activity', activity)
+        .on('pointerdown', () => {
+            // Move worker to unassigned
+            this.handleReassignment(activity, 'unassigned');
+        });
         
         container.add([bg, titleText, countText, contributionText, plusButton, minusButton]);
         
