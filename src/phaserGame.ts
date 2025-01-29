@@ -99,7 +99,7 @@ export default class MainScene extends Phaser.Scene {
   updateGame() {
     const previousTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
     this.gameState = tickGame(this.gameState);
-    this.handleNewImaginedTasks(previousTasks, this.gameState.tasks);
+    this.handleTaskTransitions(previousTasks, this.gameState.tasks);
     this.updateUI();
   }
 
@@ -230,12 +230,14 @@ export default class MainScene extends Phaser.Scene {
     return parts.join(" + ");
   }
 
-  private handleNewImaginedTasks(
+  private handleTaskTransitions(
     oldTasks: Record<string, Task>,
     newTasks: Record<string, Task>
   ) {
     for (const [taskId, newTask] of Object.entries(newTasks)) {
       const oldTask = oldTasks[taskId];
+      
+      // Handle Unthoughtof -> Imagined transition
       if (oldTask.state === TaskState.Unthoughtof && newTask.state === TaskState.Imagined) {
         // Move assigned workers to unassigned
         this.gameState.population.unassigned += newTask.assignedWorkers;
@@ -247,6 +249,11 @@ export default class MainScene extends Phaser.Scene {
 
         // Show popup
         this.showPopup(`You have imagined the possibility of a new task: ${formatTaskTitle(taskId)}`);
+      }
+      
+      // Handle Imagined -> Discovered transition
+      if (oldTask.state === TaskState.Imagined && newTask.state === TaskState.Discovered) {
+        this.showPopup(`You have discovered how to perform a new task: ${formatTaskTitle(taskId)}`);
       }
     }
   }
