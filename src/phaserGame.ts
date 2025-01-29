@@ -32,23 +32,23 @@ export default class MainScene extends Phaser.Scene {
     let yOffset = 150;
     Object.entries(this.gameState.tasks).forEach(([taskId, task]) => {
       // Create background rectangle for card
-      this.add.rectangle(20, yOffset, 600, 80, 0x333333)
+      this.add.rectangle(20, yOffset, 600, 105, 0x333333)
         .setOrigin(0, 0)
         .setAlpha(0.5);
 
       // Add task info text
-      this.taskTexts[taskId] = this.add.text(35, yOffset + 10, this.getTaskText(taskId), 
+      this.taskTexts[taskId] = this.add.text(35, yOffset + 15, this.getTaskText(taskId), 
         { fontSize: "16px", color: "#fff" });
 
       // Add Buttons on a new line
       if (task.state === TaskState.Discovered) {
         this.buttons[`${taskId}-minus`] = this.add
-          .text(35, yOffset + 40, "[-]", { fontSize: "16px", color: "#f00" })
+          .text(35, yOffset + 55, "[-]", { fontSize: "16px", color: "#f00" })
           .setInteractive()
           .on("pointerdown", () => this.handleReassign(taskId, "unassigned"));
 
         this.buttons[`${taskId}-plus`] = this.add
-          .text(75, yOffset + 40, "[+]", { fontSize: "16px", color: "#0f0" })
+          .text(75, yOffset + 55, "[+]", { fontSize: "16px", color: "#0f0" })
           .setInteractive()
           .on("pointerdown", () => this.handleReassign("unassigned", taskId));
       }
@@ -56,12 +56,12 @@ export default class MainScene extends Phaser.Scene {
       // Add Research Button for Imagined Tasks
       if (task.state === TaskState.Imagined) {
         this.buttons[`${taskId}-research`] = this.add
-          .text(35, yOffset + 40, "[Think About This]", { fontSize: "16px", color: "#00f" })
+          .text(35, yOffset + 55, "[Think About This]", { fontSize: "16px", color: "#00f" })
           .setInteractive()
           .on("pointerdown", () => this.handleStartResearch(taskId));
       }
 
-      yOffset += 100;
+      yOffset += 125;
     });
   }
 
