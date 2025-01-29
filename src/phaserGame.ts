@@ -61,6 +61,16 @@ export default class MainScene extends Phaser.Scene {
           .on("pointerdown", () => this.handleStartResearch(taskId));
       }
 
+      // Add Focus Button for Imagined and Unthoughtof Tasks
+      if (task.state === TaskState.Imagined || task.state === TaskState.Unthoughtof) {
+        const focusText = task.isFocused ? "[Stop Focus]" : "[Focus Thinking]";
+        this.buttons[`${taskId}-focus`] = this.add
+          .text(task.state === TaskState.Imagined ? 200 : 35, yOffset + 55, focusText, 
+            { fontSize: "16px", color: task.isFocused ? "#ff0" : "#fff" })
+          .setInteractive()
+          .on("pointerdown", () => this.handleToggleFocus(taskId));
+      }
+
       yOffset += 125;
     });
   }
@@ -75,6 +85,13 @@ export default class MainScene extends Phaser.Scene {
 
     Object.entries(this.gameState.tasks).forEach(([taskId, task]) => {
       this.taskTexts[taskId].setText(this.getTaskText(taskId));
+      
+      // Update focus button text if it exists
+      if (this.buttons[`${taskId}-focus`]) {
+        const focusText = task.isFocused ? "[Stop Focus]" : "[Focus Thinking]";
+        this.buttons[`${taskId}-focus`].setText(focusText);
+        this.buttons[`${taskId}-focus`].setColor(task.isFocused ? "#ff0" : "#fff");
+      }
     });
   }
 
@@ -110,6 +127,11 @@ export default class MainScene extends Phaser.Scene {
 
   handleStartResearch(taskId: string) {
     this.gameState = startResearch(this.gameState, taskId);
+    this.updateUI();
+  }
+
+  handleToggleFocus(taskId: string) {
+    this.gameState = toggleTaskFocus(this.gameState, taskId);
     this.updateUI();
   }
 }

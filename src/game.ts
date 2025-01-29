@@ -24,6 +24,7 @@ export function createInitialGameState(): GameState {
           toDiscoveredRequired: 0,
         },
         prerequisites: [],
+        isFocused: false,
       },
       thinkingL1: {
         id: "thinkingL1",
@@ -37,6 +38,7 @@ export function createInitialGameState(): GameState {
           toDiscoveredRequired: 0,
         },
         prerequisites: [],
+        isFocused: false,
       },
       hunting: {
         id: "hunting",
@@ -50,6 +52,7 @@ export function createInitialGameState(): GameState {
           toDiscoveredRequired: 100,
         },
         prerequisites: ["thinkingL1"],
+        isFocused: false,
       },
     },
     currentResearchTaskId: null,
@@ -138,6 +141,23 @@ export function updateTaskAvailability(state: GameState): GameState {
 }
 
 // Advances game state by applying all updates in sequence.
+export function toggleTaskFocus(state: GameState, taskId: string): GameState {
+  const newState = cloneDeep(state);
+  
+  // First, unfocus all tasks
+  Object.values(newState.tasks).forEach(task => {
+    task.isFocused = false;
+  });
+  
+  // Then toggle the selected task
+  const task = newState.tasks[taskId];
+  if (task.state === TaskState.Imagined || task.state === TaskState.Unthoughtof) {
+    task.isFocused = true;
+  }
+  
+  return newState;
+}
+
 export function tickGame(state: GameState): GameState {
   let newState = updateResources(state);
   newState = updateResearch(newState);

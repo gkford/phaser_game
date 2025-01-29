@@ -19,6 +19,7 @@ export interface Task {
     toDiscoveredRequired: number;
   };
   prerequisites: string[];
+  isFocused: boolean;
 }
 
 export interface GameState {
