@@ -58,10 +58,12 @@ When food reaches 0:
 4. Persistent warning until net food becomes positive
 
 ### Research Process
-1. Meet prerequisites → State becomes Imagined
+1. Meet prerequisites and accumulate required thoughts → State becomes Imagined
 2. Click "Think About This" → Progress bar appears
-3. Complete research → State becomes Discovered
+3. Accumulate required thoughts → State becomes Discovered
 4. Enables new assignment controls
+
+Each transition (Unthoughtof → Imagined and Imagined → Discovered) requires its own amount of accumulated thoughts.
 
 ## User Interface
 
@@ -144,6 +146,8 @@ Thoughts Production: +1/human/second
 - Initial State: Unthoughtof
 - Production Rate: 1.5 food/human/second
 - Prerequisites: Thinking Level 1
-- Research Cost: ___ thoughts
+- Research Costs:
+  - Unthoughtof → Imagined: ___ thoughts
+  - Imagined → Discovered: ___ thoughts
 
 
