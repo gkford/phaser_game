@@ -254,13 +254,7 @@ class MainScene extends Phaser.Scene {
             return;
         }
 
-        // Normal button state updates
-        this.huntingCard.plusButton.setEnabled(hasUnassigned);
-        this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
-        
-        this.thinkingCard.plusButton.setEnabled(hasUnassigned);
-        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
-    }
+    
 
     preload(): void {
         this.load.audio('click', 'assets/click.mp3');
@@ -268,22 +262,7 @@ class MainScene extends Phaser.Scene {
         this.load.audio('emergency', 'assets/emergency.mp3');
     }
 
-    constructor() {
-        super({ key: 'MainScene' });
-        const initialState = { ...INITIAL_STATE };
-        if (!validateGameState(initialState)) {
-            throw new Error('Invalid initial game state');
-        }
-        this.gameState = initialState;
-    }
-        
-        // Normal button state updates
-        this.huntingCard.plusButton.setEnabled(hasUnassigned);
-        this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
-        
-        this.thinkingCard.plusButton.setEnabled(hasUnassigned);
-        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
-    }
+    
 
     private updateActivityCards(): void {
         // Existing card updates
