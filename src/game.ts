@@ -357,7 +357,6 @@ class MainScene extends Phaser.Scene {
 
         // Calculate rates
         const foodRate = calculateFoodRate(this.gameState);
-        const thoughtRate = calculateThoughtRate(this.gameState);
         
         // Update food storage based on net food rate
         const newState = {
