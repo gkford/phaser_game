@@ -33,7 +33,7 @@ export const INITIAL_STATE: GameState = {
     },
     taskStates: {
         'foodGathering': TaskState.Discovered,
-        'thinkingL1': TaskState.Imagined,
+        'thinkingL1': TaskState.Discovered,
         'hunting': TaskState.Unthoughtof
     },
     researchProgress: {

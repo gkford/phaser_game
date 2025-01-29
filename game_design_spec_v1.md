@@ -94,11 +94,12 @@ Net Food: +0.2/human
 [ - ][ + ]
 ```
 
-**Thinking L1 Card (Imagined)**
+**Thinking L1 Card (Discovered)**
 ```
 [🤔] Thinking Level 1
-Requires: Food >0
-[Think About This]
+Humans Assigned: 2
+Thoughts: +1/human
+[ - ][ + ]
 ```
 
 **Hunting Card (Unthoughtof)**
