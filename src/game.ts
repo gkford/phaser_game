@@ -42,16 +42,27 @@ class MainScene extends Phaser.Scene {
         container: Phaser.GameObjects.Container;
         bg: Phaser.GameObjects.Rectangle;
         titleText: Phaser.GameObjects.Text;
-        contributionText: Phaser.GameObjects.Text;
-        plusButton: ActivityButton;
-        minusButton: ActivityButton;
-    };
-    private thinkingCard!: {
-        container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
         plusButton: ActivityButton;
         minusButton: ActivityButton;
+        researchButton?: Phaser.GameObjects.Text;
+        researchBar?: Phaser.GameObjects.Container;
+        border?: Phaser.GameObjects.Rectangle;
+        tooltip?: Phaser.GameObjects.Container;
+    };
+    private thinkingCard!: {
+        container: Phaser.GameObjects.Container;
+        bg: Phaser.GameObjects.Rectangle;
+        titleText: Phaser.GameObjects.Text;
+        countText: Phaser.GameObjects.Text;
+        contributionText: Phaser.GameObjects.Text;
+        plusButton: ActivityButton;
+        minusButton: ActivityButton;
+        researchButton?: Phaser.GameObjects.Text;
+        researchBar?: Phaser.GameObjects.Container;
+        border?: Phaser.GameObjects.Rectangle;
+        tooltip?: Phaser.GameObjects.Container;
     };
 
     constructor() {
@@ -322,6 +333,8 @@ class MainScene extends Phaser.Scene {
         
         return {
             container,
+            bg,
+            titleText,
             countText,
             contributionText,
             plusButton,
