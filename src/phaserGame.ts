@@ -66,7 +66,9 @@ export default class MainScene extends Phaser.Scene {
           { fontSize: "16px", color: "#fff" }
         );
         // Only show if there's actually some assigned workers
-        this.productionTexts[taskId].setVisible(task.assignedWorkers > 0);
+        this.productionTexts[taskId].setVisible(
+          (task.assignedWorkers.level1 + task.assignedWorkers.level2) > 0
+        );
       }
 
       // Add Research Button for Imagined Tasks
@@ -166,7 +168,9 @@ export default class MainScene extends Phaser.Scene {
           );
         }
         this.productionTexts[taskId].setText(this.getProductionText(taskId));
-        this.productionTexts[taskId].setVisible(task.assignedWorkers > 0);
+        this.productionTexts[taskId].setVisible(
+          (task.assignedWorkers.level1 + task.assignedWorkers.level2) > 0
+        );
       } else {
         // If the task is no longer discovered, remove/hide any existing production text
         if (this.productionTexts[taskId]) {
@@ -178,9 +182,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   getResourceText(): string {
-    const totalWorkers = this.gameState.workers.level1.total + this.gameState.workers.level2.total;
-    const assignedWorkers = this.gameState.workers.level1.assigned + this.gameState.workers.level2.assigned;
-    
     return `🍖 Food: ${Math.floor(this.gameState.resources.food)}
     | L1 Workers: ${this.gameState.workers.level1.assigned}/${this.gameState.workers.level1.total}
     | L2 Workers: ${this.gameState.workers.level2.assigned}/${this.gameState.workers.level2.total}
