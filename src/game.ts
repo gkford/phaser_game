@@ -95,6 +95,11 @@ class MainScene extends Phaser.Scene {
         // Initial updates
         this.updateDebugDisplay();
         this.updateActivityCards();
+        
+        // Run validation in development
+        if (process.env.NODE_ENV !== 'production') {
+            this.validateGameSystems();
+        }
     }
 
     private handleReassignment(from: Activity, to: Activity): void {
@@ -320,6 +325,61 @@ class MainScene extends Phaser.Scene {
         }
         // Note: We don't set isEmergencyActive to false here
         // That only happens when food situation improves
+    }
+
+    private validateGameSystems(): void {
+        // Test assignment combinations
+        console.log('=== Game Systems Validation ===');
+        
+        // Test state validation
+        console.log('Testing state validation...');
+        const invalidState = {
+            ...this.gameState,
+            population: {
+                ...this.gameState.population,
+                total: 11  // Should fail validation
+            }
+        };
+        console.assert(!validateGameState(invalidState), 'Invalid state was not caught');
+
+        // Test food rate calculations
+        console.log('Testing food rate calculations...');
+        const testState = {
+            ...INITIAL_STATE,
+            population: {
+                total: 10,
+                hunting: 5,
+                thinking: 5,
+                unassigned: 0
+            }
+        };
+        const foodRate = calculateFoodRate(testState);
+        console.assert(foodRate === 0, 'Food rate calculation incorrect');
+
+        // Test emergency system
+        console.log('Testing emergency system...');
+        const emergencyState = {
+            ...INITIAL_STATE,
+            food: 0,
+            population: {
+                total: 10,
+                hunting: 0,
+                thinking: 10,
+                unassigned: 0
+            }
+        };
+        this.updateGameState(emergencyState);
+        
+        // Test worker reassignment
+        console.log('Testing worker reassignment...');
+        const reassignResult = reassignWorker(INITIAL_STATE, 'hunting', 'thinking');
+        console.assert(
+            reassignResult.population.hunting === 9 && 
+            reassignResult.population.thinking === 1,
+            'Worker reassignment failed'
+        );
+
+        console.log('=== Validation Complete ===');
     }
 
     private updateDebugDisplay(): void {
