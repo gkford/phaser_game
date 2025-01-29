@@ -69,10 +69,20 @@ When food reaches 0:
 
 ### Left Panel (Resources)
 ```
-◻ Fixed Width Panel
-├─ 🍎 Food: 150 (+2.4/sec)
-├─ 💡 Thoughts L1: 3/sec
-└─ 👥 Available Humans: 2/10
+Food Storage: x
+
+Food Rates:
+ Production: +x/sec
+ Consumption: -x/sec
+ Net Rate: +x/sec
+
+Thought Rate: x/sec
+
+Population:
+ Total: x
+ Hunting: x
+ Thinking: x
+ Unassigned: x
 ```
 
 ### Right Panel (Task Cards)
