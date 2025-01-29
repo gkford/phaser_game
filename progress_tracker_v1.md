@@ -1,6 +1,6 @@
 # Game Plan V1 Implementation Progress
 
-## Foundation ⏳
+## Phase 0: Foundation ⏳
 - [ ] Extend GameState interface:
   - [ ] Add `TaskState` enum (Unthoughtof/Imagined/Discovered)
   - [ ] Add `taskStates: Record<string, TaskState>`
@@ -14,7 +14,7 @@
   - [ ] Configure thinking-l1 as Imagined
   - [ ] Configure hunting as Unthoughtof
 
-## Core Systems ⏳
+## Phase 1: Core Systems ⏳
 - [ ] Implement task state machine:
   - [ ] Add updateTaskStates() called every tick
   - [ ] Create prerequisite checks
@@ -23,7 +23,7 @@
 - [ ] Implement pause/resume research during emergencies
 - [ ] Add state transition logic on research completion
 
-## UI Framework ⏳
+## Phase 2: UI Framework ⏳
 - [ ] Create card states:
   - [ ] Unthoughtof: Greyed out with ???? display
   - [ ] Imagined: Yellow glow + research button
@@ -35,7 +35,7 @@
   - [ ] Tooltip system for "Requires: X, Y"
   - [ ] Lock icon with hover text for unmet prerequisites
 
-## Research System ⏳
+## Phase 3: Research System ⏳
 - [ ] Implement research queue:
   - [ ] Only one active research at a time
   - [ ] Cancel research button with confirmation
@@ -44,7 +44,7 @@
   - [ ] Prevent starting research if prerequisites unmet
   - [ ] Auto-cancel if prerequisites become invalid mid-research
 
-## Emergency Updates ⏳
+## Phase 4: Emergency Updates ⏳
 - [ ] Enhance emergency system:
   - [ ] Pause active research during food emergency
   - [ ] Auto-revert Thinking assignments to Hunting
@@ -53,7 +53,7 @@
   - [ ] Block assignments to Imagined/Unthoughtof tasks
   - [ ] Prevent unassigning from Hunting during emergency
 
-## Polish ⏳
+## Phase 5: Polish ⏳
 - [ ] Add visual feedback:
   - [ ] Pulse animation on state transitions
   - [ ] Thought particles animation during research
