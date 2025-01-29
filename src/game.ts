@@ -387,11 +387,11 @@ class MainScene extends Phaser.Scene {
             
             // Update background and border
             const bg = card.container.getAt(1);
-            bg.setFillStyle(style.backgroundColor);
+            bg.setFillColor(style.backgroundColor);
             bg.setAlpha(style.alpha);
             
             if (style.borderColor) {
-                card.border.setFillStyle(style.borderColor);
+                card.border.setFillColor(style.borderColor);
                 card.border.setVisible(true);
             } else {
                 card.border.setVisible(false);
