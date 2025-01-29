@@ -291,7 +291,7 @@ class MainScene extends Phaser.Scene {
         minusButton.setEnabled = function(enabled: boolean) {
             this.enabled = enabled;
             this.setAlpha(enabled ? 1 : 0.5);
-        });
+        };
         minusButton.on('pointerdown', () => {
             if (minusButton.enabled) {
                 this.handleReassignment(activity as Activity, 'unassigned');
