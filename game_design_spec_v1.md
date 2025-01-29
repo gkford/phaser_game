@@ -1,4 +1,3 @@
-
 # Prehistoric Technology Game - V1 Specification
 
 ## Game Overview
@@ -56,9 +55,9 @@ When food reaches 0:
 ### Task Requirements
 | Task            | Prerequisites               | Initial State |
 |-----------------|-----------------------------|---------------|
-| Food Gathering  | None                        | Discovered    |
-| Thinking Level 1| Food >0                     | Imagined      |
-| Hunting         | 1 Thought/sec + Thinking L1 | Unthoughtof   |
+| Food Gathering  | None                       | Discovered    |
+| Thinking Level 1| Food >0                    | Imagined      |
+| Hunting         | 1 Thought/sec + Thinking L1| Unthoughtof   |
 
 ### Research Process
 1. Meet prerequisites → State becomes Imagined
@@ -69,33 +68,33 @@ When food reaches 0:
 ## User Interface
 
 ### Left Panel (Resources)
+```
 ◻ Fixed Width Panel
 ├─ 🍎 Food: 150 (+2.4/sec)
 ├─ 💡 Thoughts L1: 3/sec
 └─ 👥 Available Humans: 2/10
-
-Copy
+```
 
 ### Right Panel (Task Cards)
 **Food Gathering Card (Discovered)**
+```
 [🍖] Food Gathering
 Humans Assigned: 8
 Net Food: +0.2/human
 [ - ][ + ]
-
-Copy
+```
 
 **Thinking L1 Card (Imagined)**
+```
 [🤔] Thinking Level 1
 Requires: Food >0
 [Think About This]
-
-Copy
+```
 
 **Hunting Card (Unthoughtof)**
+```
 [????]
-
-Copy
+```
 
 ### Card Visual Hierarchy
 1. **Icons**: Emoji (top-left)
@@ -126,10 +125,10 @@ graph LR
   A[Unthoughtof] -->|Meet Prerequisites| B[Imagined]
   B -->|Complete Research| C[Discovered]
   C -->|New Prerequisites Met| D[Higher-Level Task]
-Balance Considerations
-Base food surplus: +0.2/human (requires 83% population in Food Gathering for stability)
+```
 
-Full Thinking assignment creates -8 food/sec deficit
-
-Hunting research unlocks sustainability (2 food/human)
+### Balance Considerations
+- Base food surplus: +0.2/human (requires 83% population in Food Gathering for stability)
+- Full Thinking assignment creates -8 food/sec deficit
+- Hunting research unlocks sustainability (2 food/human)
 
