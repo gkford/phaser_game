@@ -8,9 +8,9 @@ export function createInitialGameState(): GameState {
     resources: {
       food: 0,
     },
-    population: {
-      total: 10,
-      unassigned: 0,
+    workers: {
+      level1: { total: 10, assigned: 10 },
+      level2: { total: 0, assigned: 0 }
     },
     tasks: initialTasks,
     currentResearchTaskId: null,
@@ -61,12 +61,14 @@ export function updateResources(state: GameState): GameState {
 
   for (const task of Object.values(state.tasks)) {
     if (task.state === TaskState.Discovered) {
-      foodProduced += (task.productionPerWorker.food ?? 0) * task.assignedWorkers;
-      thoughtsProduced += (task.productionPerWorker.thoughts ?? 0) * task.assignedWorkers;
+      const totalAssigned = task.assignedWorkers.level1 + task.assignedWorkers.level2;
+      foodProduced += (task.productionPerWorker.food ?? 0) * totalAssigned;
+      thoughtsProduced += (task.productionPerWorker.thoughts ?? 0) * totalAssigned;
     }
   }
 
-  foodProduced -= state.population.total; // Each person consumes 1 food/sec.
+  const totalWorkers = state.workers.level1.total + state.workers.level2.total;
+  foodProduced -= totalWorkers; // Each worker consumes 1 food/sec.
 
   return {
     ...state,
@@ -80,7 +82,7 @@ export function updateResources(state: GameState): GameState {
 export function updateResearch(state: GameState): GameState {
   const newState = cloneDeep(state);
   const thoughtsProduced = Object.values(newState.tasks).reduce(
-    (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers, 
+    (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * (t.assignedWorkers.level1 + t.assignedWorkers.level2), 
     0
   );
 

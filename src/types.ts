@@ -7,7 +7,10 @@ export enum TaskState {
 export interface Task {
   id: string;
   state: TaskState;
-  assignedWorkers: number;
+  assignedWorkers: {
+    level1: number;
+    level2: number;
+  };
   productionPerWorker: {
     food?: number;
     thoughts?: number;
@@ -20,15 +23,16 @@ export interface Task {
   };
   prerequisites: string[];
   isFocused: boolean;
+  acceptedWorkerLevels: number[];
 }
 
 export interface GameState {
   resources: {
     food: number;
   };
-  population: {
-    total: number;
-    unassigned: number;
+  workers: {
+    level1: { total: number; assigned: number };
+    level2: { total: number; assigned: number };
   };
   tasks: Record<string, Task>;
   currentResearchTaskId: string | null;

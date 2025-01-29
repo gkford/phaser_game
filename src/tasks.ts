@@ -4,7 +4,10 @@ export const initialTasks: Record<string, Task> = {
   foodGathering: {
     id: "foodGathering",
     state: TaskState.Discovered,
-    assignedWorkers: 10,
+    assignedWorkers: {
+      level1: 10,
+      level2: 0
+    },
     productionPerWorker: { food: 1.2 },
     researchProgress: {
       toImaginedCurrent: 0,
@@ -14,11 +17,15 @@ export const initialTasks: Record<string, Task> = {
     },
     prerequisites: [],
     isFocused: false,
+    acceptedWorkerLevels: [1, 2],
   },
   thinkingL1: {
     id: "thinkingL1",
     state: TaskState.Discovered,
-    assignedWorkers: 0,
+    assignedWorkers: {
+      level1: 0,
+      level2: 0
+    },
     productionPerWorker: { thoughts: 1 },
     researchProgress: {
       toImaginedCurrent: 0,
@@ -28,11 +35,15 @@ export const initialTasks: Record<string, Task> = {
     },
     prerequisites: [],
     isFocused: false,
+    acceptedWorkerLevels: [1, 2],
   },
   hunting: {
     id: "hunting",
     state: TaskState.Unthoughtof,
-    assignedWorkers: 0,
+    assignedWorkers: {
+      level1: 0,
+      level2: 0
+    },
     productionPerWorker: { food: 1.5 },
     researchProgress: {
       toImaginedCurrent: 0,
@@ -42,6 +53,7 @@ export const initialTasks: Record<string, Task> = {
     },
     prerequisites: ["thinkingL1"],
     isFocused: false,
+    acceptedWorkerLevels: [1, 2],
   },
 };
 
