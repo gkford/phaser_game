@@ -179,7 +179,7 @@ class MainScene extends Phaser.Scene {
         
         container.add([bg, titleText, countText, contributionText, plusButton, minusButton]);
         
-        return { container, countText, contributionText };
+        return { container, countText, contributionText, plusButton, minusButton };
     }
 
     private updateButtonStates(): void {
