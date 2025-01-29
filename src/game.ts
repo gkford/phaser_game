@@ -225,7 +225,9 @@ class MainScene extends Phaser.Scene {
         border.setOrigin(0, 0);
         border.setVisible(false);
         
-        const titleText = this.add.text(10, 10, title, {
+        // Generate title based on activity
+        const activityTitle = activity.charAt(0).toUpperCase() + activity.slice(1);
+        const titleText = this.add.text(10, 10, activityTitle, {
             color: '#ffffff',
             fontSize: '20px',
             fontStyle: 'bold'
