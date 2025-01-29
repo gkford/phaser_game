@@ -15,12 +15,20 @@
 
 - [ ] Implement rate calculations:
   - [ ] calculateFoodRate(state) → net food/sec
+    - [ ] Each hunter produces 2 food/sec
+    - [ ] Each person consumes 1 food/sec
   - [ ] calculateThoughtRate(state) → thoughts/sec
+    - [ ] Each thinker produces 1 thought/sec
 - [ ] Build state transition system:
   - [ ] reassignWorker(fromActivity, toActivity)
   - [ ] Emergency reset function (allToHunting())
+  - [ ] Validate transitions maintain population constraints
 - [ ] Create basic debug UI:
   - [ ] Text labels showing raw state values
+    - [ ] Current food storage
+    - [ ] Net food per second
+    - [ ] Current thoughts per second
+    - [ ] Total population
   - [ ] Rate displays (+3 food/sec style)
 
 ## Phase 2: UI & Interaction ⏳
