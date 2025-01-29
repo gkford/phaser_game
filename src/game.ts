@@ -35,14 +35,14 @@ class MainScene extends Phaser.Scene {
     private isEmergencyActive: boolean = false;
     private isGamePaused: boolean = false;
 
-    private huntingCard: {
+    private huntingCard!: {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
         plusButton: ActivityButton;
         minusButton: ActivityButton;
     };
-    private thinkingCard: {
+    private thinkingCard!: {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
