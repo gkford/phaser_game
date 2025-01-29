@@ -375,6 +375,12 @@ class MainScene extends Phaser.Scene {
         this.updateActivityCards();
         this.updateButtonStates();
     }
+    public destroy(): void {
+        if (this.updateTimer) {
+            this.updateTimer.destroy();
+        }
+        super.destroy();
+    }
 }
 
 const config: Phaser.Types.Core.GameConfig = {
