@@ -42,12 +42,12 @@ export default class MainScene extends Phaser.Scene {
       color: '#fff',
     })
 
-    // Column headers
+    // Column headers - spread across screen
     this.add.text(20, 60, 'Resources & Status', { fontSize: '20px', color: '#fff' })
     this.add.text(420, 60, 'Tasks', { fontSize: '20px', color: '#fff' })
     this.add.text(820, 60, 'Science', { fontSize: '20px', color: '#fff' })
 
-    // Resources column
+    // Resources column - keep at left
     this.resourceText = this.add.text(20, 100, this.getResourceText(), {
       fontSize: '18px',
       color: '#fff',
@@ -59,14 +59,14 @@ export default class MainScene extends Phaser.Scene {
     const scienceCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'science')
 
-    // Create Task Cards
+    // Create Task Cards - moved to middle third
     let taskYOffset = 100
     taskCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, 420, taskYOffset)
       taskYOffset += 125
     })
 
-    // Create Science Cards
+    // Create Science Cards - moved to right third
     let scienceYOffset = 100
     scienceCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, 820, scienceYOffset)
@@ -324,9 +324,9 @@ export default class MainScene extends Phaser.Scene {
   private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
     this.cardPositions[cardId] = yPos
 
-    // Create background rectangle for card
+    // Create background rectangle for card - make wider
     this.add
-      .rectangle(xPos, yPos, 380, 105, 0x333333)
+      .rectangle(xPos, yPos, 380, 105, 0x333333)  // Width increased to 380
       .setOrigin(0, 0)
       .setAlpha(0.5)
 
