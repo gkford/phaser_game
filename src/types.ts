@@ -49,16 +49,16 @@ export const INITIAL_STATE: GameState = {
 };
 
 export function validateGameState(state: GameState): boolean {
-    const { total, hunting, thinking, unassigned } = state.population;
+    const { total, hunting, thinkingL1, unassigned } = state.population;
     
     // Check if all numbers are non-negative
-    if (hunting < 0 || thinking < 0 || unassigned < 0) {
+    if (hunting < 0 || thinkingL1 < 0 || unassigned < 0) {
         console.error('Population numbers cannot be negative');
         return false;
     }
 
     // Check if sum of assigned people equals total
-    const sum = hunting + thinking + unassigned;
+    const sum = hunting + thinkingL1 + unassigned;
     if (sum !== total) {
         console.error(`Population sum (${sum}) does not match total (${total})`);
         return false;
