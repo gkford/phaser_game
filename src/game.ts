@@ -524,7 +524,7 @@ class MainScene extends Phaser.Scene {
             population: {
                 total: 10,
                 hunting: 5,
-                thinking: 5,
+                thinkingL1: 5,
                 unassigned: 0
             }
         };
@@ -539,7 +539,7 @@ class MainScene extends Phaser.Scene {
             population: {
                 total: 10,
                 hunting: 0,
-                thinking: 10,
+                thinkingL1: 10,
                 unassigned: 0
             }
         };
@@ -547,10 +547,10 @@ class MainScene extends Phaser.Scene {
         
         // Test worker reassignment
         console.log('Testing worker reassignment...');
-        const reassignResult = reassignWorker(INITIAL_STATE, 'hunting', 'thinking');
+        const reassignResult = reassignWorker(INITIAL_STATE, 'hunting', 'thinkingL1');
         console.assert(
             reassignResult.population.hunting === 9 && 
-            reassignResult.population.thinking === 1,
+            reassignResult.population.thinkingL1 === 1,
             'Worker reassignment failed'
         );
 

@@ -102,7 +102,7 @@ export function calculateFoodRate(state: GameState): number {
 
 export function calculateThoughtRate(state: GameState): number {
     // Each thinker produces 1 thought/sec
-    return state.population.thinking;
+    return state.population.thinkingL1;
 }
 
 // Check if a specific prerequisite is met
