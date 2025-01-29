@@ -13,6 +13,7 @@ import {
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
+    private debugText: Phaser.GameObjects.Text;
 
     constructor() {
         super({ key: 'MainScene' });
@@ -43,11 +44,15 @@ class MainScene extends Phaser.Scene {
             loop: true
         });
 
-        // Add debug text display
-        this.add.text(400, 300, 'Game State Initialized', {
+        // Create debug text display
+        this.debugText = this.add.text(20, 20, '', {
             color: '#ffffff',
-            fontSize: '24px'
-        }).setOrigin(0.5);
+            fontSize: '16px',
+            lineSpacing: 5
+        });
+        
+        // Initial update of debug display
+        this.updateDebugDisplay();
     }
 
     private handleReassignment(from: Activity, to: Activity): void {
@@ -58,6 +63,25 @@ class MainScene extends Phaser.Scene {
     private handleEmergencyReset(): void {
         const newState = allToHunting(this.gameState);
         this.updateGameState(newState);
+    }
+
+    private updateDebugDisplay(): void {
+        const foodRate = calculateFoodRate(this.gameState);
+        const thoughtRate = calculateThoughtRate(this.gameState);
+        
+        const debugInfo = [
+            `Food Storage: ${Math.floor(this.gameState.food)}`,
+            `Food Rate: ${foodRate >= 0 ? '+' : ''}${foodRate}/sec`,
+            `Thought Rate: ${thoughtRate}/sec`,
+            '',
+            'Population:',
+            `Total: ${this.gameState.population.total}`,
+            `Hunting: ${this.gameState.population.hunting}`,
+            `Thinking: ${this.gameState.population.thinking}`,
+            `Unassigned: ${this.gameState.population.unassigned}`
+        ].join('\n');
+
+        this.debugText.setText(debugInfo);
     }
 
     private onGameTick(): void {
@@ -74,12 +98,8 @@ class MainScene extends Phaser.Scene {
         // Update game state
         this.updateGameState(newState);
         
-        // Log current state and rates (temporary debug output)
-        console.log('Game tick:', {
-            state: this.gameState,
-            foodRate,
-            thoughtRate
-        });
+        // Update debug display
+        this.updateDebugDisplay();
     }
 }
 
