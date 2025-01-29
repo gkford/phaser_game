@@ -110,9 +110,6 @@ Implement:
 - Smooth animations:
   - Food counter ticks (gradual increments)
   - Button hover/press states
-- Audio feedback:
-  - Click sounds
-  - Emergency alarm SFX
 
 Final validation:
 - Test all assignment combinations
