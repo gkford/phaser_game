@@ -42,3 +42,19 @@ export function validateGameState(state: GameState): boolean {
 
     return true;
 }
+
+export function calculateFoodRate(state: GameState): number {
+    // Each hunter produces 2 food/sec
+    const foodProduction = state.population.hunting * 2;
+    
+    // Each person (regardless of role) consumes 1 food/sec
+    const foodConsumption = state.population.total;
+    
+    // Return net food rate
+    return foodProduction - foodConsumption;
+}
+
+export function calculateThoughtRate(state: GameState): number {
+    // Each thinker produces 1 thought/sec
+    return state.population.thinking;
+}

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GameState, INITIAL_STATE, validateGameState } from './types';
+import { GameState, INITIAL_STATE, validateGameState, calculateFoodRate, calculateThoughtRate } from './types';
 
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
@@ -42,8 +42,25 @@ class MainScene extends Phaser.Scene {
     }
 
     private onGameTick(): void {
-        // This will be filled with resource calculations later
-        console.log('Game tick:', this.gameState);
+        // Calculate rates
+        const foodRate = calculateFoodRate(this.gameState);
+        const thoughtRate = calculateThoughtRate(this.gameState);
+        
+        // Update food storage based on net food rate
+        const newState = {
+            ...this.gameState,
+            food: this.gameState.food + foodRate
+        };
+        
+        // Update game state
+        this.updateGameState(newState);
+        
+        // Log current state and rates (temporary debug output)
+        console.log('Game tick:', {
+            state: this.gameState,
+            foodRate,
+            thoughtRate
+        });
     }
 }
 
