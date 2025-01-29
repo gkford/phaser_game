@@ -45,6 +45,8 @@
 - [x] Create popup overlay
 - [x] Implement state restrictions
 - [x] Emergency exit condition handling
+- [x] Add game pause during emergency
+- [x] Resume game after acknowledgment
 
 ## Phase 4: Polishing ⏳
 

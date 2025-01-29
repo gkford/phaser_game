@@ -28,6 +28,7 @@ class MainScene extends Phaser.Scene {
     } | null = null;
 
     private isEmergencyActive: boolean = false;
+    private isGamePaused: boolean = false;
 
     private huntingCard: {
         container: Phaser.GameObjects.Container;
@@ -288,11 +289,15 @@ class MainScene extends Phaser.Scene {
         }
         this.emergencyOverlay?.container.setVisible(true);
         this.isEmergencyActive = true;
+        // Pause game when emergency occurs
+        this.isGamePaused = true;
     }
 
     private hideEmergencyOverlay(): void {
         if (this.emergencyOverlay) {
             this.emergencyOverlay.container.setVisible(false);
+            // Resume game when overlay is dismissed
+            this.isGamePaused = false;
         }
         // Note: We don't set isEmergencyActive to false here
         // That only happens when food situation improves
@@ -326,6 +331,11 @@ class MainScene extends Phaser.Scene {
     }
 
     private onGameTick(): void {
+        // Don't update game state if paused
+        if (this.isGamePaused) {
+            return;
+        }
+
         // Calculate rates
         const foodRate = calculateFoodRate(this.gameState);
         const thoughtRate = calculateThoughtRate(this.gameState);
