@@ -23,24 +23,25 @@ export function reassignWorker(state: GameState, taskId: string, action: "add" |
 
   if (action === "add") {
     // Add the first available worker among the task's accepted levels, from lowest to highest
-    for (const level of [1, 2]) {
-      if (task.acceptedWorkerLevels.includes(level)) {
-        const workerPool = newState.workers["level" + level];
+    for (const lvl of [1, 2]) {
+      const levelKey = "level" + lvl as WorkerLevelKey;
+      if (task.acceptedWorkerLevels.includes(lvl)) {
+        const workerPool = newState.workers[levelKey];
         if (workerPool.assigned < workerPool.total) {
           workerPool.assigned++;
-          task.assignedWorkers["level" + level] += 1;
+          task.assignedWorkers[levelKey]++;
           break;
         }
       }
     }
   } else {
     // Remove from highest to lowest
-    for (const level of [2, 1]) {
-      if (task.acceptedWorkerLevels.includes(level)) {
-        const assignedCount = task.assignedWorkers["level" + level];
-        if (assignedCount > 0) {
-          newState.workers["level" + level].assigned--;
-          task.assignedWorkers["level" + level] = assignedCount - 1;
+    for (const lvl of [2, 1]) {
+      const levelKey = "level" + lvl as WorkerLevelKey;
+      if (task.acceptedWorkerLevels.includes(lvl)) {
+        if (task.assignedWorkers[levelKey] > 0) {
+          newState.workers[levelKey].assigned--;
+          task.assignedWorkers[levelKey]--;
           break;
         }
       }

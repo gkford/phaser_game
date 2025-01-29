@@ -51,12 +51,12 @@ export default class MainScene extends Phaser.Scene {
         this.buttons[`${taskId}-minus`] = this.add
           .text(35, yOffset + 55, "[-]", { fontSize: "16px", color: "#f00" })
           .setInteractive()
-          .on("pointerdown", () => this.handleReassign(taskId, "unassigned"));
+          .on("pointerdown", () => this.handleReassign(taskId, "remove"));
 
         this.buttons[`${taskId}-plus`] = this.add
           .text(75, yOffset + 55, "[+]", { fontSize: "16px", color: "#0f0" })
           .setInteractive()
-          .on("pointerdown", () => this.handleReassign("unassigned", taskId));
+          .on("pointerdown", () => this.handleReassign(taskId, "add"));
 
         // Create production text, to the right of the + button:
         this.productionTexts[taskId] = this.add.text(
@@ -279,8 +279,8 @@ export default class MainScene extends Phaser.Scene {
     });
   }
 
-  handleReassign(fromTask: string, toTask: string) {
-    this.gameState = reassignWorker(this.gameState, fromTask, toTask);
+  handleReassign(taskId: string, action: "add" | "remove") {
+    this.gameState = reassignWorker(this.gameState, taskId, action);
     this.updateUI();
   }
 
