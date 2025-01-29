@@ -320,25 +320,7 @@ export default class MainScene extends Phaser.Scene {
     this.gameState = togglecardFocus(this.gameState, cardId)
     this.updateUI()
   }
-}
 
-// Utility Functions
-function formatcardTitle(cardId: string): string {
-  return cardId
-}
-
-function getCardStateLabel(state: CardState): string {
-  switch (state) {
-    case CardState.Unthoughtof:
-      return '????'
-    case CardState.Imagined:
-      return '🔎 Imagined'
-    case CardState.Discovered:
-      return '✅ Discovered'
-    default:
-      return ''
-  }
-}
   private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
     this.cardPositions[cardId] = yPos
 
@@ -408,3 +390,22 @@ function getCardStateLabel(state: CardState): string {
       }
     }
   }
+}
+
+// Utility Functions
+function formatcardTitle(cardId: string): string {
+  return cardId
+}
+
+function getCardStateLabel(state: CardState): string {
+  switch (state) {
+    case CardState.Unthoughtof:
+      return '????'
+    case CardState.Imagined:
+      return '🔎 Imagined'
+    case CardState.Discovered:
+      return '✅ Discovered'
+    default:
+      return ''
+  }
+}
