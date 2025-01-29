@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { GameState, Task, TaskState } from "./types";
+import { GameState, TaskState } from "./types";
 
 // Initializes game state with predefined tasks.
 export function createInitialGameState(): GameState {
@@ -47,7 +47,7 @@ export function createInitialGameState(): GameState {
         productionPerWorker: { food: 1.5 },
         researchProgress: {
           toImaginedCurrent: 0,
-          toImaginedRequired: 50,
+          toImaginedRequired: 5,
           toDiscoveredCurrent: 0,
           toDiscoveredRequired: 10,
         },
