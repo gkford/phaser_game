@@ -19,11 +19,11 @@ class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
-    private sounds: {
-        click: Phaser.Sound.BaseSound;
-        error: Phaser.Sound.BaseSound;
-        emergency: Phaser.Sound.BaseSound;
-    } | null = null;
+    // private sounds: {
+    //     click: Phaser.Sound.BaseSound;
+    //     error: Phaser.Sound.BaseSound;
+    //     emergency: Phaser.Sound.BaseSound;
+    // } | null = null;
     
     private emergencyOverlay: {
         container: Phaser.GameObjects.Container;
@@ -59,11 +59,6 @@ class MainScene extends Phaser.Scene {
         this.gameState = initialState;
     }
 
-    preload(): void {
-        this.load.audio('click', 'assets/click.mp3');
-        this.load.audio('error', 'assets/error.mp3');
-        this.load.audio('emergency', 'assets/emergency.mp3');
-    }
 
     private createSounds(): void {
         this.sounds = {
