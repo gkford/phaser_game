@@ -15,7 +15,7 @@ export interface GameState {
     population: {
         total: number;
         hunting: number;
-        thinking: number;
+        thinkingL1: number;
         unassigned: number;
     };
     taskStates: Record<string, TaskState>;
@@ -28,7 +28,7 @@ export const INITIAL_STATE: GameState = {
     population: {
         total: 10,
         hunting: 10,
-        thinking: 0,
+        thinkingL1: 0,
         unassigned: 0
     },
     taskStates: {

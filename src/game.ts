@@ -207,7 +207,7 @@ class MainScene extends Phaser.Scene {
         return container;
     }
 
-    private createActivityCard(x: number, y: number, activity: 'hunting' | 'thinking'): ActivityCard {
+    private createActivityCard(x: number, y: number, activity: Activity): ActivityCard {
         const container = this.add.container(x, y);
         
         // Background with border
@@ -367,7 +367,7 @@ class MainScene extends Phaser.Scene {
         this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
         
         this.thinkingCard.plusButton.setEnabled(hasUnassigned);
-        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
+        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinkingL1 > 0);
     }
 
     
@@ -585,7 +585,7 @@ class MainScene extends Phaser.Scene {
             'Population:',
             `Total: ${this.gameState.population.total}`,
             `Hunting: ${this.gameState.population.hunting}`,
-            `Thinking: ${this.gameState.population.thinking}`,
+            `Thinking: ${this.gameState.population.thinkingL1}`,
             `Unassigned: ${this.gameState.population.unassigned}`
         ].join('\n');
 
