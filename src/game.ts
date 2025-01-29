@@ -17,8 +17,8 @@ interface ActivityButton extends Phaser.GameObjects.Text {
 
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
-    private updateTimer: Phaser.Time.TimerEvent;
-    private debugText: Phaser.GameObjects.Text;
+    private updateTimer!: Phaser.Time.TimerEvent;
+    private debugText!: Phaser.GameObjects.Text;
     // private sounds: {
     //     click: Phaser.Sound.BaseSound;
     //     error: Phaser.Sound.BaseSound;
