@@ -29,19 +29,26 @@ export default class MainScene extends Phaser.Scene {
     this.resourceText = this.add.text(20, 60, this.getResourceText(), { fontSize: "18px", color: "#fff" });
 
     // Create Task Cards
-    let yOffset = 120;
+    let yOffset = 150;
     Object.entries(this.gameState.tasks).forEach(([taskId, task]) => {
-      this.taskTexts[taskId] = this.add.text(20, yOffset, this.getTaskText(taskId), { fontSize: "16px", color: "#fff" });
+      // Create background rectangle for card
+      this.add.rectangle(20, yOffset, 400, 80, 0x333333)
+        .setOrigin(0, 0)
+        .setAlpha(0.5);
 
-      // Add Buttons for Assigning Workers
+      // Add task info text
+      this.taskTexts[taskId] = this.add.text(35, yOffset + 10, this.getTaskText(taskId), 
+        { fontSize: "16px", color: "#fff" });
+
+      // Add Buttons on a new line
       if (task.state === TaskState.Discovered) {
         this.buttons[`${taskId}-minus`] = this.add
-          .text(300, yOffset, "[-]", { fontSize: "16px", color: "#f00" })
+          .text(35, yOffset + 40, "[-]", { fontSize: "16px", color: "#f00" })
           .setInteractive()
           .on("pointerdown", () => this.handleReassign(taskId, "unassigned"));
 
         this.buttons[`${taskId}-plus`] = this.add
-          .text(340, yOffset, "[+]", { fontSize: "16px", color: "#0f0" })
+          .text(75, yOffset + 40, "[+]", { fontSize: "16px", color: "#0f0" })
           .setInteractive()
           .on("pointerdown", () => this.handleReassign("unassigned", taskId));
       }
@@ -49,12 +56,12 @@ export default class MainScene extends Phaser.Scene {
       // Add Research Button for Imagined Tasks
       if (task.state === TaskState.Imagined) {
         this.buttons[`${taskId}-research`] = this.add
-          .text(300, yOffset, "[Think About This]", { fontSize: "16px", color: "#00f" })
+          .text(35, yOffset + 40, "[Think About This]", { fontSize: "16px", color: "#00f" })
           .setInteractive()
           .on("pointerdown", () => this.handleStartResearch(taskId));
       }
 
-      yOffset += 40;
+      yOffset += 100;
     });
   }
 
