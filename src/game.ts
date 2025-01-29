@@ -14,6 +14,16 @@ class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
+    private huntingCard: {
+        container: Phaser.GameObjects.Container;
+        countText: Phaser.GameObjects.Text;
+        contributionText: Phaser.GameObjects.Text;
+    };
+    private thinkingCard: {
+        container: Phaser.GameObjects.Container;
+        countText: Phaser.GameObjects.Text;
+        contributionText: Phaser.GameObjects.Text;
+    };
 
     constructor() {
         super({ key: 'MainScene' });
@@ -51,8 +61,13 @@ class MainScene extends Phaser.Scene {
             lineSpacing: 5
         });
         
-        // Initial update of debug display
+        // Create activity cards
+        this.huntingCard = this.createActivityCard(300, 100, 'Hunting');
+        this.thinkingCard = this.createActivityCard(300, 300, 'Thinking');
+        
+        // Initial updates
         this.updateDebugDisplay();
+        this.updateActivityCards();
     }
 
     private handleReassignment(from: Activity, to: Activity): void {
@@ -63,6 +78,64 @@ class MainScene extends Phaser.Scene {
     private handleEmergencyReset(): void {
         const newState = allToHunting(this.gameState);
         this.updateGameState(newState);
+    }
+
+    private createActivityCard(x: number, y: number, title: string): {
+        container: Phaser.GameObjects.Container;
+        countText: Phaser.GameObjects.Text;
+        contributionText: Phaser.GameObjects.Text;
+    } {
+        const container = this.add.container(x, y);
+        
+        // Background
+        const bg = this.add.rectangle(0, 0, 200, 150, 0x34495e);
+        bg.setOrigin(0, 0);
+        
+        // Title
+        const titleText = this.add.text(10, 10, title, {
+            color: '#ffffff',
+            fontSize: '20px',
+            fontStyle: 'bold'
+        });
+        
+        // Count display
+        const countText = this.add.text(10, 50, '', {
+            color: '#ffffff',
+            fontSize: '16px'
+        });
+        
+        // Contribution text
+        const contributionText = this.add.text(10, 80, '', {
+            color: '#ffffff',
+            fontSize: '14px'
+        });
+        
+        // Add buttons
+        const plusButton = this.add.text(160, 50, '+', {
+            color: '#ffffff',
+            fontSize: '24px',
+            backgroundColor: '#27ae60'
+        }).setInteractive();
+        
+        const minusButton = this.add.text(160, 80, '-', {
+            color: '#ffffff',
+            fontSize: '24px',
+            backgroundColor: '#c0392b'
+        }).setInteractive();
+        
+        container.add([bg, titleText, countText, contributionText, plusButton, minusButton]);
+        
+        return { container, countText, contributionText };
+    }
+
+    private updateActivityCards(): void {
+        // Update hunting card
+        this.huntingCard.countText.setText(`Workers: ${this.gameState.population.hunting}`);
+        this.huntingCard.contributionText.setText(`+2 food/worker/sec`);
+        
+        // Update thinking card
+        this.thinkingCard.countText.setText(`Workers: ${this.gameState.population.thinking}`);
+        this.thinkingCard.contributionText.setText(`+1 thought/worker/sec`);
     }
 
     private updateDebugDisplay(): void {
@@ -100,6 +173,7 @@ class MainScene extends Phaser.Scene {
         
         // Update debug display
         this.updateDebugDisplay();
+        this.updateActivityCards();
     }
 }
 
