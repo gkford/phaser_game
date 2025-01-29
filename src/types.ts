@@ -58,3 +58,46 @@ export function calculateThoughtRate(state: GameState): number {
     // Each thinker produces 1 thought/sec
     return state.population.thinking;
 }
+
+export type Activity = 'hunting' | 'thinking' | 'unassigned';
+
+export function reassignWorker(state: GameState, from: Activity, to: Activity): GameState {
+    const newState = {
+        ...state,
+        population: { ...state.population }
+    };
+
+    if (newState.population[from] <= 0) {
+        console.error(`No workers available in ${from}`);
+        return state;
+    }
+
+    newState.population[from]--;
+    newState.population[to]++;
+
+    if (!validateGameState(newState)) {
+        console.error('Invalid state after reassignment');
+        return state;
+    }
+
+    return newState;
+}
+
+export function allToHunting(state: GameState): GameState {
+    const newState = {
+        ...state,
+        population: {
+            ...state.population,
+            hunting: state.population.total,
+            thinking: 0,
+            unassigned: 0
+        }
+    };
+
+    if (!validateGameState(newState)) {
+        console.error('Invalid state after emergency reset');
+        return state;
+    }
+
+    return newState;
+}
