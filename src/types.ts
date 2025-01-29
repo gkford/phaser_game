@@ -1,3 +1,15 @@
+export enum TaskState {
+    Unthoughtof = "UNTHOUGHTOF",
+    Imagined = "IMAGINED", 
+    Discovered = "DISCOVERED"
+}
+
+export interface ResearchProgress {
+    taskId: string | null;
+    progress: number;
+    total: number;
+}
+
 export interface GameState {
     food: number;
     population: {
@@ -6,6 +18,9 @@ export interface GameState {
         thinking: number;
         unassigned: number;
     };
+    taskStates: Record<string, TaskState>;
+    researchProgress: ResearchProgress;
+    prerequisites: Record<string, string[]>;
 }
 
 export const INITIAL_STATE: GameState = {
@@ -15,6 +30,21 @@ export const INITIAL_STATE: GameState = {
         hunting: 10,
         thinking: 0,
         unassigned: 0
+    },
+    taskStates: {
+        'foodGathering': TaskState.Discovered,
+        'thinkingL1': TaskState.Imagined,
+        'hunting': TaskState.Unthoughtof
+    },
+    researchProgress: {
+        taskId: null,
+        progress: 0,
+        total: 0
+    },
+    prerequisites: {
+        'foodGathering': [],
+        'thinkingL1': ['foodPositive'],
+        'hunting': ['thinkingL1', 'thoughtRate1']
     }
 };
 
@@ -81,6 +111,53 @@ export function reassignWorker(state: GameState, from: Activity, to: Activity): 
     }
 
     return newState;
+}
+
+export function startResearch(state: GameState, taskId: string): GameState {
+    if (!state.taskStates[taskId] || state.taskStates[taskId] !== TaskState.Imagined) {
+        return state;
+    }
+
+    return {
+        ...state,
+        researchProgress: {
+            taskId,
+            progress: 0,
+            total: 30
+        }
+    };
+}
+
+export function updateResearch(state: GameState, delta: number): GameState {
+    if (!state.researchProgress.taskId) {
+        return state;
+    }
+
+    const newProgress = state.researchProgress.progress + delta;
+    
+    if (newProgress >= state.researchProgress.total) {
+        const taskId = state.researchProgress.taskId;
+        return {
+            ...state,
+            taskStates: {
+                ...state.taskStates,
+                [taskId]: TaskState.Discovered
+            },
+            researchProgress: {
+                taskId: null,
+                progress: 0,
+                total: 0
+            }
+        };
+    }
+
+    return {
+        ...state,
+        researchProgress: {
+            ...state.researchProgress,
+            progress: newProgress
+        }
+    };
 }
 
 export function allToHunting(state: GameState): GameState {
