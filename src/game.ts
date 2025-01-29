@@ -14,15 +14,24 @@ class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
+    private interface ActivityButton extends Phaser.GameObjects.Text {
+        setEnabled(enabled: boolean): void;
+        enabled: boolean;
+    }
+
     private huntingCard: {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
+        plusButton: ActivityButton;
+        minusButton: ActivityButton;
     };
     private thinkingCard: {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
+        plusButton: ActivityButton;
+        minusButton: ActivityButton;
     };
 
     constructor() {
@@ -84,7 +93,9 @@ class MainScene extends Phaser.Scene {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
-    } {
+        plusButton: ActivityButton;
+        minusButton: ActivityButton;
+    } { 
         const container = this.add.container(x, y);
         
         // Background
@@ -111,34 +122,58 @@ class MainScene extends Phaser.Scene {
         });
         
         // Add buttons with handlers
+        // Modified plus button
         const plusButton = this.add.text(160, 50, '+', {
             color: '#ffffff',
             fontSize: '24px',
             backgroundColor: '#27ae60'
-        })
-        .setInteractive()
-        .setData('activity', activity)
-        .on('pointerdown', () => {
-            // Try to move someone from unassigned to this activity
-            this.handleReassignment('unassigned', activity);
-            
-            // If no unassigned workers, try to move from the other activity
-            if (this.gameState.population.unassigned === 0) {
-                const otherActivity: Activity = activity === 'hunting' ? 'thinking' : 'hunting';
-                this.handleReassignment(otherActivity, activity);
+        }) as ActivityButton;
+        
+        plusButton.setInteractive()
+            .setData('activity', activity);
+        
+        plusButton.enabled = true;
+        plusButton.setEnabled = function(enabled: boolean) {
+            this.enabled = enabled;
+            this.setAlpha(enabled ? 1 : 0.5);
+            if (enabled) {
+                this.setInteractive();
+            } else {
+                this.removeInteractive();
+            }
+        };
+
+        plusButton.on('pointerdown', () => {
+            if (plusButton.enabled && this.gameState.population.unassigned > 0) {
+                this.handleReassignment('unassigned', activity);
             }
         });
-        
+
+        // Modified minus button
         const minusButton = this.add.text(160, 80, '-', {
             color: '#ffffff',
             fontSize: '24px',
             backgroundColor: '#c0392b'
-        })
-        .setInteractive()
-        .setData('activity', activity)
-        .on('pointerdown', () => {
-            // Move worker to unassigned
-            this.handleReassignment(activity, 'unassigned');
+        }) as ActivityButton;
+        
+        minusButton.setInteractive()
+            .setData('activity', activity);
+        
+        minusButton.enabled = true;
+        minusButton.setEnabled = function(enabled: boolean) {
+            this.enabled = enabled;
+            this.setAlpha(enabled ? 1 : 0.5);
+            if (enabled) {
+                this.setInteractive();
+            } else {
+                this.removeInteractive();
+            }
+        };
+
+        minusButton.on('pointerdown', () => {
+            if (minusButton.enabled && this.gameState.population[activity] > 0) {
+                this.handleReassignment(activity, 'unassigned');
+            }
         });
         
         container.add([bg, titleText, countText, contributionText, plusButton, minusButton]);
@@ -146,14 +181,28 @@ class MainScene extends Phaser.Scene {
         return { container, countText, contributionText };
     }
 
+    private updateButtonStates(): void {
+        const hasUnassigned = this.gameState.population.unassigned > 0;
+        
+        // Update hunting card buttons
+        this.huntingCard.plusButton.setEnabled(hasUnassigned);
+        this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
+        
+        // Update thinking card buttons
+        this.thinkingCard.plusButton.setEnabled(hasUnassigned);
+        this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
+    }
+
     private updateActivityCards(): void {
-        // Update hunting card
+        // Existing card updates
         this.huntingCard.countText.setText(`Workers: ${this.gameState.population.hunting}`);
         this.huntingCard.contributionText.setText(`+2 food/worker/sec`);
         
-        // Update thinking card
         this.thinkingCard.countText.setText(`Workers: ${this.gameState.population.thinking}`);
         this.thinkingCard.contributionText.setText(`+1 thought/worker/sec`);
+        
+        // Update button states
+        this.updateButtonStates();
     }
 
     private updateDebugDisplay(): void {
@@ -200,6 +249,7 @@ class MainScene extends Phaser.Scene {
         // Update debug display
         this.updateDebugDisplay();
         this.updateActivityCards();
+        this.updateButtonStates();
     }
 }
 
