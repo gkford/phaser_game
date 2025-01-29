@@ -222,7 +222,7 @@ export function allToHunting(state: GameState): GameState {
         population: {
             ...state.population,
             hunting: state.population.total,
-            thinking: 0,
+            thinkingL1: 0,
             unassigned: 0
         }
     };
