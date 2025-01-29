@@ -173,6 +173,37 @@ class MainScene extends Phaser.Scene {
         this.updateButtonStates();
     }
 
+    private createResearchBar(x: number, y: number, width: number = 180): Phaser.GameObjects.Container {
+        const container = this.add.container(x, y);
+        
+        // Background
+        const bg = this.add.rectangle(0, 0, width, 20, 0x666666);
+        bg.setOrigin(0, 0);
+        
+        // Progress bar
+        const bar = this.add.rectangle(2, 2, 0, 16, 0x00ff00);
+        bar.setOrigin(0, 0);
+        
+        // Progress text
+        const text = this.add.text(width / 2, 10, '0%', {
+            color: '#ffffff',
+            fontSize: '12px'
+        });
+        text.setOrigin(0.5);
+        
+        container.add([bg, bar, text]);
+        
+        // Add update method
+        container.setData('updateProgress', (progress: number, total: number) => {
+            const percentage = (progress / total) * 100;
+            const barWidth = (width - 4) * (progress / total);
+            bar.width = barWidth;
+            text.setText(`${Math.floor(percentage)}%`);
+        });
+        
+        return container;
+    }
+
     private createActivityCard(x: number, y: number, title: string, activity: 'hunting' | 'thinking'): {
         container: Phaser.GameObjects.Container;
         countText: Phaser.GameObjects.Text;
