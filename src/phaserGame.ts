@@ -147,13 +147,13 @@ export default class MainScene extends Phaser.Scene {
           this.buttons[`${taskId}-minus`] = this.add
             .text(35, this.taskPositions[taskId] + 55, "[-]", { fontSize: "16px", color: "#f00" })
             .setInteractive()
-            .on("pointerdown", () => this.handleReassign(taskId, "unassigned"));
+            .on("pointerdown", () => this.handleReassign(taskId, "remove"));
         }
         if (!this.buttons[`${taskId}-plus`]) {
           this.buttons[`${taskId}-plus`] = this.add
             .text(75, this.taskPositions[taskId] + 55, "[+]", { fontSize: "16px", color: "#0f0" })
             .setInteractive()
-            .on("pointerdown", () => this.handleReassign("unassigned", taskId));
+            .on("pointerdown", () => this.handleReassign(taskId, "add"));
         }
 
         // Update production text (create it if missing)
@@ -222,8 +222,9 @@ export default class MainScene extends Phaser.Scene {
     const task = this.gameState.tasks[taskId];
     if ((task.assignedWorkers.level1 + task.assignedWorkers.level2) <= 0) return ""; // No workers, no production text.
 
-    const foodRate = (task.productionPerWorker.food ?? 0) * task.assignedWorkers;
-    const thoughtRate = (task.productionPerWorker.thoughts ?? 0) * task.assignedWorkers;
+    const assignedSum = task.assignedWorkers.level1 + task.assignedWorkers.level2;
+    const foodRate = (task.productionPerWorker.food ?? 0) * assignedSum;
+    const thoughtRate = (task.productionPerWorker.thoughts ?? 0) * assignedSum;
     
     const parts = [];
     if (foodRate > 0) {
@@ -244,11 +245,8 @@ export default class MainScene extends Phaser.Scene {
       
       // Handle Unthoughtof -> Imagined transition
       if (oldTask.state === TaskState.Unthoughtof && newTask.state === TaskState.Imagined) {
-        // Move assigned workers to unassigned
-        this.gameState.population.unassigned += newTask.assignedWorkers;
-        
         // Reset the task's workers, research progress, and focus
-        this.gameState.tasks[taskId].assignedWorkers = 0;
+        this.gameState.tasks[taskId].assignedWorkers = { level1: 0, level2: 0 };
         this.gameState.tasks[taskId].researchProgress.toDiscoveredCurrent = 0;
         this.gameState.tasks[taskId].isFocused = false;
 

@@ -4,28 +4,6 @@ export enum TaskState {
   Discovered = "DISCOVERED",
 }
 
-export interface Task {
-  id: string;
-  state: TaskState;
-  assignedWorkers: {
-    level1: number;
-    level2: number;
-  };
-  productionPerWorker: {
-    food?: number;
-    thoughts?: number;
-  };
-  researchProgress: {
-    toImaginedCurrent: number;
-    toImaginedRequired: number;
-    toDiscoveredCurrent: number;
-    toDiscoveredRequired: number;
-  };
-  prerequisites: string[];
-  isFocused: boolean;
-  acceptedWorkerLevels: number[];
-}
-
 export type WorkerLevelKey = "level1" | "level2";
 
 export interface GameState {
