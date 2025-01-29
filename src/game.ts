@@ -9,7 +9,8 @@ import {
     reassignWorker,
     allToHunting,
     updateTaskStates,
-    updateResearch
+    updateResearch,
+    TaskState
 } from './types';
 
 interface ActivityButton extends Phaser.GameObjects.Text {
