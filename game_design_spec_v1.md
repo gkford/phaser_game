@@ -147,7 +147,7 @@ Thoughts Production: +1/human/second
 - Production Rate: 1.5 food/human/second
 - Prerequisites: Thinking Level 1
 - Research Costs:
-  - Unthoughtof → Imagined: ___ thoughts
-  - Imagined → Discovered: ___ thoughts
+  - Unthoughtof → Imagined: 50 thoughts
+  - Imagined → Discovered: 100 thoughts
 
 
