@@ -7,7 +7,22 @@ class MainScene extends Phaser.Scene {
 
     constructor() {
         super({ key: 'MainScene' });
-        this.gameState = { ...INITIAL_STATE };
+        const initialState = { ...INITIAL_STATE };
+        if (!validateGameState(initialState)) {
+            throw new Error('Invalid initial game state');
+        }
+        this.gameState = initialState;
+    }
+
+    private updateGameState(newState: GameState): boolean {
+        // Validate before updating
+        if (!validateGameState(newState)) {
+            return false;
+        }
+        
+        // If valid, update the state
+        this.gameState = { ...newState };
+        return true;
     }
 
     create(): void {
