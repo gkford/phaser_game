@@ -328,7 +328,25 @@ class MainScene extends Phaser.Scene {
     }
 
     private validateGameSystems(): void {
-        // Test assignment combinations
+        // Create and show loading screen
+        const loadingBg = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.7);
+        loadingBg.setOrigin(0, 0);
+        loadingBg.setDepth(2000);
+        
+        const loadingText = this.add.text(400, 300, 'Validating game systems...', {
+            color: '#ffffff',
+            fontSize: '24px',
+            align: 'center'
+        });
+        loadingText.setOrigin(0.5);
+        loadingText.setDepth(2000);
+
+        // Store original emergency show function
+        const originalShowEmergency = this.showEmergencyOverlay;
+        // Temporarily disable emergency overlay
+        this.showEmergencyOverlay = () => {};
+
+        // Run validations
         console.log('=== Game Systems Validation ===');
         
         // Test state validation
@@ -337,7 +355,7 @@ class MainScene extends Phaser.Scene {
             ...this.gameState,
             population: {
                 ...this.gameState.population,
-                total: 11  // Should fail validation
+                total: 11
             }
         };
         console.assert(!validateGameState(invalidState), 'Invalid state was not caught');
@@ -380,6 +398,14 @@ class MainScene extends Phaser.Scene {
         );
 
         console.log('=== Validation Complete ===');
+
+        // Restore original game state and emergency function
+        this.updateGameState(INITIAL_STATE);
+        this.showEmergencyOverlay = originalShowEmergency;
+
+        // Remove loading screen
+        loadingBg.destroy();
+        loadingText.destroy();
     }
 
     private updateDebugDisplay(): void {
