@@ -240,9 +240,10 @@ export default class MainScene extends Phaser.Scene {
         // Move assigned workers to unassigned
         this.gameState.population.unassigned += newTask.assignedWorkers;
         
-        // Reset the task's workers and research progress
+        // Reset the task's workers, research progress, and focus
         this.gameState.tasks[taskId].assignedWorkers = 0;
         this.gameState.tasks[taskId].researchProgress.toDiscoveredCurrent = 0;
+        this.gameState.tasks[taskId].isFocused = false;
 
         // Show popup
         this.showPopup(`You have imagined the possibility of a new task: ${formatTaskTitle(taskId)}`);
