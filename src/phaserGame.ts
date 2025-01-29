@@ -8,6 +8,7 @@ export default class MainScene extends Phaser.Scene {
   taskTexts: Record<string, Phaser.GameObjects.Text> = {};
   buttons: Record<string, Phaser.GameObjects.Text> = {};
   taskPositions: Record<string, number> = {};
+  productionTexts: Record<string, Phaser.GameObjects.Text> = {};
 
   constructor() {
     super("MainScene");
@@ -55,6 +56,16 @@ export default class MainScene extends Phaser.Scene {
           .text(75, yOffset + 55, "[+]", { fontSize: "16px", color: "#0f0" })
           .setInteractive()
           .on("pointerdown", () => this.handleReassign("unassigned", taskId));
+
+        // Create production text, to the right of the + button:
+        this.productionTexts[taskId] = this.add.text(
+          120, 
+          yOffset + 55, 
+          this.getProductionText(taskId), 
+          { fontSize: "16px", color: "#fff" }
+        );
+        // Only show if there's actually some assigned workers
+        this.productionTexts[taskId].setVisible(task.assignedWorkers > 0);
       }
 
       // Add Research Button for Imagined Tasks
@@ -122,6 +133,24 @@ export default class MainScene extends Phaser.Scene {
             .setInteractive()
             .on("pointerdown", () => this.handleReassign("unassigned", taskId));
         }
+
+        // Update production text (create it if missing)
+        if (!this.productionTexts[taskId]) {
+          this.productionTexts[taskId] = this.add.text(
+            120,
+            this.taskPositions[taskId] + 55,
+            "",
+            { fontSize: "16px", color: "#fff" }
+          );
+        }
+        this.productionTexts[taskId].setText(this.getProductionText(taskId));
+        this.productionTexts[taskId].setVisible(task.assignedWorkers > 0);
+      } else {
+        // If the task is no longer discovered, remove/hide any existing production text
+        if (this.productionTexts[taskId]) {
+          this.productionTexts[taskId].destroy();
+          delete this.productionTexts[taskId];
+        }
       }
     });
   }
@@ -154,6 +183,23 @@ export default class MainScene extends Phaser.Scene {
     }
 
     return text;
+  }
+
+  private getProductionText(taskId: string): string {
+    const task = this.gameState.tasks[taskId];
+    if (task.assignedWorkers <= 0) return ""; // No workers, no production text.
+
+    const foodRate = (task.productionPerWorker.food ?? 0) * task.assignedWorkers;
+    const thoughtRate = (task.productionPerWorker.thoughts ?? 0) * task.assignedWorkers;
+    
+    const parts = [];
+    if (foodRate > 0) {
+      parts.push(`${foodRate.toFixed(1)} food/sec`);
+    }
+    if (thoughtRate > 0) {
+      parts.push(`${thoughtRate.toFixed(1)} thoughts/sec`);
+    }
+    return parts.join(" + ");
   }
 
   handleReassign(fromTask: string, toTask: string) {
