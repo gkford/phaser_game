@@ -17,6 +17,7 @@ export interface GameState {
         hunting: number;
         thinkingL1: number;
         unassigned: number;
+        foodGathering: number;
     };
     taskStates: Record<string, TaskState>;
     researchProgress: ResearchProgress;
@@ -27,9 +28,10 @@ export const INITIAL_STATE: GameState = {
     food: 0,
     population: {
         total: 10,
-        hunting: 10,
+        hunting: 0,
         thinkingL1: 0,
-        unassigned: 0
+        unassigned: 0,
+        foodGathering: 10
     },
     taskStates: {
         'foodGathering': TaskState.Discovered,
