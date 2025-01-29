@@ -124,4 +124,26 @@ Thoughts Production: +1/human/second
 3. Hunting requires completed research before assignments
 
 
+## Task Statistics Reference
+
+### Initial Tasks
+
+**Food Gathering**
+- Initial State: Discovered
+- Production Rate: ___ food/human/second
+- Prerequisites: None
+- Research Cost: N/A (starts discovered)
+
+**Thinking Level 1**
+- Initial State: Discovered
+- Production Rate: ___ thoughts/human/second
+- Prerequisites: None
+- Research Cost: N/A (starts discovered)
+
+**Hunting**
+- Initial State: Unthoughtof
+- Production Rate: ___ food/human/second
+- Prerequisites: _______
+- Research Cost: ___ thoughts
+
 
