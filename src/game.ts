@@ -157,12 +157,20 @@ class MainScene extends Phaser.Scene {
     }
 
     private updateDebugDisplay(): void {
-        const foodRate = calculateFoodRate(this.gameState);
+        // Calculate detailed rates
+        const foodProductionRate = this.gameState.population.hunting * 2;
+        const foodConsumptionRate = this.gameState.population.total;
+        const netFoodRate = calculateFoodRate(this.gameState);
         const thoughtRate = calculateThoughtRate(this.gameState);
         
         const debugInfo = [
             `Food Storage: ${Math.floor(this.gameState.food)}`,
-            `Food Rate: ${foodRate >= 0 ? '+' : ''}${foodRate}/sec`,
+            '',
+            'Food Rates:',
+            `  Production: +${foodProductionRate}/sec`,
+            `  Consumption: -${foodConsumptionRate}/sec`,
+            `  Net Rate: ${netFoodRate >= 0 ? '+' : ''}${netFoodRate}/sec`,
+            '',
             `Thought Rate: ${thoughtRate}/sec`,
             '',
             'Population:',
