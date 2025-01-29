@@ -63,6 +63,28 @@ export function createInitialGameState(): GameState {
 export function reassignWorker(state: GameState, fromTaskId: string, toTaskId: string): GameState {
   const newState = cloneDeep(state);
 
+  // Special handling for unassigned workers
+  if (fromTaskId === "unassigned") {
+    if (newState.population.unassigned <= 0) {
+      console.error("No unassigned workers available");
+      return state;
+    }
+    newState.tasks[toTaskId].assignedWorkers++;
+    newState.population.unassigned--;
+    return newState;
+  }
+
+  if (toTaskId === "unassigned") {
+    if (newState.tasks[fromTaskId].assignedWorkers <= 0) {
+      console.error(`No workers available in ${fromTaskId}`);
+      return state;
+    }
+    newState.tasks[fromTaskId].assignedWorkers--;
+    newState.population.unassigned++;
+    return newState;
+  }
+
+  // Regular task to task reassignment
   if (newState.tasks[fromTaskId].assignedWorkers <= 0) {
     console.error(`No workers available in ${fromTaskId}`);
     return state;
@@ -70,8 +92,7 @@ export function reassignWorker(state: GameState, fromTaskId: string, toTaskId: s
 
   newState.tasks[fromTaskId].assignedWorkers--;
   newState.tasks[toTaskId].assignedWorkers++;
-  newState.population.unassigned = newState.population.total - Object.values(newState.tasks).reduce((sum, task) => sum + task.assignedWorkers, 0);
-
+  
   return newState;
 }
 
