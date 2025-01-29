@@ -7,6 +7,7 @@ export default class MainScene extends Phaser.Scene {
   resourceText!: Phaser.GameObjects.Text;
   taskTexts: Record<string, Phaser.GameObjects.Text> = {};
   buttons: Record<string, Phaser.GameObjects.Text> = {};
+  taskPositions: Record<string, number> = {};
 
   constructor() {
     super("MainScene");
@@ -31,6 +32,9 @@ export default class MainScene extends Phaser.Scene {
     // Create Task Cards
     let yOffset = 150;
     Object.entries(this.gameState.tasks).forEach(([taskId, task]) => {
+      const taskPositionY = yOffset;
+      this.taskPositions[taskId] = taskPositionY;
+      
       // Create background rectangle for card
       this.add.rectangle(20, yOffset, 600, 105, 0x333333)
         .setOrigin(0, 0)
@@ -91,6 +95,33 @@ export default class MainScene extends Phaser.Scene {
         const focusText = task.isFocused ? "[Stop Focus]" : "[Focus Thinking]";
         this.buttons[`${taskId}-focus`].setText(focusText);
         this.buttons[`${taskId}-focus`].setColor(task.isFocused ? "#ff0" : "#fff");
+      }
+
+      // Handle dynamic button updates based on task state
+      if (task.state === TaskState.Discovered) {
+        // Remove Focus/Research buttons if they exist
+        if (this.buttons[`${taskId}-focus`]) {
+          this.buttons[`${taskId}-focus`].destroy();
+          delete this.buttons[`${taskId}-focus`];
+        }
+        if (this.buttons[`${taskId}-research`]) {
+          this.buttons[`${taskId}-research`].destroy();
+          delete this.buttons[`${taskId}-research`];
+        }
+
+        // Create +/- buttons if they don't exist yet
+        if (!this.buttons[`${taskId}-minus`]) {
+          this.buttons[`${taskId}-minus`] = this.add
+            .text(35, this.taskPositions[taskId] + 55, "[-]", { fontSize: "16px", color: "#f00" })
+            .setInteractive()
+            .on("pointerdown", () => this.handleReassign(taskId, "unassigned"));
+        }
+        if (!this.buttons[`${taskId}-plus`]) {
+          this.buttons[`${taskId}-plus`] = this.add
+            .text(75, this.taskPositions[taskId] + 55, "[+]", { fontSize: "16px", color: "#0f0" })
+            .setInteractive()
+            .on("pointerdown", () => this.handleReassign("unassigned", taskId));
+        }
       }
     });
   }
