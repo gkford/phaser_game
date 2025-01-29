@@ -261,6 +261,46 @@ class MainScene extends Phaser.Scene {
         // Tooltip for prerequisites
         const tooltip = this.createTooltip('');
         
+        // Create plus/minus buttons
+        const plusButton = this.add.text(160, 50, '+', {
+            color: '#ffffff',
+            fontSize: '24px',
+            backgroundColor: '#27ae60',
+            padding: { x: 10, y: 5 }
+        }) as ActivityButton;
+        plusButton.setInteractive();
+        plusButton.enabled = true;
+        plusButton.setEnabled = function(enabled: boolean) {
+            this.enabled = enabled;
+            this.setAlpha(enabled ? 1 : 0.5);
+        };
+        plusButton.on('pointerdown', () => {
+            if (plusButton.enabled) {
+                this.handleReassignment('unassigned', activity as Activity);
+            }
+        });
+
+        const minusButton = this.add.text(120, 50, '-', {
+            color: '#ffffff',
+            fontSize: '24px',
+            backgroundColor: '#c0392b',
+            padding: { x: 12, y: 5 }
+        }) as ActivityButton;
+        minusButton.setInteractive();
+        minusButton.enabled = true;
+        minusButton.setEnabled = function(enabled: boolean) {
+            this.enabled = enabled;
+            this.setAlpha(enabled ? 1 : 0.5);
+        });
+        minusButton.on('pointerdown', () => {
+            if (minusButton.enabled) {
+                this.handleReassignment(activity as Activity, 'unassigned');
+            }
+        });
+
+        // Add buttons to container
+        container.add([plusButton, minusButton]);
+        
         // Add hover handlers for tooltip
         bg.setInteractive();
         bg.on('pointerover', () => {
@@ -283,8 +323,8 @@ class MainScene extends Phaser.Scene {
             container,
             countText,
             contributionText,
-            plusButton: null as any,
-            minusButton: null as any,
+            plusButton,
+            minusButton,
             researchButton,
             researchBar,
             border,
