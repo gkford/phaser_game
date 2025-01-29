@@ -33,10 +33,10 @@
 
 ## Phase 2: UI & Interaction ⏳
 
-- [ ] Build activity cards with:
-  - [ ] Assignment count displays
-  - [ ] +/- buttons (disabled when unavailable)
-  - [ ] Net contribution labels
+- [x] Build activity cards with:
+  - [x] Assignment count displays
+  - [x] +/- buttons (needs handler implementation)
+  - [x] Net contribution labels
 - [ ] Implement button handlers
 - [ ] Create emergency detection system
 
