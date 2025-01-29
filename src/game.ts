@@ -19,6 +19,15 @@ class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
+    
+    private emergencyOverlay: {
+        container: Phaser.GameObjects.Container;
+        background: Phaser.GameObjects.Rectangle;
+        text: Phaser.GameObjects.Text;
+        button: Phaser.GameObjects.Text;
+    } | null = null;
+
+    private isEmergencyActive: boolean = false;
 
     private huntingCard: {
         container: Phaser.GameObjects.Container;
@@ -187,24 +196,43 @@ class MainScene extends Phaser.Scene {
         
         // Emergency conditions: food is 0 or less AND food rate is negative or zero
         if (this.gameState.food <= 0 && foodRate <= 0) {
-            console.log('Emergency: Food shortage detected!');
-            // Reset all workers to hunting
-            this.handleEmergencyReset();
-            // Update all displays
-            this.updateDebugDisplay();
-            this.updateActivityCards();
-            this.updateButtonStates();
+            if (!this.isEmergencyActive) {
+                console.log('Emergency: Food shortage detected!');
+                // Reset all workers to hunting
+                this.handleEmergencyReset();
+                // Show emergency overlay
+                this.showEmergencyOverlay();
+            }
+        } else if (this.isEmergencyActive && this.gameState.food > 0 && foodRate > 0) {
+            // Emergency is over
+            this.isEmergencyActive = false;
+            if (this.emergencyOverlay) {
+                this.emergencyOverlay.container.setVisible(false);
+            }
         }
+        
+        // Update all displays
+        this.updateDebugDisplay();
+        this.updateActivityCards();
+        this.updateButtonStates();
     }
 
     private updateButtonStates(): void {
         const hasUnassigned = this.gameState.population.unassigned > 0;
         
-        // Update hunting card buttons
+        // During emergency, only hunting is allowed
+        if (this.isEmergencyActive) {
+            this.huntingCard.plusButton.setEnabled(hasUnassigned);
+            this.huntingCard.minusButton.setEnabled(false);
+            this.thinkingCard.plusButton.setEnabled(false);
+            this.thinkingCard.minusButton.setEnabled(false);
+            return;
+        }
+        
+        // Normal button state updates
         this.huntingCard.plusButton.setEnabled(hasUnassigned);
         this.huntingCard.minusButton.setEnabled(this.gameState.population.hunting > 0);
         
-        // Update thinking card buttons
         this.thinkingCard.plusButton.setEnabled(hasUnassigned);
         this.thinkingCard.minusButton.setEnabled(this.gameState.population.thinking > 0);
     }
@@ -219,6 +247,55 @@ class MainScene extends Phaser.Scene {
         
         // Update button states
         this.updateButtonStates();
+    }
+
+    private createEmergencyOverlay(): void {
+        // Create semi-transparent background
+        const background = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.7);
+        background.setOrigin(0, 0);
+
+        // Create warning text
+        const text = this.add.text(400, 250, 'EMERGENCY: Food Shortage!\nAll workers reassigned to hunting.', {
+            color: '#ff0000',
+            fontSize: '24px',
+            align: 'center'
+        });
+        text.setOrigin(0.5);
+
+        // Create dismiss button
+        const button = this.add.text(400, 350, 'Understood', {
+            color: '#ffffff',
+            fontSize: '20px',
+            backgroundColor: '#c0392b',
+            padding: { x: 20, y: 10 }
+        });
+        button.setOrigin(0.5);
+        button.setInteractive();
+        button.on('pointerdown', () => {
+            this.hideEmergencyOverlay();
+        });
+
+        // Create container and add elements
+        const container = this.add.container(0, 0, [background, text, button]);
+        container.setDepth(1000); // Ensure it appears above everything else
+
+        this.emergencyOverlay = { container, background, text, button };
+    }
+
+    private showEmergencyOverlay(): void {
+        if (!this.emergencyOverlay) {
+            this.createEmergencyOverlay();
+        }
+        this.emergencyOverlay?.container.setVisible(true);
+        this.isEmergencyActive = true;
+    }
+
+    private hideEmergencyOverlay(): void {
+        if (this.emergencyOverlay) {
+            this.emergencyOverlay.container.setVisible(false);
+        }
+        // Note: We don't set isEmergencyActive to false here
+        // That only happens when food situation improves
     }
 
     private updateDebugDisplay(): void {
