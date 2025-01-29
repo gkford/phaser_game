@@ -65,7 +65,6 @@ export default class MainScene extends Phaser.Scene {
           this.getProductionText(taskId), 
           { fontSize: "16px", color: "#fff" }
         );
-        // Only show if there's actually some assigned workers
         this.productionTexts[taskId].setVisible(
           (task.assignedWorkers.level1 + task.assignedWorkers.level2) > 0
         );
@@ -182,13 +181,26 @@ export default class MainScene extends Phaser.Scene {
   }
 
   getResourceText(): string {
-    return `🍖 Food: ${Math.floor(this.gameState.resources.food)}
+    const food = Math.floor(this.gameState.resources.food);
+
+    const l1ThoughtRate = Object.values(this.gameState.tasks).reduce(
+      (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers.level1,
+      0
+    );
+
+    const l2ThoughtRate = Object.values(this.gameState.tasks).reduce(
+      (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers.level2,
+      0
+    );
+
+    const totalThoughtRate = l1ThoughtRate + l2ThoughtRate;
+
+    return `🍖 Food: ${food}
     | L1 Workers: ${this.gameState.workers.level1.assigned}/${this.gameState.workers.level1.total}
     | L2 Workers: ${this.gameState.workers.level2.assigned}/${this.gameState.workers.level2.total}
-    | 🧠 Thought Rate: ${Object.values(this.gameState.tasks).reduce(
-        (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * (t.assignedWorkers.level1 + t.assignedWorkers.level2),
-        0
-      )}`;
+    | 🧠 L1 Thought Rate: ${l1ThoughtRate.toFixed(1)}
+    | 🧠 L2 Thought Rate: ${l2ThoughtRate.toFixed(1)}
+    | 🧠 Combined Thought Rate: ${totalThoughtRate.toFixed(1)} (* L2 thinking is 1.5 each)`;
   }
 
   getTaskText(taskId: string): string {
