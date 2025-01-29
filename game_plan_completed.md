@@ -13,12 +13,12 @@
 
 ## Phase 1: Core Systems 🚧
 
-- [ ] Implement rate calculations:
-  - [ ] calculateFoodRate(state) → net food/sec
-    - [ ] Each hunter produces 2 food/sec
-    - [ ] Each person consumes 1 food/sec
-  - [ ] calculateThoughtRate(state) → thoughts/sec
-    - [ ] Each thinker produces 1 thought/sec
+- [x] Implement rate calculations:
+  - [x] calculateFoodRate(state) → net food/sec
+    - [x] Each hunter produces 2 food/sec
+    - [x] Each person consumes 1 food/sec
+  - [x] calculateThoughtRate(state) → thoughts/sec
+    - [x] Each thinker produces 1 thought/sec
 - [ ] Build state transition system:
   - [ ] reassignWorker(fromActivity, toActivity)
   - [ ] Emergency reset function (allToHunting())
