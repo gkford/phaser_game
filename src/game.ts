@@ -31,6 +31,7 @@ interface ActivityCard {
     researchBar?: Phaser.GameObjects.Container;
     border?: Phaser.GameObjects.Rectangle;
     tooltip?: Phaser.GameObjects.Container;
+    lockIcon: Phaser.GameObjects.Text;
 }
 
 class MainScene extends Phaser.Scene {
@@ -292,8 +293,14 @@ class MainScene extends Phaser.Scene {
             }
         });
 
+        // Add lock icon (initially hidden)
+        const lockIcon = this.add.text(170, 10, '🔒', {
+            fontSize: '20px'
+        });
+        lockIcon.setVisible(false);
+
         // Add buttons to container
-        container.add([plusButton, minusButton, border, bg, titleText, countText, contributionText, researchButton, researchBar, tooltip]);
+        container.add([plusButton, minusButton, border, bg, titleText, countText, contributionText, researchButton, researchBar, tooltip, lockIcon]);
         
         // Add hover handlers for tooltip
         bg.setInteractive();
