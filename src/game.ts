@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { GameState, TaskState } from "./types";
+import { GameState, TaskState, WorkerLevelKey } from "./types";
 import { initialTasks } from "./tasks";
 
 // Initializes game state with predefined tasks.
