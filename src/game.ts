@@ -309,8 +309,6 @@ class MainScene extends Phaser.Scene {
             tooltip.setVisible(false);
         });
         
-        // Add all elements to container
-        
         return {
             container,
             bg,
