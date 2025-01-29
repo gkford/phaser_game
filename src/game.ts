@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GameState, INITIAL_STATE } from './types';
+import { GameState, INITIAL_STATE, validateGameState } from './types';
 
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
