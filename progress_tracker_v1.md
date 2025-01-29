@@ -58,7 +58,3 @@
   - [ ] Pulse animation on state transitions
   - [ ] Thought particles animation during research
   - [ ] Food icons animation during consumption/production
-- [ ] Implement audio:
-  - [ ] Research complete sound
-  - [ ] Emergency alarm sound
-  - [ ] Button click sounds
