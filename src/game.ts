@@ -10,14 +10,15 @@ import {
     allToHunting 
 } from './types';
 
+interface ActivityButton extends Phaser.GameObjects.Text {
+    setEnabled(enabled: boolean): void;
+    enabled: boolean;
+}
+
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
-    private interface ActivityButton extends Phaser.GameObjects.Text {
-        setEnabled(enabled: boolean): void;
-        enabled: boolean;
-    }
 
     private huntingCard: {
         container: Phaser.GameObjects.Container;
