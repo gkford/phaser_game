@@ -23,13 +23,13 @@
   - [x] reassignWorker(fromActivity, toActivity)
   - [x] Emergency reset function (allToHunting())
   - [x] Validate transitions maintain population constraints
-- [ ] Create basic debug UI:
-  - [ ] Text labels showing raw state values
-    - [ ] Current food storage
-    - [ ] Net food per second
-    - [ ] Current thoughts per second
-    - [ ] Total population
-  - [ ] Rate displays (+3 food/sec style)
+- [x] Create basic debug UI:
+  - [x] Text labels showing raw state values
+    - [x] Current food storage
+    - [x] Net food per second
+    - [x] Current thoughts per second
+    - [x] Total population
+  - [x] Rate displays (+3 food/sec style)
 
 ## Phase 2: UI & Interaction ⏳
 
