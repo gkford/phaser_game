@@ -1,18 +1,18 @@
 # Game Plan V1 Implementation Progress
 
 ## Phase 0: Foundation ⏳
-- [ ] Extend GameState interface:
-  - [ ] Add `TaskState` enum (Unthoughtof/Imagined/Discovered)
-  - [ ] Add `taskStates: Record<string, TaskState>`
-  - [ ] Add `researchProgress: { current?: string; progress: number; total: number }`
-  - [ ] Add `prerequisites: Record<string, string[]>`
-- [ ] Implement base research system:
-  - [ ] Add `startResearch(taskId: string)` function
-  - [ ] Add `updateResearchProgress(delta: number)` in game loop
-- [ ] Set up initial tasks in GameState:
-  - [ ] Configure food-gathering as Discovered
-  - [ ] Configure thinking-l1 as Imagined
-  - [ ] Configure hunting as Unthoughtof
+- [x] Extend GameState interface:
+  - [x] Add `TaskState` enum (Unthoughtof/Imagined/Discovered)
+  - [x] Add `taskStates: Record<string, TaskState>`
+  - [x] Add `researchProgress: { taskId: string | null; progress: number; total: number }`
+  - [x] Add `prerequisites: Record<string, string[]>`
+- [x] Implement base research system:
+  - [x] Add `startResearch(taskId: string)` function
+  - [x] Add `updateResearch(delta: number)` function
+- [x] Set up initial tasks in GameState:
+  - [x] Configure food-gathering as Discovered
+  - [x] Configure thinking-l1 as Imagined
+  - [x] Configure hunting as Unthoughtof
 
 ## Phase 1: Core Systems ⏳
 - [ ] Implement task state machine:
