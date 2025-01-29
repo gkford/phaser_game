@@ -40,7 +40,8 @@ class MainScene extends Phaser.Scene {
 
     private huntingCard!: {
         container: Phaser.GameObjects.Container;
-        countText: Phaser.GameObjects.Text;
+        bg: Phaser.GameObjects.Rectangle;
+        titleText: Phaser.GameObjects.Text;
         contributionText: Phaser.GameObjects.Text;
         plusButton: ActivityButton;
         minusButton: ActivityButton;
@@ -300,7 +301,7 @@ class MainScene extends Phaser.Scene {
         });
 
         // Add buttons to container
-        container.add([plusButton, minusButton]);
+        container.add([plusButton, minusButton, border, bg, titleText, countText, contributionText, researchButton, researchBar, tooltip]);
         
         // Add hover handlers for tooltip
         bg.setInteractive();
@@ -318,7 +319,6 @@ class MainScene extends Phaser.Scene {
         });
         
         // Add all elements to container
-        container.add([border, bg, titleText, countText, contributionText, researchButton, researchBar, tooltip]);
         
         return {
             container,
@@ -387,7 +387,7 @@ class MainScene extends Phaser.Scene {
             const style = this.getCardStyle(taskState);
             
             // Update background and border
-            const bg = card.container.getAt(1);
+            const bg = card.bg;
             bg.fillColor = style.backgroundColor;
             bg.fillAlpha = style.alpha;
             
@@ -399,7 +399,7 @@ class MainScene extends Phaser.Scene {
             }
             
             // Update title and content based on state
-            const titleText = card.container.getAt(2);
+            const titleText = card.titleText;
             titleText.setText(taskState === TaskState.Unthoughtof ? '????' : title);
             
             // Update counts and controls
