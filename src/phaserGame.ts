@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { createInitialGameState, tickGame, reassignWorker, startResearch } from "./game";
+import { createInitialGameState, tickGame, reassignWorker, startResearch, toggleTaskFocus } from "./game";
 import { GameState, TaskState } from "./types";
 
 export default class MainScene extends Phaser.Scene {
