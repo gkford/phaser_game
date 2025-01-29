@@ -239,7 +239,10 @@ export default class MainScene extends Phaser.Scene {
       if (oldTask.state === TaskState.Unthoughtof && newTask.state === TaskState.Imagined) {
         // Move assigned workers to unassigned
         this.gameState.population.unassigned += newTask.assignedWorkers;
-        this.gameState.tasks[taskId].assignedWorkers = 0;  // Use gameState.tasks instead of newTask
+        
+        // Reset the task's workers and research progress
+        this.gameState.tasks[taskId].assignedWorkers = 0;
+        this.gameState.tasks[taskId].researchProgress.toDiscoveredCurrent = 0;
 
         // Show popup
         this.showPopup(`You have imagined the possibility of a new task: ${formatTaskTitle(taskId)}`);
