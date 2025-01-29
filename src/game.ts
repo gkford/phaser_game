@@ -61,6 +61,55 @@ class MainScene extends Phaser.Scene {
         this.gameState = initialState;
     }
 
+    private getCardStyle(taskState: TaskState): {
+        backgroundColor: number;
+        borderColor?: number;
+        alpha: number;
+    } {
+        switch (taskState) {
+            case TaskState.Unthoughtof:
+                return {
+                    backgroundColor: 0x34495e,
+                    alpha: 0.5
+                };
+            case TaskState.Imagined:
+                return {
+                    backgroundColor: 0x34495e,
+                    borderColor: 0xf1c40f, // Yellow glow
+                    alpha: 1
+                };
+            case TaskState.Discovered:
+                return {
+                    backgroundColor: 0x34495e,
+                    borderColor: 0x27ae60, // Green border
+                    alpha: 1
+                };
+        }
+    }
+
+    private createTooltip(text: string): Phaser.GameObjects.Container {
+        const container = this.add.container(0, 0);
+        container.setVisible(false);
+        
+        // Background
+        const bg = this.add.rectangle(0, 0, 200, 80, 0x000000, 0.8);
+        bg.setOrigin(0, 0);
+        
+        // Text
+        const tooltipText = this.add.text(10, 10, text, {
+            color: '#ffffff',
+            fontSize: '14px',
+            wordWrap: { width: 180 }
+        });
+        
+        container.add([bg, tooltipText]);
+        
+        // Adjust background height to fit text
+        bg.height = tooltipText.height + 20;
+        
+        return container;
+    }
+
 
 
     private updateGameState(newState: GameState): boolean {
@@ -130,15 +179,22 @@ class MainScene extends Phaser.Scene {
         contributionText: Phaser.GameObjects.Text;
         plusButton: ActivityButton;
         minusButton: ActivityButton;
-    } { 
+        researchButton?: Phaser.GameObjects.Text;
+        researchBar?: Phaser.GameObjects.Container;
+        border?: Phaser.GameObjects.Rectangle;
+        tooltip?: Phaser.GameObjects.Container;
+    } {
         const container = this.add.container(x, y);
         
-        // Background
+        // Background with border
+        const border = this.add.rectangle(-5, -5, 210, 160, 0x000000);
         const bg = this.add.rectangle(0, 0, 200, 150, 0x34495e);
         bg.setOrigin(0, 0);
+        border.setOrigin(0, 0);
+        border.setVisible(false);
         
-        // Title
-        const titleText = this.add.text(10, 10, title, {
+        // Title (will show ???? for Unthoughtof)
+        const titleText = this.add.text(10, 10, '????', {
             color: '#ffffff',
             fontSize: '20px',
             fontStyle: 'bold'
@@ -156,64 +212,52 @@ class MainScene extends Phaser.Scene {
             fontSize: '14px'
         });
         
-        // Add buttons with handlers
-        // Modified plus button
-        const plusButton = this.add.text(160, 50, '+', {
+        // Research button (initially hidden)
+        const researchButton = this.add.text(10, 110, 'Research', {
             color: '#ffffff',
-            fontSize: '24px',
-            backgroundColor: '#27ae60'
-        }) as ActivityButton;
+            fontSize: '16px',
+            backgroundColor: '#2980b9',
+            padding: { x: 10, y: 5 }
+        });
+        researchButton.setVisible(false);
+        researchButton.setInteractive();
         
-        plusButton.setInteractive()
-            .setData('activity', activity);
+        // Research progress bar
+        const researchBar = this.createResearchBar(10, 140);
+        researchBar.setVisible(false);
         
-        plusButton.enabled = true;
-        plusButton.setEnabled = function(enabled: boolean) {
-            this.enabled = enabled;
-            this.setAlpha(enabled ? 1 : 0.5);
-            if (enabled) {
-                this.setInteractive();
-            } else {
-                this.removeInteractive();
-            }
-        };
-
-        plusButton.on('pointerdown', () => {
-            if (plusButton.enabled && this.gameState.population.unassigned > 0) {
-                this.handleReassignment('unassigned', activity);
+        // Tooltip for prerequisites
+        const tooltip = this.createTooltip('');
+        
+        // Add hover handlers for tooltip
+        bg.setInteractive();
+        bg.on('pointerover', () => {
+            if (this.gameState.taskStates[activity] === TaskState.Unthoughtof) {
+                const prereqs = this.gameState.prerequisites[activity];
+                const tooltipText = `Requires:\n${prereqs.join('\n')}`;
+                tooltip.getAt(1).setText(tooltipText);
+                tooltip.setPosition(container.x + 210, container.y);
+                tooltip.setVisible(true);
             }
         });
-
-        // Modified minus button
-        const minusButton = this.add.text(160, 80, '-', {
-            color: '#ffffff',
-            fontSize: '24px',
-            backgroundColor: '#c0392b'
-        }) as ActivityButton;
-        
-        minusButton.setInteractive()
-            .setData('activity', activity);
-        
-        minusButton.enabled = true;
-        minusButton.setEnabled = function(enabled: boolean) {
-            this.enabled = enabled;
-            this.setAlpha(enabled ? 1 : 0.5);
-            if (enabled) {
-                this.setInteractive();
-            } else {
-                this.removeInteractive();
-            }
-        };
-
-        minusButton.on('pointerdown', () => {
-            if (minusButton.enabled && this.gameState.population[activity] > 0) {
-                this.handleReassignment(activity, 'unassigned');
-            }
+        bg.on('pointerout', () => {
+            tooltip.setVisible(false);
         });
         
-        container.add([bg, titleText, countText, contributionText, plusButton, minusButton]);
+        // Add all elements to container
+        container.add([border, bg, titleText, countText, contributionText, researchButton, researchBar, tooltip]);
         
-        return { container, countText, contributionText, plusButton, minusButton };
+        return {
+            container,
+            countText,
+            contributionText,
+            plusButton: null as any,
+            minusButton: null as any,
+            researchButton,
+            researchBar,
+            border,
+            tooltip
+        };
     }
 
     private checkEmergencyState(): void {
@@ -265,15 +309,62 @@ class MainScene extends Phaser.Scene {
     
 
     private updateActivityCards(): void {
-        // Existing card updates
-        this.huntingCard.countText.setText(`Workers: ${this.gameState.population.hunting}`);
-        this.huntingCard.contributionText.setText(`+2 food/worker/sec`);
+        const updateCard = (card: any, activity: string, title: string) => {
+            const taskState = this.gameState.taskStates[activity];
+            const style = this.getCardStyle(taskState);
+            
+            // Update background and border
+            const bg = card.container.getAt(1);
+            bg.setFillStyle(style.backgroundColor);
+            bg.setAlpha(style.alpha);
+            
+            if (style.borderColor) {
+                card.border.setFillStyle(style.borderColor);
+                card.border.setVisible(true);
+            } else {
+                card.border.setVisible(false);
+            }
+            
+            // Update title and content based on state
+            const titleText = card.container.getAt(2);
+            titleText.setText(taskState === TaskState.Unthoughtof ? '????' : title);
+            
+            // Update counts and controls
+            if (taskState === TaskState.Discovered) {
+                card.countText.setText(`Workers: ${this.gameState.population[activity]}`);
+                card.contributionText.setVisible(true);
+                card.plusButton?.setVisible(true);
+                card.minusButton?.setVisible(true);
+                card.researchButton?.setVisible(false);
+                card.researchBar?.setVisible(false);
+            } else if (taskState === TaskState.Imagined) {
+                card.countText.setText('');
+                card.contributionText.setVisible(false);
+                card.plusButton?.setVisible(false);
+                card.minusButton?.setVisible(false);
+                card.researchButton?.setVisible(!this.isEmergencyActive);
+                card.researchBar?.setVisible(this.gameState.researchProgress.taskId === activity);
+            } else {
+                card.countText.setText('');
+                card.contributionText.setVisible(false);
+                card.plusButton?.setVisible(false);
+                card.minusButton?.setVisible(false);
+                card.researchButton?.setVisible(false);
+                card.researchBar?.setVisible(false);
+            }
+            
+            // Update research progress if active
+            if (this.gameState.researchProgress.taskId === activity) {
+                card.researchBar?.getData('updateProgress')(
+                    this.gameState.researchProgress.progress,
+                    this.gameState.researchProgress.total
+                );
+            }
+        };
         
-        this.thinkingCard.countText.setText(`Workers: ${this.gameState.population.thinking}`);
-        this.thinkingCard.contributionText.setText(`+1 thought/worker/sec`);
-        
-        // Update button states
-        this.updateButtonStates();
+        // Update each card
+        updateCard(this.huntingCard, 'hunting', 'Hunting');
+        updateCard(this.thinkingCard, 'thinking', 'Thinking');
     }
 
     private createEmergencyOverlay(): void {
