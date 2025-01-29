@@ -19,6 +19,11 @@ class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer: Phaser.Time.TimerEvent;
     private debugText: Phaser.GameObjects.Text;
+    private sounds: {
+        click: Phaser.Sound.BaseSound;
+        error: Phaser.Sound.BaseSound;
+        emergency: Phaser.Sound.BaseSound;
+    } | null = null;
     
     private emergencyOverlay: {
         container: Phaser.GameObjects.Container;
@@ -54,6 +59,14 @@ class MainScene extends Phaser.Scene {
         this.gameState = initialState;
     }
 
+    private createSounds(): void {
+        this.sounds = {
+            click: this.sound.add('click'),
+            error: this.sound.add('error'),
+            emergency: this.sound.add('emergency')
+        };
+    }
+
     private updateGameState(newState: GameState): boolean {
         // Validate before updating
         if (!validateGameState(newState)) {
@@ -66,6 +79,7 @@ class MainScene extends Phaser.Scene {
     }
 
     create(): void {
+        this.createSounds();
         // Set up the 1-second game loop timer
         this.updateTimer = this.time.addEvent({
             delay: 1000,
