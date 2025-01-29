@@ -70,6 +70,22 @@ export function validateGameState(state: GameState): boolean {
         return false;
     }
 
+    // Task state validation
+    for (const [taskId, taskState] of Object.entries(state.taskStates)) {
+        if (!Object.values(TaskState).includes(taskState)) {
+            console.error(`Invalid task state for ${taskId}: ${taskState}`);
+            return false;
+        }
+    }
+
+    // Research progress validation
+    if (state.researchProgress.progress < 0 || 
+        state.researchProgress.total < 0 ||
+        state.researchProgress.progress > state.researchProgress.total) {
+        console.error('Invalid research progress values');
+        return false;
+    }
+
     return true;
 }
 
