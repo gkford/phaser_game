@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 import { createInitialGameState, tickGame, reassignWorker, startResearch, toggleTaskFocus } from "../../../core/game/state";
 import { GameState, TaskState, Task } from "../../../types";
-import { taskTitles } from "../../../core/tasks/titles";
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState;
@@ -308,7 +307,7 @@ export default class MainScene extends Phaser.Scene {
 
 // Utility Functions
 function formatTaskTitle(taskId: string): string {
-  return taskTitles[taskId] || taskId;
+  return this.gameState.tasks[taskId]?.title || taskId;
 }
 
 function getTaskStateLabel(state: TaskState): string {

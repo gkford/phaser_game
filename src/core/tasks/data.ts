@@ -3,6 +3,7 @@ import { Task, TaskState } from "../../types";
 export const initialTasks: Record<string, Task> = {
   foodGathering: {
     id: "foodGathering",
+    title: "🌾 Food Gathering",
     state: TaskState.Discovered,
     assignedWorkers: {
       level1: 10,
@@ -21,6 +22,7 @@ export const initialTasks: Record<string, Task> = {
   },
   thinkingL1: {
     id: "thinkingL1",
+    title: "🤔 Thinking Level 1",
     state: TaskState.Discovered,
     assignedWorkers: {
       level1: 0,
@@ -39,6 +41,7 @@ export const initialTasks: Record<string, Task> = {
   },
   thinkingL2: {
     id: "thinkingL2",
+    title: "💡 Thinking Level 2",
     state: TaskState.Discovered,
     assignedWorkers: {
       level1: 0,
@@ -57,6 +60,7 @@ export const initialTasks: Record<string, Task> = {
   },
   hunting: {
     id: "hunting",
+    title: "🏹 Hunting",
     state: TaskState.Unthoughtof,
     assignedWorkers: {
       level1: 0,
@@ -75,10 +79,3 @@ export const initialTasks: Record<string, Task> = {
   },
 };
 
-// Task title formatting map
-export const taskTitles: Record<string, string> = {
-  foodGathering: "🌾 Food Gathering",
-  thinkingL1: "🤔 Thinking Level 1",
-  thinkingL2: "💡 Thinking Level 2",
-  hunting: "🏹 Hunting",
-};

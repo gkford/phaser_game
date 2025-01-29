@@ -17,6 +17,7 @@ export interface GameState {
 
 export interface Task {
   id: string;
+  title: string;
   state: TaskState;
   assignedWorkers: Record<WorkerLevelKey, number>;
   productionPerWorker: {
