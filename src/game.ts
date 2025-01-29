@@ -375,11 +375,11 @@ class MainScene extends Phaser.Scene {
         this.updateActivityCards();
         this.updateButtonStates();
     }
-    public destroy(): void {
+    public shutdown(): void {
         if (this.updateTimer) {
             this.updateTimer.destroy();
         }
-        super.destroy();
+        super.shutdown();
     }
 }
 
