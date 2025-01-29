@@ -57,6 +57,7 @@ class MainScene extends Phaser.Scene {
 
     private huntingCard!: ActivityCard;
     private thinkingCard!: ActivityCard;
+    private gatheringCard!: ActivityCard;
 
     constructor() {
         super({ key: 'MainScene' });
@@ -148,6 +149,7 @@ class MainScene extends Phaser.Scene {
         // Create activity cards with their respective activities
         this.huntingCard = this.createActivityCard(300, 100, 'hunting');
         this.thinkingCard = this.createActivityCard(300, 300, 'thinkingL1');
+        this.gatheringCard = this.createActivityCard(300, 500, 'foodGathering');
         
         // Initial updates
         this.updateDebugDisplay();
@@ -451,6 +453,7 @@ class MainScene extends Phaser.Scene {
         // Update each card
         updateCard(this.huntingCard, 'hunting', 'Hunting');
         updateCard(this.thinkingCard, 'thinkingL1', 'Thinking Level 1');
+        updateCard(this.gatheringCard, 'foodGathering', 'Food Gathering');
     }
 
     private createEmergencyOverlay(): void {
