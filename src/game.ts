@@ -328,7 +328,8 @@ class MainScene extends Phaser.Scene {
             researchButton,
             researchBar,
             border,
-            tooltip
+            tooltip,
+            lockIcon
         };
     }
 
@@ -409,6 +410,7 @@ class MainScene extends Phaser.Scene {
                 card.minusButton?.setVisible(true);
                 card.researchButton?.setVisible(false);
                 card.researchBar?.setVisible(false);
+                card.lockIcon.setVisible(false);
             } else if (taskState === TaskState.Imagined) {
                 card.countText.setText('');
                 card.contributionText.setVisible(false);
@@ -416,6 +418,17 @@ class MainScene extends Phaser.Scene {
                 card.minusButton?.setVisible(false);
                 card.researchButton?.setVisible(!this.isEmergencyActive);
                 card.researchBar?.setVisible(this.gameState.researchProgress.taskId === activity);
+
+                // Handle lock icon visibility
+                const prereqsMet = checkAllPrerequisites(this.gameState, activity);
+                card.lockIcon.setVisible(!prereqsMet);
+                
+                // Update tooltip text for locked state
+                if (!prereqsMet) {
+                    const prereqs = this.gameState.prerequisites[activity];
+                    const tooltipText = `Locked - Requires:\n${prereqs.join('\n')}`;
+                    (card.tooltip?.getAt(1) as Phaser.GameObjects.Text).setText(tooltipText);
+                }
             } else {
                 card.countText.setText('');
                 card.contributionText.setVisible(false);
