@@ -18,6 +18,20 @@ interface ActivityButton extends Phaser.GameObjects.Text {
     enabled: boolean;
 }
 
+interface ActivityCard {
+    container: Phaser.GameObjects.Container;
+    bg: Phaser.GameObjects.Rectangle;
+    titleText: Phaser.GameObjects.Text;
+    countText: Phaser.GameObjects.Text;
+    contributionText: Phaser.GameObjects.Text;
+    plusButton: ActivityButton;
+    minusButton: ActivityButton;
+    researchButton?: Phaser.GameObjects.Text;
+    researchBar?: Phaser.GameObjects.Container;
+    border?: Phaser.GameObjects.Rectangle;
+    tooltip?: Phaser.GameObjects.Container;
+}
+
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
     private updateTimer!: Phaser.Time.TimerEvent;
@@ -38,32 +52,8 @@ class MainScene extends Phaser.Scene {
     private isEmergencyActive: boolean = false;
     private isGamePaused: boolean = false;
 
-    private huntingCard!: {
-        container: Phaser.GameObjects.Container;
-        bg: Phaser.GameObjects.Rectangle;
-        titleText: Phaser.GameObjects.Text;
-        countText: Phaser.GameObjects.Text;
-        contributionText: Phaser.GameObjects.Text;
-        plusButton: ActivityButton;
-        minusButton: ActivityButton;
-        researchButton?: Phaser.GameObjects.Text;
-        researchBar?: Phaser.GameObjects.Container;
-        border?: Phaser.GameObjects.Rectangle;
-        tooltip?: Phaser.GameObjects.Container;
-    };
-    private thinkingCard!: {
-        container: Phaser.GameObjects.Container;
-        bg: Phaser.GameObjects.Rectangle;
-        titleText: Phaser.GameObjects.Text;
-        countText: Phaser.GameObjects.Text;
-        contributionText: Phaser.GameObjects.Text;
-        plusButton: ActivityButton;
-        minusButton: ActivityButton;
-        researchButton?: Phaser.GameObjects.Text;
-        researchBar?: Phaser.GameObjects.Container;
-        border?: Phaser.GameObjects.Rectangle;
-        tooltip?: Phaser.GameObjects.Container;
-    };
+    private huntingCard!: ActivityCard;
+    private thinkingCard!: ActivityCard;
 
     constructor() {
         super({ key: 'MainScene' });
@@ -217,17 +207,7 @@ class MainScene extends Phaser.Scene {
         return container;
     }
 
-    private createActivityCard(x: number, y: number, activity: 'hunting' | 'thinking'): {
-        container: Phaser.GameObjects.Container;
-        countText: Phaser.GameObjects.Text;
-        contributionText: Phaser.GameObjects.Text;
-        plusButton: ActivityButton;
-        minusButton: ActivityButton;
-        researchButton?: Phaser.GameObjects.Text;
-        researchBar?: Phaser.GameObjects.Container;
-        border?: Phaser.GameObjects.Rectangle;
-        tooltip?: Phaser.GameObjects.Container;
-    } {
+    private createActivityCard(x: number, y: number, activity: 'hunting' | 'thinking'): ActivityCard {
         const container = this.add.container(x, y);
         
         // Background with border
