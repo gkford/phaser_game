@@ -1,5 +1,14 @@
 import Phaser from 'phaser';
-import { GameState, INITIAL_STATE, validateGameState, calculateFoodRate, calculateThoughtRate } from './types';
+import { 
+    GameState, 
+    INITIAL_STATE, 
+    validateGameState, 
+    calculateFoodRate, 
+    calculateThoughtRate,
+    Activity,
+    reassignWorker,
+    allToHunting 
+} from './types';
 
 class MainScene extends Phaser.Scene {
     private gameState: GameState;
@@ -39,6 +48,16 @@ class MainScene extends Phaser.Scene {
             color: '#ffffff',
             fontSize: '24px'
         }).setOrigin(0.5);
+    }
+
+    private handleReassignment(from: Activity, to: Activity): void {
+        const newState = reassignWorker(this.gameState, from, to);
+        this.updateGameState(newState);
+    }
+
+    private handleEmergencyReset(): void {
+        const newState = allToHunting(this.gameState);
+        this.updateGameState(newState);
     }
 
     private onGameTick(): void {
