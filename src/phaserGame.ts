@@ -79,11 +79,17 @@ export default class MainScene extends Phaser.Scene {
       // Add Focus Button for Imagined and Unthoughtof Tasks
       if (task.state === TaskState.Imagined || task.state === TaskState.Unthoughtof) {
         const focusText = task.isFocused ? "[Stop Focus]" : "[Focus Thinking]";
+        const prereqsMet = this.arePrerequisitesMet(taskId);
         this.buttons[`${taskId}-focus`] = this.add
           .text(task.state === TaskState.Imagined ? 200 : 35, yOffset + 55, focusText, 
-            { fontSize: "16px", color: task.isFocused ? "#ff0" : "#fff" })
-          .setInteractive()
-          .on("pointerdown", () => this.handleToggleFocus(taskId));
+            { fontSize: "16px", color: task.isFocused ? "#ff0" : (prereqsMet ? "#fff" : "#666") })
+          .setAlpha(prereqsMet ? 1 : 0.5);
+        
+        if (prereqsMet) {
+          this.buttons[`${taskId}-focus`]
+            .setInteractive()
+            .on("pointerdown", () => this.handleToggleFocus(taskId));
+        }
       }
 
       yOffset += 125;
@@ -104,8 +110,21 @@ export default class MainScene extends Phaser.Scene {
       // Update focus button text if it exists
       if (this.buttons[`${taskId}-focus`]) {
         const focusText = task.isFocused ? "[Stop Focus]" : "[Focus Thinking]";
+        const prereqsMet = this.arePrerequisitesMet(taskId);
         this.buttons[`${taskId}-focus`].setText(focusText);
-        this.buttons[`${taskId}-focus`].setColor(task.isFocused ? "#ff0" : "#fff");
+        this.buttons[`${taskId}-focus`].setColor(task.isFocused ? "#ff0" : (prereqsMet ? "#fff" : "#666"));
+        this.buttons[`${taskId}-focus`].setAlpha(prereqsMet ? 1 : 0.5);
+        
+        // Remove old listener if it exists
+        this.buttons[`${taskId}-focus`].removeAllListeners();
+        
+        if (prereqsMet) {
+          this.buttons[`${taskId}-focus`]
+            .setInteractive()
+            .on("pointerdown", () => this.handleToggleFocus(taskId));
+        } else {
+          this.buttons[`${taskId}-focus`].removeInteractive();
+        }
       }
 
       // Handle dynamic button updates based on task state
@@ -183,6 +202,13 @@ export default class MainScene extends Phaser.Scene {
     }
 
     return text;
+  }
+
+  private arePrerequisitesMet(taskId: string): boolean {
+    const task = this.gameState.tasks[taskId];
+    return task.prerequisites.every(prereq => 
+      this.gameState.tasks[prereq].state === TaskState.Discovered
+    );
   }
 
   private getProductionText(taskId: string): string {
