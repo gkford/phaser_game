@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { createInitialGameState, tickGame, reassignWorker, startResearch, toggleTaskFocus } from "./game";
 import { GameState, TaskState, Task } from "./types";
+import { taskTitles } from "./tasks";
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState;
@@ -292,12 +293,7 @@ export default class MainScene extends Phaser.Scene {
 
 // Utility Functions
 function formatTaskTitle(taskId: string): string {
-  const titles: Record<string, string> = {
-    foodGathering: "🌾 Food Gathering",
-    thinkingL1: "🤔 Thinking Level 1",
-    hunting: "🏹 Hunting",
-  };
-  return titles[taskId] || taskId;
+  return taskTitles[taskId] || taskId;
 }
 
 function getTaskStateLabel(state: TaskState): string {

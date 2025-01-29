@@ -1,5 +1,6 @@
 import { cloneDeep } from "lodash";
 import { GameState, TaskState } from "./types";
+import { initialTasks } from "./tasks";
 
 // Initializes game state with predefined tasks.
 export function createInitialGameState(): GameState {
@@ -11,50 +12,7 @@ export function createInitialGameState(): GameState {
       total: 10,
       unassigned: 0,
     },
-    tasks: {
-      foodGathering: {
-        id: "foodGathering",
-        state: TaskState.Discovered,
-        assignedWorkers: 10,
-        productionPerWorker: { food: 1.2 },
-        researchProgress: {
-          toImaginedCurrent: 0,
-          toImaginedRequired: 0,
-          toDiscoveredCurrent: 0,
-          toDiscoveredRequired: 0,
-        },
-        prerequisites: [],
-        isFocused: false,
-      },
-      thinkingL1: {
-        id: "thinkingL1",
-        state: TaskState.Discovered,
-        assignedWorkers: 0,
-        productionPerWorker: { thoughts: 1 },
-        researchProgress: {
-          toImaginedCurrent: 0,
-          toImaginedRequired: 0,
-          toDiscoveredCurrent: 0,
-          toDiscoveredRequired: 0,
-        },
-        prerequisites: [],
-        isFocused: false,
-      },
-      hunting: {
-        id: "hunting",
-        state: TaskState.Unthoughtof,
-        assignedWorkers: 0,
-        productionPerWorker: { food: 1.5 },
-        researchProgress: {
-          toImaginedCurrent: 0,
-          toImaginedRequired: 5,
-          toDiscoveredCurrent: 0,
-          toDiscoveredRequired: 10,
-        },
-        prerequisites: ["thinkingL1"],
-        isFocused: false,
-      },
-    },
+    tasks: initialTasks,
     currentResearchTaskId: null,
   };
 }
