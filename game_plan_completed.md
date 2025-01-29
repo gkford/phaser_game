@@ -19,10 +19,10 @@
     - [x] Each person consumes 1 food/sec
   - [x] calculateThoughtRate(state) → thoughts/sec
     - [x] Each thinker produces 1 thought/sec
-- [ ] Build state transition system:
-  - [ ] reassignWorker(fromActivity, toActivity)
-  - [ ] Emergency reset function (allToHunting())
-  - [ ] Validate transitions maintain population constraints
+- [x] Build state transition system:
+  - [x] reassignWorker(fromActivity, toActivity)
+  - [x] Emergency reset function (allToHunting())
+  - [x] Validate transitions maintain population constraints
 - [ ] Create basic debug UI:
   - [ ] Text labels showing raw state values
     - [ ] Current food storage
