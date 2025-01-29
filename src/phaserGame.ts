@@ -117,6 +117,11 @@ export default class MainScene extends Phaser.Scene {
       text += ` | Research Progress: ${progress.toFixed(0)}%`;
     }
 
+    if (task.state === TaskState.Unthoughtof) {
+      const progress = (task.researchProgress.toImaginedCurrent / task.researchProgress.toImaginedRequired) * 100;
+      text += ` | Research Progress: ${progress.toFixed(0)}%`;
+    }
+
     return text;
   }
 

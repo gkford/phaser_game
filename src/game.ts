@@ -99,22 +99,36 @@ export function updateResources(state: GameState): GameState {
 
 // Progresses research on the currently selected research task.
 export function updateResearch(state: GameState): GameState {
-  if (!state.currentResearchTaskId) return state;
-
   const newState = cloneDeep(state);
-  const task = newState.tasks[state.currentResearchTaskId];
+  const thoughtsProduced = Object.values(newState.tasks).reduce(
+    (sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers, 
+    0
+  );
 
-  const thoughtsProduced = Object.values(newState.tasks).reduce((sum, t) => sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers, 0);
-
-  if (task.state === TaskState.Unthoughtof) {
-    task.researchProgress.toImaginedCurrent += thoughtsProduced;
-    if (task.researchProgress.toImaginedCurrent >= task.researchProgress.toImaginedRequired) {
-      task.state = TaskState.Imagined;
+  // Handle actively researched task (when clicking "Think About This")
+  if (state.currentResearchTaskId) {
+    const researchTask = newState.tasks[state.currentResearchTaskId];
+    if (researchTask.state === TaskState.Imagined) {
+      researchTask.researchProgress.toDiscoveredCurrent += thoughtsProduced;
+      if (researchTask.researchProgress.toDiscoveredCurrent >= researchTask.researchProgress.toDiscoveredRequired) {
+        researchTask.state = TaskState.Discovered;
+      }
     }
-  } else if (task.state === TaskState.Imagined) {
-    task.researchProgress.toDiscoveredCurrent += thoughtsProduced;
-    if (task.researchProgress.toDiscoveredCurrent >= task.researchProgress.toDiscoveredRequired) {
-      task.state = TaskState.Discovered;
+  }
+
+  // Handle focused task
+  const focusedTask = Object.values(newState.tasks).find(task => task.isFocused);
+  if (focusedTask) {
+    if (focusedTask.state === TaskState.Unthoughtof) {
+      focusedTask.researchProgress.toImaginedCurrent += thoughtsProduced;
+      if (focusedTask.researchProgress.toImaginedCurrent >= focusedTask.researchProgress.toImaginedRequired) {
+        focusedTask.state = TaskState.Imagined;
+      }
+    } else if (focusedTask.state === TaskState.Imagined) {
+      focusedTask.researchProgress.toDiscoveredCurrent += thoughtsProduced;
+      if (focusedTask.researchProgress.toDiscoveredCurrent >= focusedTask.researchProgress.toDiscoveredRequired) {
+        focusedTask.state = TaskState.Discovered;
+      }
     }
   }
 
