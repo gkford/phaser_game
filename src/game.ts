@@ -11,7 +11,8 @@ import {
     allToHunting,
     updateTaskStates,
     updateResearch,
-    TaskState
+    TaskState,
+    checkAllPrerequisites
 } from './types';
 
 interface ActivityButton extends Phaser.GameObjects.Text {
