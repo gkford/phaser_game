@@ -445,10 +445,18 @@ class MainScene extends Phaser.Scene {
         const foodRate = calculateFoodRate(this.gameState);
         
         // Update food storage based on net food rate
-        const newState = {
+        let newState = {
             ...this.gameState,
             food: this.gameState.food + foodRate
         };
+        
+        // Update task states based on prerequisites
+        newState = updateTaskStates(newState);
+        
+        // Update research progress if active
+        if (newState.researchProgress.taskId && !this.isEmergencyActive) {
+            newState = updateResearch(newState, 1); // 1 second per tick
+        }
         
         // Update game state
         this.updateGameState(newState);

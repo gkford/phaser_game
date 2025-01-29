@@ -105,6 +105,46 @@ export function calculateThoughtRate(state: GameState): number {
     return state.population.thinking;
 }
 
+// Check if a specific prerequisite is met
+export function checkPrerequisite(state: GameState, prerequisite: string): boolean {
+    switch (prerequisite) {
+        case 'foodPositive':
+            return state.food > 0;
+        case 'thoughtRate1':
+            return calculateThoughtRate(state) >= 1;
+        case 'thinkingL1':
+            return state.taskStates['thinkingL1'] === TaskState.Discovered;
+        default:
+            console.warn(`Unknown prerequisite: ${prerequisite}`);
+            return false;
+    }
+}
+
+// Check if all prerequisites for a task are met
+export function checkAllPrerequisites(state: GameState, taskId: string): boolean {
+    const prerequisites = state.prerequisites[taskId];
+    if (!prerequisites) return true; // No prerequisites
+    
+    return prerequisites.every(prereq => checkPrerequisite(state, prereq));
+}
+
+// Update task states based on prerequisites
+export function updateTaskStates(state: GameState): GameState {
+    const newTaskStates = { ...state.taskStates };
+    
+    // Check each Unthoughtof task to see if it should become Imagined
+    for (const [taskId, taskState] of Object.entries(state.taskStates)) {
+        if (taskState === TaskState.Unthoughtof && checkAllPrerequisites(state, taskId)) {
+            newTaskStates[taskId] = TaskState.Imagined;
+        }
+    }
+    
+    return {
+        ...state,
+        taskStates: newTaskStates
+    };
+}
+
 export type Activity = 'hunting' | 'thinking' | 'unassigned';
 
 export function reassignWorker(state: GameState, from: Activity, to: Activity): GameState {
