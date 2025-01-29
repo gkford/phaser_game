@@ -164,15 +164,8 @@ export function startResearch(state: GameState, taskId: string): GameState {
 
 // Checks if prerequisites for tasks are met and updates states.
 export function updateTaskAvailability(state: GameState): GameState {
-  const newState = cloneDeep(state);
-
-  for (const [taskId, task] of Object.entries(newState.tasks)) {
-    if (task.state === TaskState.Unthoughtof && task.prerequisites.every(req => newState.tasks[req].state === TaskState.Discovered)) {
-      task.state = TaskState.Imagined;
-    }
-  }
-
-  return newState;
+  // No longer automatically transitioning tasks to Imagined state
+  return state;
 }
 
 // Toggles focus state for a task
