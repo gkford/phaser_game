@@ -130,20 +130,20 @@ Thoughts Production: +1/human/second
 
 **Food Gathering**
 - Initial State: Discovered
-- Production Rate: ___ food/human/second
+- Production Rate: 1.2 food/human/second
 - Prerequisites: None
 - Research Cost: N/A (starts discovered)
 
 **Thinking Level 1**
 - Initial State: Discovered
-- Production Rate: ___ thoughts/human/second
+- Production Rate: 1 thoughts/human/second
 - Prerequisites: None
 - Research Cost: N/A (starts discovered)
 
 **Hunting**
 - Initial State: Unthoughtof
-- Production Rate: ___ food/human/second
-- Prerequisites: _______
+- Production Rate: 1.5 food/human/second
+- Prerequisites: Thinking Level 1
 - Research Cost: ___ thoughts
 
 
