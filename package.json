@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "phaser": "^3.55.2"
   },
   "devDependencies": {
