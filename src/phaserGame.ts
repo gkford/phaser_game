@@ -32,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
     let yOffset = 150;
     Object.entries(this.gameState.tasks).forEach(([taskId, task]) => {
       // Create background rectangle for card
-      this.add.rectangle(20, yOffset, 400, 80, 0x333333)
+      this.add.rectangle(20, yOffset, 600, 80, 0x333333)
         .setOrigin(0, 0)
         .setAlpha(0.5);
 
