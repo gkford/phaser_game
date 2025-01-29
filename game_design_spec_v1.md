@@ -40,6 +40,7 @@ Both food gathering snd thinking have the initial state of "discovered" which me
 3. **Discovered**  
    - Full interaction enabled
    - green border
+   - Large emoji appears briefly in center of screen on discovery
 
 ## Resource Mechanics
 
@@ -135,12 +136,14 @@ Thoughts Production: +1/human/second
 - Production Rate: 1.2 food/human/second
 - Prerequisites: None
 - Research Cost: N/A (starts discovered)
+- Discovery Emoji: 🌾
 
 **Thinking Level 1**
 - Initial State: Discovered
 - Production Rate: 1 thoughts/human/second
 - Prerequisites: None
 - Research Cost: N/A (starts discovered)
+- Discovery Emoji: 💭
 
 **Hunting**
 - Initial State: Unthoughtof
@@ -149,5 +152,6 @@ Thoughts Production: +1/human/second
 - Research Costs:
   - Unthoughtof → Imagined: 50 thoughts
   - Imagined → Discovered: 100 thoughts
+- Discovery Emoji: 🏹
 
 
