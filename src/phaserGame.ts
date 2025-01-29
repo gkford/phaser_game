@@ -4,6 +4,7 @@ import { GameState, TaskState } from "./types";
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState;
+  private oldTasks!: Record<string, Task>;
   resourceText!: Phaser.GameObjects.Text;
   taskTexts: Record<string, Phaser.GameObjects.Text> = {};
   buttons: Record<string, Phaser.GameObjects.Text> = {};
@@ -20,6 +21,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.oldTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
     this.createUI();
     this.time.addEvent({ delay: 1000, callback: this.updateGame, callbackScope: this, loop: true });
   }
@@ -97,8 +99,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   updateGame() {
+    const previousTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
     this.gameState = tickGame(this.gameState);
+    this.handleNewImaginedTasks(previousTasks, this.gameState.tasks);
     this.updateUI();
+    this.oldTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
   }
 
   updateUI() {
@@ -226,6 +231,39 @@ export default class MainScene extends Phaser.Scene {
       parts.push(`${thoughtRate.toFixed(1)} thoughts/sec`);
     }
     return parts.join(" + ");
+  }
+
+  private handleNewImaginedTasks(
+    oldTasks: Record<string, Task>,
+    newTasks: Record<string, Task>
+  ) {
+    for (const [taskId, newTask] of Object.entries(newTasks)) {
+      const oldTask = oldTasks[taskId];
+      if (oldTask.state === TaskState.Unthoughtof && newTask.state === TaskState.Imagined) {
+        // Move assigned workers to unassigned
+        this.gameState.population.unassigned += newTask.assignedWorkers;
+        newTask.assignedWorkers = 0;
+
+        // Show popup
+        this.showPopup(`You have imagined the possibility of a new task: ${formatTaskTitle(taskId)}`);
+      }
+    }
+  }
+
+  private showPopup(message: string) {
+    const popup = this.add.text(400, 300, message, {
+      fontSize: "20px",
+      color: "#fff",
+      backgroundColor: "#000",
+      padding: { x: 10, y: 10 },
+    }).setOrigin(0.5);
+
+    this.time.addEvent({
+      delay: 3000,
+      callback: () => {
+        popup.destroy();
+      }
+    });
   }
 
   handleReassign(fromTask: string, toTask: string) {
