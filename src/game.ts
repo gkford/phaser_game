@@ -381,6 +381,13 @@ class MainScene extends Phaser.Scene {
         }
         super.shutdown();
     }
+
+    public destroy(): void {
+        if (this.updateTimer) {
+            this.updateTimer.destroy();
+        }
+        super.destroy();
+    }
 }
 
 const config: Phaser.Types.Core.GameConfig = {
