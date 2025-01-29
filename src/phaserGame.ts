@@ -101,7 +101,6 @@ export default class MainScene extends Phaser.Scene {
     this.gameState = tickGame(this.gameState);
     this.handleNewImaginedTasks(previousTasks, this.gameState.tasks);
     this.updateUI();
-    this.oldTasks = JSON.parse(JSON.stringify(this.gameState.tasks));
   }
 
   updateUI() {
