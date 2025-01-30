@@ -44,8 +44,9 @@ export default class MainScene extends Phaser.Scene {
 
     // Column headers - spread across screen
     this.add.text(20, 60, 'Resources & Status', { fontSize: '20px', color: '#fff' })
-    this.add.text(420, 60, 'Tasks', { fontSize: '20px', color: '#fff' })
-    this.add.text(820, 60, 'Science', { fontSize: '20px', color: '#fff' })
+    this.add.text(320, 60, 'Tasks', { fontSize: '20px', color: '#fff' })
+    this.add.text(620, 60, 'Thinking', { fontSize: '20px', color: '#fff' })
+    this.add.text(920, 60, 'Science', { fontSize: '20px', color: '#fff' })
 
     // Resources column - keep at left
     this.resourceText = this.add.text(20, 100, this.getResourceText(), {
@@ -58,20 +59,29 @@ export default class MainScene extends Phaser.Scene {
     // Sort cards by type
     const taskCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'task')
+    const thinkingCards = Object.entries(this.gameState.cards)
+      .filter(([_, card]) => card.type === 'thinking')
     const scienceCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'science')
 
-    // Create Task Cards - moved to middle third
+    // Create Task Cards - left third
     let taskYOffset = 100
     taskCards.forEach(([cardId, card]) => {
-      this.createCardUI(cardId, card, 420, taskYOffset)
+      this.createCardUI(cardId, card, 320, taskYOffset)
       taskYOffset += 125
     })
 
-    // Create Science Cards - moved to right third
+    // Create Thinking Cards - middle third
+    let thinkingYOffset = 100
+    thinkingCards.forEach(([cardId, card]) => {
+      this.createCardUI(cardId, card, 620, thinkingYOffset)
+      thinkingYOffset += 125
+    })
+
+    // Create Science Cards - right third
     let scienceYOffset = 100
     scienceCards.forEach(([cardId, card]) => {
-      this.createCardUI(cardId, card, 820, scienceYOffset)
+      this.createCardUI(cardId, card, 920, scienceYOffset)
       scienceYOffset += 125
     })
   }

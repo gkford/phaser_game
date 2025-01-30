@@ -25,7 +25,7 @@ export const intialCards: Record<string, Card> = {
     id: 'thinkingL1',
     title: '🤔 Thinking Level 1',
     state: CardState.Discovered,
-    type: 'science',
+    type: 'thinking',
     assignedWorkers: {
       level1: 0,
       level2: 0,
@@ -45,7 +45,7 @@ export const intialCards: Record<string, Card> = {
     id: 'thinkingL2',
     title: '💡 Thinking Level 2',
     state: CardState.Discovered,
-    type: 'science',
+    type: 'thinking',
     assignedWorkers: {
       level1: 0,
       level2: 0,

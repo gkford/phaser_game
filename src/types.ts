@@ -19,7 +19,7 @@ export interface Card {
   id: string
   title: string
   state: CardState
-  type: 'task' | 'science'
+  type: 'task' | 'thinking' | 'science'
   assignedWorkers: Record<WorkerLevelKey, number>
   productionPerWorker: {
     food?: number
