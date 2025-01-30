@@ -112,7 +112,11 @@ export default class MainScene extends Phaser.Scene {
       // Update focus button text if it exists
       if (this.buttons[`${cardId}-focus`]) {
         const focusButton = this.buttons[`${cardId}-focus`];
-        const focusText = Card.isFocused ? 'Stop Focus' : 'Focus Thinking'
+        const focusText = Card.isFocused 
+          ? 'Stop Focus' 
+          : Card.state === CardState.Unthoughtof 
+            ? 'Imagine...' 
+            : 'Focus Thinking'
         const prereqsMet = this.arePrerequisitesMet(cardId)
       
         // Check if it's a Text object before calling setText and setColor
@@ -462,7 +466,11 @@ export default class MainScene extends Phaser.Scene {
     }
 
     if (card.state === CardState.Imagined || card.state === CardState.Unthoughtof) {
-      const focusText = card.isFocused ? 'Stop Focus' : 'Focus Thinking'
+      const focusText = card.isFocused 
+        ? 'Stop Focus' 
+        : card.state === CardState.Unthoughtof 
+          ? 'Imagine...' 
+          : 'Focus Thinking'
       const prereqsMet = this.arePrerequisitesMet(cardId)
       const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
 
