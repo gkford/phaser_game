@@ -335,6 +335,11 @@ export default class MainScene extends Phaser.Scene {
           }
           // Show effect-specific message
           this.showPopup(newcard.onDiscovery.message);
+
+          // Auto-discover thinkingL2 if we just discovered non-verbal communication
+          if (newcard.id === 'nonVerbalCommunication') {
+            this.gameState.cards['thinkingL2'].state = CardState.Discovered;
+          }
         } else {
           // Show default discovery message
           this.showPopup(
