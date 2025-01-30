@@ -262,6 +262,11 @@ export default class MainScene extends Phaser.Scene {
           ).join('')
           text += `\n${maskedDesc}`
         }
+
+        // Add thinking level requirement if present
+        if (card.minimumThinkingLevel) {
+          text += `\nRequires ${getWorkerLevelName('level' + card.minimumThinkingLevel)} thinking`
+        }
         break
 
       case CardState.Imagined:
@@ -271,6 +276,10 @@ export default class MainScene extends Phaser.Scene {
         text += ` | Research Progress: ${discoveredProgress.toFixed(0)}%`
         if (card.description) {
           text += `\n${card.description}`
+        }
+        // Add thinking level requirement if present
+        if (card.minimumThinkingLevel) {
+          text += `\nRequires ${getWorkerLevelName('level' + card.minimumThinkingLevel)} thinking`
         }
         break
 
