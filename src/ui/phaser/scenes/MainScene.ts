@@ -17,7 +17,7 @@ export default class MainScene extends Phaser.Scene {
   gameState: GameState
   resourceText!: Phaser.GameObjects.Text
   cardTexts: Record<string, Phaser.GameObjects.Text> = {}
-  buttons: Record<string, Phaser.GameObjects.Text> = {}
+  buttons: Record<string, Phaser.GameObjects.Text | Phaser.GameObjects.Rectangle> = {}
   cardPositions: Record<string, number> = {}
   productionTexts: Record<string, Phaser.GameObjects.Text> = {}
 
@@ -121,9 +121,12 @@ export default class MainScene extends Phaser.Scene {
 
         // Update the button background if it exists
         if (this.buttons[`${cardId}-focus-bg`]) {
-          this.buttons[`${cardId}-focus-bg`]
-            .setFillStyle(Card.isFocused ? 0x886600 : prereqsMet ? 0x444444 : 0x222222)
-            .setAlpha(prereqsMet ? 1 : 0.5)
+          const buttonBg = this.buttons[`${cardId}-focus-bg`];
+          if (buttonBg instanceof Phaser.GameObjects.Rectangle) {
+            buttonBg
+              .setFillStyle(Card.isFocused ? 0x886600 : prereqsMet ? 0x444444 : 0x222222)
+              .setAlpha(prereqsMet ? 1 : 0.5);
+          }
         }
 
         // Remove old listener if it exists
@@ -453,7 +456,7 @@ export default class MainScene extends Phaser.Scene {
       const focusText = card.isFocused ? 'Stop Focus' : 'Focus Thinking'
       const prereqsMet = this.arePrerequisitesMet(cardId)
       const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
-  
+
       // Create background rectangle for button
       const buttonWidth = 160
       const buttonHeight = 30
@@ -468,7 +471,7 @@ export default class MainScene extends Phaser.Scene {
       .setAlpha(prereqsMet ? 1 : 0.5)
 
       // Add text centered on the button
-      this.buttons[`${cardId}-focus`] = this.add
+      const buttonText = this.add
         .text(
           xOffset + 20 + buttonWidth/2,
           yPos + 110 + buttonHeight/2,
@@ -493,8 +496,9 @@ export default class MainScene extends Phaser.Scene {
             buttonBg.setFillStyle(card.isFocused ? 0x886600 : 0x444444)
           })
 
-        // Store the background reference for later updates
+        // Store both the background and text
         this.buttons[`${cardId}-focus-bg`] = buttonBg
+        this.buttons[`${cardId}-focus`] = buttonText
       }
     }
   }
