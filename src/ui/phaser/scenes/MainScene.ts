@@ -7,7 +7,7 @@ import {
   togglecardFocus,
 } from '../../../core/game/state'
 import { GameState, CardState, Card } from '../../../types'
-import { WORKER_LEVEL_NAMES, getWorkerLevelName } from '../../../core/constants/workerLevels'
+import { getWorkerLevelName } from '../../../core/constants/workerLevels'
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState
