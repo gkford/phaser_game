@@ -75,24 +75,25 @@ export default class MainScene extends Phaser.Scene {
       .filter(([_, card]) => card.type === 'science')
 
     // Create Task Cards - first quarter
+    // Create Task Cards - first quarter
     let taskYOffset = 100
     taskCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(1), taskYOffset)
-      taskYOffset += 170
+      taskYOffset += 190
     })
 
     // Create Thinking Cards - second quarter
     let thinkingYOffset = 100
     thinkingCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(2), thinkingYOffset)
-      thinkingYOffset += 170
+      thinkingYOffset += 190
     })
 
     // Create Science Cards - third quarter
     let scienceYOffset = 100
     scienceCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(3), scienceYOffset)
-      scienceYOffset += 170
+      scienceYOffset += 190
     })
   }
 
@@ -251,11 +252,11 @@ export default class MainScene extends Phaser.Scene {
       return `${maskedTitle} | Research Progress: ${progress.toFixed(0)}%`
     }
 
-    // For other states, keep existing logic
+    // For other states, modify the text formatting
     let text = `${card.title} - ${getCardStateLabel(card.state)}`
 
     if (card.state === CardState.Discovered) {
-      text += ` | L1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
+      text += `\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
     }
 
     if (card.state === CardState.Imagined) {
@@ -400,7 +401,7 @@ export default class MainScene extends Phaser.Scene {
     const columnWidth = window.innerWidth / 4;
     const cardWidth = columnWidth - 40; // Leave some margin
     this.add
-      .rectangle(xPos, yPos, cardWidth, 150, 0x333333)
+      .rectangle(xPos, yPos, cardWidth, 170, 0x333333)
       .setOrigin(0, 0)
       .setAlpha(0.5)
 
@@ -435,18 +436,18 @@ export default class MainScene extends Phaser.Scene {
     // Only add worker assignment buttons for non-science cards
     if (card.state === CardState.Discovered && card.type !== 'science') {
       this.buttons[`${cardId}-minus`] = this.add
-        .text(xPos + 15, yPos + 110, '[-]', { fontSize: '16px', color: '#f00' })
+        .text(xPos + 15, yPos + 130, '[-]', { fontSize: '16px', color: '#f00' })
         .setInteractive()
         .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
 
       this.buttons[`${cardId}-plus`] = this.add
-        .text(xPos + 55, yPos + 110, '[+]', { fontSize: '16px', color: '#0f0' })
+        .text(xPos + 55, yPos + 130, '[+]', { fontSize: '16px', color: '#0f0' })
         .setInteractive()
         .on('pointerdown', () => this.handleReassign(cardId, 'add'))
 
       this.productionTexts[cardId] = this.add.text(
         xPos + 100,
-        yPos + 110,
+        yPos + 130,
         this.getProductionText(cardId),
         { fontSize: '16px', color: '#fff' }
       )
@@ -457,7 +458,7 @@ export default class MainScene extends Phaser.Scene {
 
     if (card.state === CardState.Imagined) {
       this.buttons[`${cardId}-research`] = this.add
-        .text(xPos + 15, yPos + 110, '[Think About This]', {
+        .text(xPos + 15, yPos + 130, '[Think About This]', {
           fontSize: '16px',
           color: '#00f',
         })
@@ -479,7 +480,7 @@ export default class MainScene extends Phaser.Scene {
       const buttonHeight = 30
       const buttonBg = this.add.rectangle(
         xOffset + 20,
-        yPos + 110,
+        yPos + 130,
         buttonWidth,
         buttonHeight,
         card.isFocused ? 0x886600 : prereqsMet ? 0x444444 : 0x222222
@@ -491,7 +492,7 @@ export default class MainScene extends Phaser.Scene {
       const buttonText = this.add
         .text(
           xOffset + 20 + buttonWidth/2,
-          yPos + 110 + buttonHeight/2,
+          yPos + 130 + buttonHeight/2,
           focusText,
           {
             fontSize: '16px',
