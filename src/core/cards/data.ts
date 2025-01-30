@@ -110,4 +110,32 @@ export const intialCards: Record<string, Card> = {
       message: "Through non-verbal communication, 5 of your Hominids have evolved into Mimics!"
     }
   },
+  giftGiving: {
+    id: 'giftGiving',
+    title: '🎁 Gift-giving',
+    state: CardState.Unthoughtof,
+    type: 'science',
+    description: "Converts 5 hominids into 5 mimics",
+    assignedWorkers: {
+      level1: 0,
+      level2: 0,
+    },
+    productionPerWorker: {},
+    researchProgress: {
+      toImaginedCurrent: 0,
+      toImaginedRequired: 15,
+      toDiscoveredCurrent: 0,
+      toDiscoveredRequired: 20,
+    },
+    prerequisites: ['nonVerbalCommunication'],
+    isFocused: false,
+    acceptedWorkerLevels: [],
+    onDiscovery: {
+      type: 'workerUpgrade',
+      fromLevel: 'level1',
+      toLevel: 'level2',
+      amount: 5,
+      message: "Through gift-giving rituals, 5 of your Hominids have evolved into Mimics!"
+    }
+  },
 }
