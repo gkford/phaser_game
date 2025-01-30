@@ -11,6 +11,8 @@ export function createInitialGameState(): GameState {
     workers: {
       level1: { total: 10, assigned: 10 },
       level2: { total: 0, assigned: 0 },
+      level3: { total: 0, assigned: 0 },  // Initialize with zero values
+      level4: { total: 0, assigned: 0 },  // Initialize with zero values
     },
     cards: intialCards,
     currentResearchcardId: null,
@@ -198,10 +200,12 @@ export function removeAllWorkers(state: GameState): GameState {
   
   // Reset all card worker assignments
   Object.values(newState.cards).forEach(card => {
-    Object.keys(card.assignedWorkers).forEach(level => {
+    Object.entries(card.assignedWorkers).forEach(([level, count]) => {
       const levelKey = level as WorkerLevelKey;
-      // Add workers back to unassigned pool
-      newState.workers[levelKey].assigned -= card.assignedWorkers[levelKey];
+      // Only subtract from worker pool if that level exists
+      if (newState.workers[levelKey]) {
+        newState.workers[levelKey].assigned -= count;
+      }
       // Clear card assignment
       card.assignedWorkers[levelKey] = 0;
     });
