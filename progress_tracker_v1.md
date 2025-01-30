@@ -1,16 +1,18 @@
 # Prehistoric Technology Game - Implementation Progress
 
 ## Phase 1: Introduce the New Schema
-- [ ] Define new Task interface
-- [ ] Expand GameState to use tasks Record
-- [ ] Convert core tasks to new format:
+
+- [ ] Define new Card interface
+- [ ] Expand GameState to use cards Record
+- [ ] Convert core cards to new format:
   - [ ] foodGathering
-  - [ ] thinkingL1 
+  - [ ] thinkingL1
   - [ ] hunting
 - [ ] Initialize population.unassigned
 - [ ] Test basic state initialization
 
 ## Phase 2: Migrate Assignments & Resource Calculations
+
 - [ ] Remove old population role fields
 - [ ] Update reassignWorker function
 - [ ] Rewrite calculateFoodRate
@@ -19,9 +21,10 @@
 - [ ] Test worker reassignment
 - [ ] Test resource calculations
 
-## Phase 3: Migrate Research to Per-Task Progress
+## Phase 3: Migrate Research to Per-Card Progress
+
 - [ ] Remove old researchProgress
-- [ ] Add currentResearchTaskId
+- [ ] Add currentResearchcardId
 - [ ] Implement thought distribution logic
 - [ ] Add state transition logic:
   - [ ] Unthoughtof → Imagined
@@ -30,18 +33,20 @@
 - [ ] Test state transitions
 
 ## Phase 4: Clean-Up and Extension
+
 - [ ] Remove redundant logic
 - [ ] Add state validation tests:
-  - [ ] Task assignment sums
+  - [ ] Card assignment sums
   - [ ] Research transitions
   - [ ] Resource calculations
 - [ ] Document new structure
 - [ ] Prepare for future extensions:
   - [ ] Additional resources
-  - [ ] New task types
+  - [ ] New Card types
   - [ ] Enhanced prerequisites
 
 ## Current Status
+
 - Phase 1: Not Started
 - Phase 2: Not Started
 - Phase 3: Not Started

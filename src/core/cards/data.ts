@@ -9,7 +9,7 @@ export const intialCards: Record<string, Card> = {
     state: CardState.Discovered,
     type: 'task',
     assignedWorkers: {
-      level1: 0,
+      level1: 10,
       level2: 0,
       level3: 0,
       level4: 0,
@@ -31,7 +31,7 @@ export const intialCards: Record<string, Card> = {
     state: CardState.Discovered,
     type: 'thinking',
     assignedWorkers: {
-      level1: 10,
+      level1: 0,
       level2: 0,
       level3: 0,
       level4: 0,

@@ -1,8 +1,8 @@
 export const WORKER_LEVEL_NAMES = {
-  level1: 'Hominid',
-  level2: 'Mimic',
-  level3: 'Talker',
-  level4: 'Storyleer'
+  level1: '(L1) Hominid',
+  level2: '(L2) Mimic',
+  level3: '(L3) Talker',
+  level4: '(L4) Storyteller'
 } as const
 
 export const getThinkingTitle = (level: string): string => {
