@@ -301,11 +301,23 @@ export default class MainScene extends Phaser.Scene {
         if (newcard.onDiscovery) {
           if (newcard.onDiscovery.type === 'workerUpgrade') {
             const effect = newcard.onDiscovery;
-            // Update worker counts
-            this.gameState.workers[effect.fromLevel].total -= effect.amount;
-            this.gameState.workers[effect.fromLevel].assigned -= effect.amount;
-            this.gameState.workers[effect.toLevel].total += effect.amount;
-            this.gameState.workers[effect.toLevel].assigned += effect.amount;
+            
+            // Capture current assignments
+            const previousAssignments = captureWorkerAssignments(this.gameState);
+            
+            // Remove all workers
+            this.gameState = removeAllWorkers(this.gameState);
+            
+            // Perform the upgrade
+            this.gameState = performWorkerUpgrade(
+              this.gameState,
+              effect.fromLevel,
+              effect.toLevel,
+              effect.amount
+            );
+            
+            // Redistribute workers
+            this.gameState = redistributeWorkers(this.gameState, previousAssignments);
           }
           // Show effect-specific message
           this.showPopup(newcard.onDiscovery.message);
