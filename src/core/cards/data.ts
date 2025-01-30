@@ -10,6 +10,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 0,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: { food: 1.2 },
     researchProgress: {
@@ -30,6 +32,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 10,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: { thoughts: 1 },
     researchProgress: {
@@ -50,6 +54,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 0,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: { thoughts: 1.5 },
     researchProgress: {
@@ -70,6 +76,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 0,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: { food: 1.5 },
     researchProgress: {
@@ -91,6 +99,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 0,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: {},
     researchProgress: {
@@ -120,6 +130,8 @@ export const intialCards: Record<string, Card> = {
     assignedWorkers: {
       level1: 0,
       level2: 0,
+      level3: 0,
+      level4: 0,
     },
     productionPerWorker: {},
     researchProgress: {
