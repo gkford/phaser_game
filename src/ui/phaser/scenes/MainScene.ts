@@ -468,7 +468,7 @@ export default class MainScene extends Phaser.Scene {
 
     if (card.state === CardState.Imagined || card.state === CardState.Unthoughtof) {
       const focusText = card.isFocused 
-        ? 'Stop Focus' 
+        ? (card.state === CardState.Unthoughtof ? 'Stop Imagining' : 'Stop Focus')
         : card.state === CardState.Unthoughtof 
           ? 'Imagine...' 
           : 'Focus Thinking'
