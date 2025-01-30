@@ -251,25 +251,6 @@ export default class MainScene extends Phaser.Scene {
     )
   }
 
-  private getProductionText(cardId: string): string {
-    const Card = this.gameState.cards[cardId]
-    if (Card.assignedWorkers.level1 + Card.assignedWorkers.level2 <= 0)
-      return '' // No workers, no production text.
-
-    const assignedSum =
-      Card.assignedWorkers.level1 + Card.assignedWorkers.level2
-    const foodRate = (Card.productionPerWorker.food ?? 0) * assignedSum
-    const thoughtRate = (Card.productionPerWorker.thoughts ?? 0) * assignedSum
-
-    const parts = []
-    if (foodRate > 0) {
-      parts.push(`${foodRate.toFixed(1)} food/sec`)
-    }
-    if (thoughtRate > 0) {
-      parts.push(`${thoughtRate.toFixed(1)} thoughts/sec`)
-    }
-    return parts.join(' + ')
-  }
 
   private handlecardTransitions(
     oldCards: Record<string, Card>,
@@ -380,10 +361,6 @@ export default class MainScene extends Phaser.Scene {
     // Create background rectangle inside the container
     const columnWidth = window.innerWidth / 4
     const cardWidth = columnWidth - 40
-    this.add.rectangle(0, 0, cardWidth, 170, 0x333333)
-      .setOrigin(0, 0)
-      .setAlpha(0.5)
-      .setInteractive()
     cardContainer.add(this.add.rectangle(0, 0, cardWidth, 170, 0x333333).setOrigin(0, 0).setAlpha(0.5))
 
     // Add Card info text
@@ -447,69 +424,6 @@ export default class MainScene extends Phaser.Scene {
     buttonContainer.add(focusButton)
     this.buttons[`${cardId}-focus`] = focusButton
 
-    if (card.state === CardState.Imagined) {
-      this.buttons[`${cardId}-research`] = this.add
-        .text(xPos + 15, yPos + 130, '[Think About This]', {
-          fontSize: '16px',
-          color: '#00f',
-        })
-        .setInteractive()
-        .on('pointerdown', () => this.handleStartResearch(cardId))
-    }
-
-    if (card.state === CardState.Imagined || card.state === CardState.Unthoughtof) {
-      const focusText = card.isFocused 
-        ? (card.state === CardState.Unthoughtof ? 'Stop Imagining' : 'Stop Focus')
-        : card.state === CardState.Unthoughtof 
-          ? 'Imagine...' 
-          : 'Focus Thinking'
-      const prereqsMet = this.arePrerequisitesMet(cardId)
-      const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
-
-      // Create background rectangle for button
-      const buttonWidth = 160
-      const buttonHeight = 30
-      const buttonBg = this.add.rectangle(
-        xOffset + 20,
-        yPos + 130,
-        buttonWidth,
-        buttonHeight,
-        card.isFocused ? 0x886600 : prereqsMet ? 0x444444 : 0x222222
-      )
-      .setOrigin(0, 0)
-      .setAlpha(prereqsMet ? 1 : 0.5)
-
-      // Add text centered on the button
-      const buttonText = this.add
-        .text(
-          xOffset + 20 + buttonWidth/2,
-          yPos + 130 + buttonHeight/2,
-          focusText,
-          {
-            fontSize: '16px',
-            color: card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
-          }
-        )
-        .setOrigin(0.5, 0.5)
-        .setAlpha(prereqsMet ? 1 : 0.5)
-
-      if (prereqsMet) {
-        // Make the button background interactive
-        buttonBg
-          .setInteractive()
-          .on('pointerdown', () => this.handleToggleFocus(cardId))
-          .on('pointerover', () => {
-            buttonBg.setFillStyle(card.isFocused ? 0xaa8800 : 0x555555)
-          })
-          .on('pointerout', () => {
-            buttonBg.setFillStyle(card.isFocused ? 0x886600 : 0x444444)
-          })
-
-        // Store both the background and text
-        this.buttons[`${cardId}-focus-bg`] = buttonBg
-        this.buttons[`${cardId}-focus`] = buttonText
-      }
-    }
   }
 }
 
