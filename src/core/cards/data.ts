@@ -152,4 +152,28 @@ export const intialCards: Record<string, Card> = {
       message: "Through gift-giving rituals, 5 of your Hominids have evolved into Mimics!"
     }
   },
+  cooperativeHunting: {
+    id: 'cooperativeHunting',
+    title: '👥 Cooperative Hunting',
+    state: CardState.Unthoughtof,
+    type: 'task',
+    description: "Hunt together for better results",
+    assignedWorkers: {
+      level1: 0,
+      level2: 0,
+      level3: 0,
+      level4: 0,
+    },
+    productionPerWorker: { food: 2.0 },
+    researchProgress: {
+      toImaginedCurrent: 0,
+      toImaginedRequired: 20,
+      toDiscoveredCurrent: 0,
+      toDiscoveredRequired: 25,
+    },
+    prerequisites: ['giftGiving'],
+    isFocused: false,
+    acceptedWorkerLevels: [1, 2],
+    minimumThinkingLevel: 2,
+  },
 }
