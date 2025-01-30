@@ -233,26 +233,30 @@ export default class MainScene extends Phaser.Scene {
   }
 
   getcardText(cardId: string): string {
-    const Card = this.gameState.cards[cardId]
-    let text = `${Card.title} - ${getCardStateLabel(Card.state)}`
-
-    if (Card.state === CardState.Discovered) {
-      text += ` | L1: ${Card.assignedWorkers.level1} | L2: ${Card.assignedWorkers.level2}`
+    const card = this.gameState.cards[cardId]
+    
+    if (card.state === CardState.Unthoughtof) {
+      // Mask the title with question marks, preserving spaces
+      const maskedTitle = card.title.split('').map(char => 
+        char === ' ' ? ' ' : '?'
+      ).join('')
+      
+      // Add research progress
+      const progress = (card.researchProgress.toImaginedCurrent / 
+        card.researchProgress.toImaginedRequired) * 100
+      return `${maskedTitle} | Research Progress: ${progress.toFixed(0)}%`
     }
 
-    if (Card.state === CardState.Imagined) {
-      const progress =
-        (Card.researchProgress.toDiscoveredCurrent /
-          Card.researchProgress.toDiscoveredRequired) *
-        100
-      text += ` | Research Progress: ${progress.toFixed(0)}%`
+    // For other states, keep existing logic
+    let text = `${card.title} - ${getCardStateLabel(card.state)}`
+
+    if (card.state === CardState.Discovered) {
+      text += ` | L1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
     }
 
-    if (Card.state === CardState.Unthoughtof) {
-      const progress =
-        (Card.researchProgress.toImaginedCurrent /
-          Card.researchProgress.toImaginedRequired) *
-        100
+    if (card.state === CardState.Imagined) {
+      const progress = (card.researchProgress.toDiscoveredCurrent /
+        card.researchProgress.toDiscoveredRequired) * 100
       text += ` | Research Progress: ${progress.toFixed(0)}%`
     }
 
@@ -517,7 +521,7 @@ function formatcardTitle(cardId: string): string {
 function getCardStateLabel(state: CardState): string {
   switch (state) {
     case CardState.Unthoughtof:
-      return '????'
+      return '' // Remove the ???? for unthoughtof state
     case CardState.Imagined:
       return '🔎 Imagined'
     case CardState.Discovered:
