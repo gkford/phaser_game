@@ -116,7 +116,9 @@ export default class MainScene extends Phaser.Scene {
     this.resourceText.setText(this.getResourceText())
 
     Object.entries(this.gameState.cards).forEach(([cardId, Card]) => {
-      this.cardTexts[cardId].setText(this.getcardText(cardId))
+      // Only update UI elements if they exist
+      if (this.cardTexts[cardId]) {
+        this.cardTexts[cardId].setText(this.getcardText(cardId))
 
       // Update focus button text if it exists
       if (this.buttons[`${cardId}-focus`]) {
