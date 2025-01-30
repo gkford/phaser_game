@@ -20,6 +20,7 @@ export default class MainScene extends Phaser.Scene {
   buttons: Record<string, Phaser.GameObjects.Text | Phaser.GameObjects.Rectangle> = {}
   cardPositions: Record<string, number> = {}
   productionTexts: Record<string, Phaser.GameObjects.Text> = {}
+  cardContainers: Record<string, Phaser.GameObjects.Container> = {}
 
   constructor() {
     super('MainScene')
@@ -151,57 +152,32 @@ export default class MainScene extends Phaser.Scene {
         }
       }
 
-      // Handle dynamic button updates based on Card state
+      // Handle button visibility based on Card state
+      const minusBtn = this.buttons[`${cardId}-minus`]
+      const plusBtn = this.buttons[`${cardId}-plus`]
+      const researchBtn = this.buttons[`${cardId}-research`]
+      const focusBtn = this.buttons[`${cardId}-focus`]
+
       if (Card.state === CardState.Discovered) {
-        // Remove Focus/Research buttons if they exist
-        if (this.buttons[`${cardId}-focus`]) {
-          this.buttons[`${cardId}-focus`].destroy()
-          delete this.buttons[`${cardId}-focus`]
-        }
-        if (this.buttons[`${cardId}-research`]) {
-          this.buttons[`${cardId}-research`].destroy()
-          delete this.buttons[`${cardId}-research`]
-        }
-
-        // Create +/- buttons if they don't exist yet
-        if (!this.buttons[`${cardId}-minus`]) {
-          this.buttons[`${cardId}-minus`] = this.add
-            .text(420, this.cardPositions[cardId] + 55, '[-]', {
-              fontSize: '16px',
-              color: '#f00',
-            })
-            .setInteractive()
-            .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
-        }
-        if (!this.buttons[`${cardId}-plus`]) {
-          this.buttons[`${cardId}-plus`] = this.add
-            .text(460, this.cardPositions[cardId] + 55, '[+]', {
-              fontSize: '16px',
-              color: '#0f0',
-            })
-            .setInteractive()
-            .on('pointerdown', () => this.handleReassign(cardId, 'add'))
-        }
-
-        // Update production text (create it if missing)
-        if (!this.productionTexts[cardId]) {
-          this.productionTexts[cardId] = this.add.text(
-            120,
-            this.cardPositions[cardId] + 55,
-            '',
-            { fontSize: '16px', color: '#fff' }
-          )
-        }
-        this.productionTexts[cardId].setText(this.getProductionText(cardId))
-        this.productionTexts[cardId].setVisible(
-          Card.assignedWorkers.level1 + Card.assignedWorkers.level2 > 0
-        )
-      } else {
-        // If the Card is no longer discovered, remove/hide any existing production text
-        if (this.productionTexts[cardId]) {
-          this.productionTexts[cardId].destroy()
-          delete this.productionTexts[cardId]
-        }
+        // Show +/– for non-science cards
+        const showPlusMinus = Card.type !== 'science'
+        minusBtn?.setVisible(showPlusMinus)
+        plusBtn?.setVisible(showPlusMinus)
+        researchBtn?.setVisible(false)
+        focusBtn?.setVisible(false)
+      } else if (Card.state === CardState.Imagined) {
+        // Show research and focus buttons
+        minusBtn?.setVisible(false)
+        plusBtn?.setVisible(false)
+        researchBtn?.setVisible(true)
+        focusBtn?.setVisible(true)
+      } else if (Card.state === CardState.Unthoughtof) {
+        // Hide most buttons, show focus if prerequisites met
+        minusBtn?.setVisible(false)
+        plusBtn?.setVisible(false)
+        researchBtn?.setVisible(false)
+        const prereqsMet = this.arePrerequisitesMet(cardId)
+        focusBtn?.setVisible(prereqsMet)
       }
     })
   }
@@ -397,26 +373,28 @@ export default class MainScene extends Phaser.Scene {
   private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
     this.cardPositions[cardId] = yPos
 
-    // Create background rectangle for card - make it fit column width
-    const columnWidth = window.innerWidth / 4;
-    const cardWidth = columnWidth - 40; // Leave some margin
-    this.add
-      .rectangle(xPos, yPos, cardWidth, 170, 0x333333)
+    // Create container for the card
+    const cardContainer = this.add.container(xPos, yPos)
+    this.cardContainers[cardId] = cardContainer
+
+    // Create background rectangle inside the container
+    const columnWidth = window.innerWidth / 4
+    const cardWidth = columnWidth - 40
+    this.add.rectangle(0, 0, cardWidth, 170, 0x333333)
       .setOrigin(0, 0)
       .setAlpha(0.5)
+      .setInteractive()
+    cardContainer.add(this.add.rectangle(0, 0, cardWidth, 170, 0x333333).setOrigin(0, 0).setAlpha(0.5))
 
-    // Add Card info text with proper wrapping
-    this.cardTexts[cardId] = this.add.text(
-      xPos + 15,
-      yPos + 15,
-      this.getcardText(cardId),
-      {
-        fontSize: '16px',
-        color: '#fff',
-        wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
-        align: 'left'
-      }
-    )
+    // Add Card info text
+    const cardInfoText = this.add.text(15, 15, this.getcardText(cardId), {
+      fontSize: '16px',
+      color: '#fff',
+      wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
+      align: 'left'
+    })
+    cardContainer.add(cardInfoText)
+    this.cardTexts[cardId] = cardInfoText
 
     // Add description for science cards (show for all states, not just discovered)
     if (card.type === 'science' && card.description) {
@@ -433,28 +411,41 @@ export default class MainScene extends Phaser.Scene {
       )
     }
 
-    // Only add worker assignment buttons for non-science cards
-    if (card.state === CardState.Discovered && card.type !== 'science') {
-      this.buttons[`${cardId}-minus`] = this.add
-        .text(xPos + 15, yPos + 130, '[-]', { fontSize: '16px', color: '#f00' })
-        .setInteractive()
-        .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
+    // Create button container
+    const buttonContainer = this.add.container(0, 130)
+    cardContainer.add(buttonContainer)
 
-      this.buttons[`${cardId}-plus`] = this.add
-        .text(xPos + 55, yPos + 130, '[+]', { fontSize: '16px', color: '#0f0' })
-        .setInteractive()
-        .on('pointerdown', () => this.handleReassign(cardId, 'add'))
+    // Create minus button
+    const minusButton = this.add.text(20, 0, '[-]', { fontSize: '16px', color: '#f00' })
+      .setInteractive()
+      .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
+      .setVisible(false)
+    buttonContainer.add(minusButton)
+    this.buttons[`${cardId}-minus`] = minusButton
 
-      this.productionTexts[cardId] = this.add.text(
-        xPos + 100,
-        yPos + 130,
-        this.getProductionText(cardId),
-        { fontSize: '16px', color: '#fff' }
-      )
-      this.productionTexts[cardId].setVisible(
-        card.assignedWorkers.level1 + card.assignedWorkers.level2 > 0
-      )
-    }
+    // Create plus button
+    const plusButton = this.add.text(60, 0, '[+]', { fontSize: '16px', color: '#0f0' })
+      .setInteractive()
+      .on('pointerdown', () => this.handleReassign(cardId, 'add'))
+      .setVisible(false)
+    buttonContainer.add(plusButton)
+    this.buttons[`${cardId}-plus`] = plusButton
+
+    // Create research button
+    const researchButton = this.add.text(100, 0, '[Think]', { fontSize: '16px', color: '#0ff' })
+      .setInteractive()
+      .on('pointerdown', () => this.handleStartResearch(cardId))
+      .setVisible(false)
+    buttonContainer.add(researchButton)
+    this.buttons[`${cardId}-research`] = researchButton
+
+    // Create focus button
+    const focusButton = this.add.text(180, 0, '[Focus]', { fontSize: '16px', color: '#ff0' })
+      .setInteractive()
+      .on('pointerdown', () => this.handleToggleFocus(cardId))
+      .setVisible(false)
+    buttonContainer.add(focusButton)
+    this.buttons[`${cardId}-focus`] = focusButton
 
     if (card.state === CardState.Imagined) {
       this.buttons[`${cardId}-research`] = this.add
