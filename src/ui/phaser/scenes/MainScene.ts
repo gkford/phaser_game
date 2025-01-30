@@ -126,7 +126,7 @@ export default class MainScene extends Phaser.Scene {
         // Create +/- buttons if they don't exist yet
         if (!this.buttons[`${cardId}-minus`]) {
           this.buttons[`${cardId}-minus`] = this.add
-            .text(35, this.cardPositions[cardId] + 55, '[-]', {
+            .text(420, this.cardPositions[cardId] + 55, '[-]', {
               fontSize: '16px',
               color: '#f00',
             })
@@ -135,7 +135,7 @@ export default class MainScene extends Phaser.Scene {
         }
         if (!this.buttons[`${cardId}-plus`]) {
           this.buttons[`${cardId}-plus`] = this.add
-            .text(75, this.cardPositions[cardId] + 55, '[+]', {
+            .text(460, this.cardPositions[cardId] + 55, '[+]', {
               fontSize: '16px',
               color: '#0f0',
             })
