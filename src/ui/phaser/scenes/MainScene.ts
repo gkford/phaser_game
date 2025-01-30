@@ -412,18 +412,18 @@ export default class MainScene extends Phaser.Scene {
     // Only add worker assignment buttons for non-science cards
     if (card.state === CardState.Discovered && card.type !== 'science') {
       this.buttons[`${cardId}-minus`] = this.add
-        .text(xPos + 15, yPos + 55, '[-]', { fontSize: '16px', color: '#f00' })
+        .text(xPos + 15, yPos + 110, '[-]', { fontSize: '16px', color: '#f00' })
         .setInteractive()
         .on('pointerdown', () => this.handleReassign(cardId, 'remove'))
 
       this.buttons[`${cardId}-plus`] = this.add
-        .text(xPos + 55, yPos + 55, '[+]', { fontSize: '16px', color: '#0f0' })
+        .text(xPos + 55, yPos + 110, '[+]', { fontSize: '16px', color: '#0f0' })
         .setInteractive()
         .on('pointerdown', () => this.handleReassign(cardId, 'add'))
 
       this.productionTexts[cardId] = this.add.text(
         xPos + 100,
-        yPos + 55,
+        yPos + 110,
         this.getProductionText(cardId),
         { fontSize: '16px', color: '#fff' }
       )
@@ -434,7 +434,7 @@ export default class MainScene extends Phaser.Scene {
 
     if (card.state === CardState.Imagined) {
       this.buttons[`${cardId}-research`] = this.add
-        .text(xPos + 15, yPos + 55, '[Think About This]', {
+        .text(xPos + 15, yPos + 110, '[Think About This]', {
           fontSize: '16px',
           color: '#00f',
         })
@@ -448,7 +448,7 @@ export default class MainScene extends Phaser.Scene {
       const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
       
       this.buttons[`${cardId}-focus`] = this.add
-        .text(xOffset, yPos + 55, focusText, {
+        .text(xOffset, yPos + 110, focusText, {
           fontSize: '16px',
           color: card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
         })
