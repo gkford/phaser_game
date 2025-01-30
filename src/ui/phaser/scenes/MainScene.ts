@@ -550,7 +550,7 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
 
   private showPopup(message: string) {
     const popup = this.add
-      .text(400, 300, message, {
+      .text(window.innerWidth / 2, window.innerHeight / 2, message, {
         fontSize: '20px',
         color: '#fff',
         backgroundColor: '#000',
