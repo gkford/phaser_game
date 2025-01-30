@@ -215,44 +215,46 @@ export default class MainScene extends Phaser.Scene {
 
   getcardText(cardId: string): string {
     const card = this.gameState.cards[cardId]
+    let text = ''
     
-    if (card.state === CardState.Unthoughtof) {
-      // Mask the title with question marks, preserving spaces
-      const maskedTitle = card.title.split('').map(char => 
-        char === ' ' ? ' ' : '?'
-      ).join('')
-      
-      // Add research progress
-      const progress = (card.researchProgress.toImaginedCurrent / 
-        card.researchProgress.toImaginedRequired) * 100
-      return `\n${maskedTitle} | Research Progress: ${progress.toFixed(0)}%`
-    }
+    switch (card.state) {
+      case CardState.Unthoughtof:
+        // Mask the title with question marks, preserving spaces
+        const maskedTitle = card.title.split('').map(char => 
+          char === ' ' ? ' ' : '?'
+        ).join('')
+        
+        // Add research progress
+        const imaginedProgress = (card.researchProgress.toImaginedCurrent / 
+          card.researchProgress.toImaginedRequired) * 100
+        text = `\n${maskedTitle} | Research Progress: ${imaginedProgress.toFixed(0)}%`
+        
+        // Add masked description if present
+        if (card.description) {
+          const maskedDesc = card.description.split('').map(char => 
+            char === ' ' ? ' ' : '?'
+          ).join('')
+          text += `\n${maskedDesc}`
+        }
+        break
 
-    // For other states, modify the text formatting
-    let text = `\n${card.title} - ${getCardStateLabel(card.state)}`
+      case CardState.Imagined:
+        text = `\n${card.title} - ${getCardStateLabel(card.state)}`
+        const discoveredProgress = (card.researchProgress.toDiscoveredCurrent /
+          card.researchProgress.toDiscoveredRequired) * 100
+        text += ` | Research Progress: ${discoveredProgress.toFixed(0)}%`
+        if (card.description) {
+          text += `\n${card.description}`
+        }
+        break
 
-    if (card.state === CardState.Discovered) {
-      text += `\n\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
-      if (card.description) {
-        text += `\n${card.description}`
-      }
-    }
-
-    if (card.state === CardState.Imagined) {
-      const progress = (card.researchProgress.toDiscoveredCurrent /
-        card.researchProgress.toDiscoveredRequired) * 100
-      text += ` | Research Progress: ${progress.toFixed(0)}%`
-      if (card.description) {
-        text += `\n${card.description}`
-      }
-    }
-
-    if (card.state === CardState.Unthoughtof && card.description) {
-      // Mask the description with question marks, preserving spaces
-      const maskedDesc = card.description.split('').map(char => 
-        char === ' ' ? ' ' : '?'
-      ).join('')
-      text += `\n${maskedDesc}`
+      case CardState.Discovered:
+        text = `\n${card.title} - ${getCardStateLabel(card.state)}`
+        text += `\n\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
+        if (card.description) {
+          text += `\n${card.description}`
+        }
+        break
     }
 
     return text
