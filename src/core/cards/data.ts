@@ -178,4 +178,32 @@ export const intialCards: Record<string, Card> = {
     acceptedWorkerLevels: [1, 2],
     minimumThinkingLevel: 2,
   },
+  earlyStoneTools: {
+    id: 'earlyStoneTools',
+    title: '🪨 Early Stone Tools',
+    description: "Basic tools increase food production by 20%",
+    state: CardState.Unthoughtof,
+    type: 'task',
+    assignedWorkers: {
+      level1: 0,
+      level2: 0,
+      level3: 0,
+      level4: 0,
+    },
+    productionPerWorker: {},
+    researchProgress: {
+      toImaginedCurrent: 0,
+      toImaginedRequired: 15,
+      toDiscoveredCurrent: 0,
+      toDiscoveredRequired: 20,
+    },
+    prerequisites: ['thinkingL2'],
+    isFocused: false,
+    acceptedWorkerLevels: [],
+    minimumThinkingLevel: 2,
+    persistentUpgrade: {
+      type: 'foodProduction',
+      multiplier: 1.2
+    }
+  },
 }

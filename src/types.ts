@@ -23,6 +23,11 @@ export type CardEffect = {
   message: string
 }
 
+export type PersistentUpgrade = {
+  type: 'foodProduction' | 'researchSpeed'
+  multiplier: number
+}
+
 export interface Card {
   id: string
   title: string
@@ -45,4 +50,5 @@ export interface Card {
   onDiscovery?: CardEffect
   minimumThinkingLevel?: number
   description?: string
+  persistentUpgrade?: PersistentUpgrade
 }

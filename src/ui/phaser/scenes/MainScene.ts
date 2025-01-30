@@ -218,6 +218,18 @@ export default class MainScene extends Phaser.Scene {
   getResourceText(): string {
     const food = Math.floor(this.gameState.resources.food)
 
+    // Calculate persistent upgrades
+    let bonusesText = '\nBonuses:'
+    let hasBonuses = false
+    Object.values(this.gameState.cards).forEach(card => {
+      if (card.state === CardState.Discovered && card.persistentUpgrade) {
+        hasBonuses = true
+        if (card.persistentUpgrade.type === 'foodProduction') {
+          bonusesText += `\n${card.title}: ${card.persistentUpgrade.multiplier.toFixed(1)}x 🍖`
+        }
+      }
+    })
+
     // Calculate thought rates for each level
     const l1Card = this.gameState.cards['thinkingL1']
     const l2Card = this.gameState.cards['thinkingL2']

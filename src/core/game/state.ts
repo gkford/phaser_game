@@ -56,15 +56,25 @@ export function reassignWorker(
 // Updates resource production based on assigned workers.
 export function updateResources(state: GameState): GameState {
   let foodProduced = 0
+  
+  // Calculate food production multiplier from persistent upgrades
+  const foodMultiplier = Object.values(state.cards).reduce((mult, card) => {
+    if (card.state === CardState.Discovered && 
+        card.persistentUpgrade?.type === 'foodProduction') {
+      return mult * card.persistentUpgrade.multiplier
+    }
+    return mult
+  }, 1)
 
   for (const card of Object.values(state.cards)) {
     if (card.state === CardState.Discovered) {
       // Calculate total workers on this card (all levels)
-      const totalWorkers = Object.values(card.assignedWorkers).reduce((sum, count) => sum + count, 0);
+      const totalWorkers = Object.values(card.assignedWorkers)
+        .reduce((sum, count) => sum + count, 0);
       
-      // Add food production if card produces food
+      // Add food production if card produces food, applying multiplier
       if (card.productionPerWorker.food) {
-        foodProduced += card.productionPerWorker.food * totalWorkers;
+        foodProduced += card.productionPerWorker.food * totalWorkers * foodMultiplier;
       }
     }
   }
