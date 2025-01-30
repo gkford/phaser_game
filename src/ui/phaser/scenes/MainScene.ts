@@ -128,13 +128,10 @@ export default class MainScene extends Phaser.Scene {
     const thinkingCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => {
         if (card.type !== 'thinking') return false
-    
-        // Only show thinking cards that are Discovered AND have corresponding workers
-        if (card.id === 'thinkingL1') {
-          return card.state === CardState.Discovered && this.gameState.workers.level1.total > 0
-        }
-        if (card.id === 'thinkingL2') {
-          return card.state === CardState.Discovered && this.gameState.workers.level2.total > 0
+
+        // Show thinking cards that are Discovered, regardless of worker count
+        if (card.id === 'thinkingL1' || card.id === 'thinkingL2') {
+          return card.state === CardState.Discovered
         }
         return false
       })
