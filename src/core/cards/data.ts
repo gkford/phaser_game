@@ -1,4 +1,5 @@
 import { Card, CardState } from '../../types'
+import { getThinkingTitle } from '../constants/workerLevels'
 
 export const intialCards: Record<string, Card> = {
   foodGathering: {
@@ -23,7 +24,7 @@ export const intialCards: Record<string, Card> = {
   },
   thinkingL1: {
     id: 'thinkingL1',
-    title: '🤔 Thinking Level 1',
+    title: `🤔 ${getThinkingTitle('level1')}`,
     state: CardState.Discovered,
     type: 'thinking',
     assignedWorkers: {
@@ -43,7 +44,7 @@ export const intialCards: Record<string, Card> = {
   },
   thinkingL2: {
     id: 'thinkingL2',
-    title: '💡 Thinking Level 2',
+    title: `💡 ${getThinkingTitle('level2')}`,
     state: CardState.Discovered,
     type: 'thinking',
     assignedWorkers: {

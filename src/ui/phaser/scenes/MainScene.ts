@@ -7,6 +7,7 @@ import {
   togglecardFocus,
 } from '../../../core/game/state'
 import { GameState, CardState, Card } from '../../../types'
+import { WORKER_LEVEL_NAMES, getWorkerLevelName } from '../../../core/constants/workerLevels'
 
 export default class MainScene extends Phaser.Scene {
   gameState: GameState
@@ -199,17 +200,17 @@ export default class MainScene extends Phaser.Scene {
     const totalThoughtRate = l1ThoughtRate + l2ThoughtRate
 
     return `🍖 Food: ${food}
-    | L1 Workers: ${this.gameState.workers.level1.assigned}/${
+    | ${getWorkerLevelName('level1')}s: ${this.gameState.workers.level1.assigned}/${
       this.gameState.workers.level1.total
     }
-    | L2 Workers: ${this.gameState.workers.level2.assigned}/${
+    | ${getWorkerLevelName('level2')}s: ${this.gameState.workers.level2.assigned}/${
       this.gameState.workers.level2.total
     }
-    | 🧠 L1 Thought Rate: ${l1ThoughtRate.toFixed(1)}
-    | 🧠 L2 Thought Rate: ${l2ThoughtRate.toFixed(1)}
+    | 🧠 ${getWorkerLevelName('level1')} Thought Rate: ${l1ThoughtRate.toFixed(1)}
+    | 🧠 ${getWorkerLevelName('level2')} Thought Rate: ${l2ThoughtRate.toFixed(1)}
     | 🧠 Combined Thought Rate: ${totalThoughtRate.toFixed(
       1
-    )} (* L2 thinking is 1.5 each)`
+    )} (* ${getWorkerLevelName('level2')} thinking is 1.5 each)`
   }
 
   getcardText(cardId: string): string {
