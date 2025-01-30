@@ -63,24 +63,27 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.createUI()
     
-    // Add keyboard controls
-    this.input.keyboard.on('keydown-UP', () => {
-        this.scroll(-this.scrollSpeed);
-    });
-    this.input.keyboard.on('keydown-DOWN', () => {
-        this.scroll(this.scrollSpeed);
-    });
+    // Add keyboard controls - check if keyboard exists
+    const keyboard = this.input.keyboard
+    if (keyboard) {
+        keyboard.on('keydown-UP', () => {
+            this.scroll(-this.scrollSpeed);
+        });
+        keyboard.on('keydown-DOWN', () => {
+            this.scroll(this.scrollSpeed);
+        });
+    }
 
-    // Add mousewheel support
-    this.input.on('wheel', (pointer: any, gameObjects: any, deltaX: number, deltaY: number) => {
+    // Add mousewheel support - use underscore prefix for unused parameters
+    this.input.on('wheel', (_pointer: any, _gameObjects: any, _deltaX: number, deltaY: number) => {
         this.scroll(deltaY * 0.5);
     });
 
     this.time.addEvent({
-      delay: 1000,
-      callback: this.updateGame,
-      callbackScope: this,
-      loop: true,
+        delay: 1000,
+        callback: this.updateGame,
+        callbackScope: this,
+        loop: true,
     })
   }
 
