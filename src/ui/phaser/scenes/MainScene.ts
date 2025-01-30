@@ -111,13 +111,16 @@ export default class MainScene extends Phaser.Scene {
 
       // Update focus button text if it exists
       if (this.buttons[`${cardId}-focus`]) {
+        const focusButton = this.buttons[`${cardId}-focus`];
         const focusText = Card.isFocused ? 'Stop Focus' : 'Focus Thinking'
         const prereqsMet = this.arePrerequisitesMet(cardId)
-        this.buttons[`${cardId}-focus`].setText(focusText)
-        this.buttons[`${cardId}-focus`].setColor(
-          Card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666'
-        )
-        this.buttons[`${cardId}-focus`].setAlpha(prereqsMet ? 1 : 0.5)
+      
+        // Check if it's a Text object before calling setText and setColor
+        if (focusButton instanceof Phaser.GameObjects.Text) {
+          focusButton.setText(focusText)
+          focusButton.setColor(Card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666')
+          focusButton.setAlpha(prereqsMet ? 1 : 0.5)
+        }
 
         // Update the button background if it exists
         if (this.buttons[`${cardId}-focus-bg`]) {
@@ -130,14 +133,16 @@ export default class MainScene extends Phaser.Scene {
         }
 
         // Remove old listener if it exists
-        this.buttons[`${cardId}-focus`].removeAllListeners()
+        if (focusButton instanceof Phaser.GameObjects.Text) {
+          focusButton.removeAllListeners()
 
-        if (prereqsMet) {
-          this.buttons[`${cardId}-focus`]
-            .setInteractive()
-            .on('pointerdown', () => this.handleToggleFocus(cardId))
-        } else {
-          this.buttons[`${cardId}-focus`].removeInteractive()
+          if (prereqsMet) {
+            focusButton
+              .setInteractive()
+              .on('pointerdown', () => this.handleToggleFocus(cardId))
+          } else {
+            focusButton.removeInteractive()
+          }
         }
       }
 
