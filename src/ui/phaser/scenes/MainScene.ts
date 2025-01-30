@@ -286,6 +286,14 @@ export default class MainScene extends Phaser.Scene {
       case CardState.Discovered:
         text = `\n${card.title} - ${getCardStateLabel(card.state)}`
         text += `\n\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
+        
+        // Add production rate info if card produces food
+        if (card.productionPerWorker.food) {
+          const totalWorkers = Object.values(card.assignedWorkers).reduce((sum, count) => sum + count, 0);
+          const foodPerSecond = totalWorkers * card.productionPerWorker.food;
+          text += `\nProducing ${foodPerSecond.toFixed(1)} food/sec`
+        }
+        
         if (card.description) {
           text += `\n${card.description}`
         }
