@@ -111,7 +111,7 @@ export default class MainScene extends Phaser.Scene {
     })
 
     // Food shortage toggle button
-    const toggleButton = this.add.text(20, 140, this.getFoodShortageButtonText(), {
+    const toggleButton = this.add.text(20, this.resourceText.y + this.resourceText.height + 10, this.getFoodShortageButtonText(), {
       fontSize: '16px',
       color: '#fff',
       backgroundColor: '#444444',
