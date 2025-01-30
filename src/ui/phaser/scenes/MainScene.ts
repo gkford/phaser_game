@@ -60,6 +60,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   createUI() {
+    this.cleanupUI()
+
     // Title at the top
     this.add.text(20, 20, 'Prehistoric Tech Game', {
       fontSize: '24px',
