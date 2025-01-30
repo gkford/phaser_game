@@ -51,6 +51,8 @@ export default class MainScene extends Phaser.Scene {
     this.resourceText = this.add.text(20, 100, this.getResourceText(), {
       fontSize: '18px',
       color: '#fff',
+      wordWrap: { width: 350, useAdvancedWrap: true },
+      align: 'left'
     })
 
     // Sort cards by type
@@ -335,7 +337,12 @@ export default class MainScene extends Phaser.Scene {
       xPos + 15,
       yPos + 15,
       this.getcardText(cardId),
-      { fontSize: '16px', color: '#fff' }
+      {
+        fontSize: '16px',
+        color: '#fff',
+        wordWrap: { width: 350, useAdvancedWrap: true },
+        align: 'left'
+      }
     )
 
     // Add Buttons on a new line
