@@ -365,7 +365,7 @@ export default class MainScene extends Phaser.Scene {
     this.updateUI()
   }
 
-  private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
+  private createCardUI(cardId: string, _card: Card, xPos: number, yPos: number) {
     this.cardPositions[cardId] = yPos
 
     // Create container for the card
