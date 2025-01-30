@@ -514,18 +514,19 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
     // Create semi-transparent background
     const bg = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x000000, 0.7)
       .setOrigin(0)
-      .setDepth(100);
+      .setDepth(1000);
 
     // Create popup container
     const popup = this.add.container(window.innerWidth/2, window.innerHeight/2)
-      .setDepth(101);
+      .setDepth(1001);
 
     // Add text
     const message = this.add.text(0, -50, 
       'You have run out of food.\nAll workers have been moved to gathering food.', {
       fontSize: '24px',
       color: '#fff',
-      align: 'center'
+      align: 'center',
+      backgroundColor: '#000000'
     }).setOrigin(0.5);
 
     // Add button
@@ -541,6 +542,7 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
       this.gameState.isPaused = false;
       popup.destroy();
       bg.destroy();
+      this.createUI();  // Refresh UI after unpausing
     });
 
     popup.add([message, button]);

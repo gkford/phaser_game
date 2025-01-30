@@ -128,6 +128,9 @@ function handleFoodShortage(state: GameState): GameState {
     }
   });
 
+  // Keep the state paused until user clicks "I understand"
+  newState.isPaused = true;
+
   return newState;
 }
 
