@@ -21,6 +21,10 @@ export default class MainScene extends Phaser.Scene {
   cardPositions: Record<string, number> = {}
   productionTexts: Record<string, Phaser.GameObjects.Text> = {}
   cardContainers: Record<string, Phaser.GameObjects.Container> = {}
+  
+  private scrollY: number = 0;
+  private readonly scrollSpeed: number = 15;
+  private maxScroll: number = 0;
 
   constructor() {
     super('MainScene')
@@ -28,6 +32,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private cleanupUI() {
+    this.scrollY = 0;
+    
     // Destroy all existing card containers
     Object.values(this.cardContainers).forEach(container => {
       container.destroy()
@@ -434,6 +440,29 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
     }
   }
 
+  private scroll(amount: number) {
+    // Calculate new scroll position
+    const newScrollY = this.scrollY + amount;
+    
+    // Don't scroll above 0
+    if (newScrollY < 0) {
+        this.scrollY = 0;
+    }
+    // Don't scroll below max scroll
+    else if (newScrollY > this.maxScroll) {
+        this.scrollY = this.maxScroll;
+    }
+    else {
+        this.scrollY = newScrollY;
+    }
+
+    // Update all containers
+    Object.values(this.cardContainers).forEach(container => {
+        const originalY = this.cardPositions[container.name];
+        container.setY(originalY - this.scrollY);
+    });
+  }
+
   private showPopup(message: string) {
     const popup = this.add
       .text(400, 300, message, {
@@ -471,8 +500,13 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
     this.cardPositions[cardId] = yPos
 
     // Create container for the card
-    const cardContainer = this.add.container(xPos, yPos)
-    this.cardContainers[cardId] = cardContainer
+    const cardContainer = this.add.container(xPos, yPos);
+    cardContainer.name = cardId; // Set container name for scrolling
+    this.cardContainers[cardId] = cardContainer;
+
+    // Update max scroll calculation
+    const bottomMost = Math.max(...Object.values(this.cardPositions)) + 190; // 190 is card height
+    this.maxScroll = Math.max(0, bottomMost - this.cameras.main.height + 100);
 
     // Create background rectangle inside the container
     const columnWidth = window.innerWidth / 4
