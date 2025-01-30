@@ -218,25 +218,58 @@ export default class MainScene extends Phaser.Scene {
   getResourceText(): string {
     const food = Math.floor(this.gameState.resources.food)
 
-    // L1 thoughts come from total workers on L1 thinking card
+    // Calculate thought rates for each level
     const l1Card = this.gameState.cards['thinkingL1']
-    const l1ThoughtRate = (l1Card.assignedWorkers.level1 + l1Card.assignedWorkers.level2) * 
-      (l1Card.productionPerWorker.thoughts ?? 0)
-
-    // L2 thoughts only come from L2 thinking card
     const l2Card = this.gameState.cards['thinkingL2']
+    const l3Card = this.gameState.cards['thinkingL3'] || { assignedWorkers: { level3: 0 }, productionPerWorker: { thoughts: 0 } }
+    const l4Card = this.gameState.cards['thinkingL4'] || { assignedWorkers: { level4: 0 }, productionPerWorker: { thoughts: 0 } }
+
+    const l1ThoughtRate = (l1Card.assignedWorkers.level1 + l1Card.assignedWorkers.level2) * 
+        (l1Card.productionPerWorker.thoughts ?? 0)
     const l2ThoughtRate = l2Card.assignedWorkers.level2 * 
-      (l2Card.productionPerWorker.thoughts ?? 0)
+        (l2Card.productionPerWorker.thoughts ?? 0)
+    const l3ThoughtRate = l3Card.assignedWorkers.level3 * 
+        (l3Card.productionPerWorker.thoughts ?? 0)
+    const l4ThoughtRate = l4Card.assignedWorkers.level4 * 
+        (l4Card.productionPerWorker.thoughts ?? 0)
+
+    // Calculate food production and consumption
+    let totalFoodProduction = 0
+    Object.values(this.gameState.cards).forEach(card => {
+        if (card.state === CardState.Discovered && card.productionPerWorker.food) {
+            const totalWorkers = Object.values(card.assignedWorkers).reduce((sum, count) => sum + count, 0)
+            totalFoodProduction += card.productionPerWorker.food * totalWorkers
+        }
+    })
+
+    // Calculate total workers for food consumption
+    const totalWorkers = 
+        this.gameState.workers.level1.total + 
+        this.gameState.workers.level2.total +
+        (this.gameState.workers.level3?.total || 0) +
+        (this.gameState.workers.level4?.total || 0)
+    
+    const foodConsumption = totalWorkers // 1 food per worker
+    const excessFood = totalFoodProduction - foodConsumption
 
     return `🍖 Food: ${food}
-    | ${getWorkerLevelName('level1')}s: ${this.gameState.workers.level1.assigned}/${
-      this.gameState.workers.level1.total
-    }
-    | ${getWorkerLevelName('level2')}s: ${this.gameState.workers.level2.assigned}/${
-      this.gameState.workers.level2.total
-    }
-    | 🧠 ${getWorkerLevelName('level1')} Thought Rate: ${l1ThoughtRate.toFixed(1)}
-    | 🧠 ${getWorkerLevelName('level2')} Thought Rate: ${l2ThoughtRate.toFixed(1)}`
+
+Population:
+${getWorkerLevelName('level1')}s: ${this.gameState.workers.level1.assigned}/${this.gameState.workers.level1.total}
+${getWorkerLevelName('level2')}s: ${this.gameState.workers.level2.assigned}/${this.gameState.workers.level2.total}
+${getWorkerLevelName('level3')}s: ${this.gameState.workers.level3?.assigned || 0}/${this.gameState.workers.level3?.total || 0}
+${getWorkerLevelName('level4')}s: ${this.gameState.workers.level4?.assigned || 0}/${this.gameState.workers.level4?.total || 0}
+
+Thought Rates:
+🧠 ${getWorkerLevelName('level1')}: ${l1ThoughtRate.toFixed(1)}/sec
+🧠 ${getWorkerLevelName('level2')}: ${l2ThoughtRate.toFixed(1)}/sec
+🧠 ${getWorkerLevelName('level3')}: ${l3ThoughtRate.toFixed(1)}/sec
+🧠 ${getWorkerLevelName('level4')}: ${l4ThoughtRate.toFixed(1)}/sec
+
+Food Economy:
+Production: ${totalFoodProduction.toFixed(1)}/sec
+Consumption: ${foodConsumption.toFixed(1)}/sec
+Net Change: ${excessFood.toFixed(1)}/sec`
   }
 
   getcardText(cardId: string): string {
