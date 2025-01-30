@@ -119,7 +119,7 @@ export default class MainScene extends Phaser.Scene {
       // Only update UI elements if they exist
       if (this.cardTexts[cardId]) {
         this.cardTexts[cardId].setText(this.getcardText(cardId))
-
+      }  // <-- Added closing brace
       // Update focus button text if it exists
       if (this.buttons[`${cardId}-focus`]) {
         const focusButton = this.buttons[`${cardId}-focus`];
