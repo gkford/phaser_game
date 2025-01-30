@@ -183,7 +183,7 @@ export const intialCards: Record<string, Card> = {
     title: '🪨 Early Stone Tools',
     description: "Basic tools increase food production by 20%",
     state: CardState.Unthoughtof,
-    type: 'task',
+    type: 'science',
     assignedWorkers: {
       level1: 0,
       level2: 0,
