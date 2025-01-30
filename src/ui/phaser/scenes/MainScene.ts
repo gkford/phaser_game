@@ -114,7 +114,7 @@ export default class MainScene extends Phaser.Scene {
       if (this.buttons[`${cardId}-focus`]) {
         const focusButton = this.buttons[`${cardId}-focus`];
         const focusText = Card.isFocused 
-          ? 'Stop Focus' 
+          ? (Card.state === CardState.Unthoughtof ? 'Stop Imagining' : 'Stop Focus')
           : Card.state === CardState.Unthoughtof 
             ? 'Imagine...' 
             : 'Focus Thinking'
