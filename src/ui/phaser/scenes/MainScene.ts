@@ -78,21 +78,21 @@ export default class MainScene extends Phaser.Scene {
     let taskYOffset = 100
     taskCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(1), taskYOffset)
-      taskYOffset += 125
+      taskYOffset += 170
     })
 
     // Create Thinking Cards - second quarter
     let thinkingYOffset = 100
     thinkingCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(2), thinkingYOffset)
-      thinkingYOffset += 125
+      thinkingYOffset += 170
     })
 
     // Create Science Cards - third quarter
     let scienceYOffset = 100
     scienceCards.forEach(([cardId, card]) => {
       this.createCardUI(cardId, card, this.getColumnX(3), scienceYOffset)
-      scienceYOffset += 125
+      scienceYOffset += 170
     })
   }
 
@@ -377,7 +377,7 @@ export default class MainScene extends Phaser.Scene {
     const columnWidth = window.innerWidth / 4;
     const cardWidth = columnWidth - 40; // Leave some margin
     this.add
-      .rectangle(xPos, yPos, cardWidth, 105, 0x333333)
+      .rectangle(xPos, yPos, cardWidth, 150, 0x333333)
       .setOrigin(0, 0)
       .setAlpha(0.5)
 
