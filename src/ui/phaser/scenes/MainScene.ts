@@ -249,11 +249,11 @@ export default class MainScene extends Phaser.Scene {
       // Add research progress
       const progress = (card.researchProgress.toImaginedCurrent / 
         card.researchProgress.toImaginedRequired) * 100
-      return `${maskedTitle} | Research Progress: ${progress.toFixed(0)}%`
+      return `\n${maskedTitle} | Research Progress: ${progress.toFixed(0)}%`
     }
 
     // For other states, modify the text formatting
-    let text = `${card.title} - ${getCardStateLabel(card.state)}`
+    let text = `\n${card.title} - ${getCardStateLabel(card.state)}`
 
     if (card.state === CardState.Discovered) {
       text += `\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
