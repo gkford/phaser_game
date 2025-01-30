@@ -21,6 +21,11 @@ export default class MainScene extends Phaser.Scene {
     this.gameState = createInitialGameState()
   }
 
+  private getColumnX(columnIndex: number): number {
+    const columnWidth = window.innerWidth / 4;  // 4 columns
+    return columnWidth * columnIndex + 20; // 20px padding from left
+  }
+
   preload() {
     // Load assets here if needed (e.g., background images, icons)
   }
@@ -42,11 +47,11 @@ export default class MainScene extends Phaser.Scene {
       color: '#fff',
     })
 
-    // Column headers - spread across screen
-    this.add.text(20, 60, 'Resources & Status', { fontSize: '20px', color: '#fff' })
-    this.add.text(320, 60, 'Tasks', { fontSize: '20px', color: '#fff' })
-    this.add.text(620, 60, 'Thinking', { fontSize: '20px', color: '#fff' })
-    this.add.text(920, 60, 'Science', { fontSize: '20px', color: '#fff' })
+    // Column headers - spread evenly across screen
+    this.add.text(this.getColumnX(0), 60, 'Resources & Status', { fontSize: '20px', color: '#fff' })
+    this.add.text(this.getColumnX(1), 60, 'Tasks', { fontSize: '20px', color: '#fff' })
+    this.add.text(this.getColumnX(2), 60, 'Thinking', { fontSize: '20px', color: '#fff' })
+    this.add.text(this.getColumnX(3), 60, 'Science', { fontSize: '20px', color: '#fff' })
 
     // Resources column - keep at left
     this.resourceText = this.add.text(20, 100, this.getResourceText(), {
@@ -64,24 +69,24 @@ export default class MainScene extends Phaser.Scene {
     const scienceCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'science')
 
-    // Create Task Cards - left third
+    // Create Task Cards - first quarter
     let taskYOffset = 100
     taskCards.forEach(([cardId, card]) => {
-      this.createCardUI(cardId, card, 320, taskYOffset)
+      this.createCardUI(cardId, card, this.getColumnX(1), taskYOffset)
       taskYOffset += 125
     })
 
-    // Create Thinking Cards - middle third
+    // Create Thinking Cards - second quarter
     let thinkingYOffset = 100
     thinkingCards.forEach(([cardId, card]) => {
-      this.createCardUI(cardId, card, 620, thinkingYOffset)
+      this.createCardUI(cardId, card, this.getColumnX(2), thinkingYOffset)
       thinkingYOffset += 125
     })
 
-    // Create Science Cards - right third
+    // Create Science Cards - third quarter
     let scienceYOffset = 100
     scienceCards.forEach(([cardId, card]) => {
-      this.createCardUI(cardId, card, 920, scienceYOffset)
+      this.createCardUI(cardId, card, this.getColumnX(3), scienceYOffset)
       scienceYOffset += 125
     })
   }
@@ -336,13 +341,15 @@ export default class MainScene extends Phaser.Scene {
   private createCardUI(cardId: string, card: Card, xPos: number, yPos: number) {
     this.cardPositions[cardId] = yPos
 
-    // Create background rectangle for card - make wider
+    // Create background rectangle for card - make it fit column width
+    const columnWidth = window.innerWidth / 4;
+    const cardWidth = columnWidth - 40; // Leave some margin
     this.add
-      .rectangle(xPos, yPos, 380, 105, 0x333333)  // Width increased to 380
+      .rectangle(xPos, yPos, cardWidth, 105, 0x333333)
       .setOrigin(0, 0)
       .setAlpha(0.5)
 
-    // Add Card info text
+    // Add Card info text with proper wrapping
     this.cardTexts[cardId] = this.add.text(
       xPos + 15,
       yPos + 15,
@@ -350,7 +357,7 @@ export default class MainScene extends Phaser.Scene {
       {
         fontSize: '16px',
         color: '#fff',
-        wordWrap: { width: 350, useAdvancedWrap: true },
+        wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
         align: 'left'
       }
     )
