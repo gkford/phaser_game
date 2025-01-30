@@ -357,7 +357,12 @@ Net Change: ${excessFood.toFixed(1)}/sec`
         newcard.state === CardState.Imagined
       ) {
         // Reset the Card's workers, research progress, and focus
-        this.gameState.cards[cardId].assignedWorkers = { level1: 0, level2: 0 }
+        this.gameState.cards[cardId].assignedWorkers = { 
+          level1: 0, 
+          level2: 0, 
+          level3: 0, 
+          level4: 0 
+        }
         this.gameState.cards[cardId].researchProgress.toDiscoveredCurrent = 0
         this.gameState.cards[cardId].isFocused = false
 
