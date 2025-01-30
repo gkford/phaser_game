@@ -82,4 +82,31 @@ export const intialCards: Record<string, Card> = {
     isFocused: false,
     acceptedWorkerLevels: [1, 2],
   },
+  nonVerbalCommunication: {
+    id: 'nonVerbalCommunication',
+    title: '🤲 Non-verbal Communication',
+    state: CardState.Unthoughtof,
+    type: 'science',
+    assignedWorkers: {
+      level1: 0,
+      level2: 0,
+    },
+    productionPerWorker: {},
+    researchProgress: {
+      toImaginedCurrent: 0,
+      toImaginedRequired: 10,
+      toDiscoveredCurrent: 0,
+      toDiscoveredRequired: 15,
+    },
+    prerequisites: ['thinkingL1'],
+    isFocused: false,
+    acceptedWorkerLevels: [1, 2],
+    onDiscovery: {
+      type: 'workerUpgrade',
+      fromLevel: 'level1',
+      toLevel: 'level2',
+      amount: 5,
+      message: "Through non-verbal communication, 5 of your Hominids have evolved into Mimics!"
+    }
+  },
 }
