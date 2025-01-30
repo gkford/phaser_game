@@ -1,10 +1,14 @@
 import Phaser from 'phaser'
-import {
-  createInitialGameState,
-  tickGame,
-  reassignWorker,
-  startResearch,
+import { 
+  createInitialGameState, 
+  tickGame, 
+  reassignWorker, 
+  startResearch, 
   togglecardFocus,
+  captureWorkerAssignments,
+  removeAllWorkers,
+  performWorkerUpgrade,
+  redistributeWorkers
 } from '../../../core/game/state'
 import { GameState, CardState, Card } from '../../../types'
 import { getWorkerLevelName } from '../../../core/constants/workerLevels'

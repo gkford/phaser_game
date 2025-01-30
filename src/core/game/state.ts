@@ -166,19 +166,19 @@ export function togglecardFocus(state: GameState, cardId: string): GameState {
   return newState
 }
 
-type WorkerAssignments = {
+export type WorkerAssignments = {
   cardId: string;
   workers: Record<WorkerLevelKey, number>;
 }
 
-function captureWorkerAssignments(state: GameState): WorkerAssignments[] {
+export function captureWorkerAssignments(state: GameState): WorkerAssignments[] {
   return Object.entries(state.cards).map(([cardId, card]) => ({
     cardId,
     workers: { ...card.assignedWorkers }
   }));
 }
 
-function removeAllWorkers(state: GameState): GameState {
+export function removeAllWorkers(state: GameState): GameState {
   const newState = cloneDeep(state);
   
   // Reset all card worker assignments
@@ -195,7 +195,7 @@ function removeAllWorkers(state: GameState): GameState {
   return newState;
 }
 
-function performWorkerUpgrade(state: GameState, fromLevel: WorkerLevelKey, toLevel: WorkerLevelKey, amount: number): GameState {
+export function performWorkerUpgrade(state: GameState, fromLevel: WorkerLevelKey, toLevel: WorkerLevelKey, amount: number): GameState {
   const newState = cloneDeep(state);
   
   // Remove workers from lower level
@@ -206,7 +206,7 @@ function performWorkerUpgrade(state: GameState, fromLevel: WorkerLevelKey, toLev
   return newState;
 }
 
-function redistributeWorkers(state: GameState, previousAssignments: WorkerAssignments[]): GameState {
+export function redistributeWorkers(state: GameState, previousAssignments: WorkerAssignments[]): GameState {
   const newState = cloneDeep(state);
   
   // Sort assignments by card acceptedWorkerLevels (cards that only accept higher levels should go last)
