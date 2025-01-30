@@ -23,34 +23,27 @@ export function reassignWorker(
   action: 'add' | 'remove'
 ): GameState {
   const newState = cloneDeep(state)
-  const Card = newState.cards[cardId]
+  const card = newState.cards[cardId]
 
   if (action === 'add') {
-    // Add the first available worker among the Card's accepted levels, from lowest to highest
-    for (const lvl of [1, 2]) {
+    // Find the lowest accepted level that has available workers
+    for (const lvl of card.acceptedWorkerLevels.sort((a, b) => a - b)) {
       const levelKey = ('level' + lvl) as WorkerLevelKey
-      if (Card.acceptedWorkerLevels.includes(lvl)) {
-        const workerPool = newState.workers[levelKey]
-        if (workerPool.assigned < workerPool.total) {
-          workerPool.assigned++
-          Card.assignedWorkers[levelKey]++
-          break
-        }
+      const workerPool = newState.workers[levelKey]
+      if (workerPool.assigned < workerPool.total) {
+        workerPool.assigned++
+        card.assignedWorkers[levelKey]++
+        break
       }
     }
   } else {
-    // Remove from highest to lowest
-    for (const lvl of [2, 1]) {
+    // Remove from highest to lowest among assigned workers
+    for (const lvl of card.acceptedWorkerLevels.sort((a, b) => b - a)) {
       const levelKey = ('level' + lvl) as WorkerLevelKey
-      if (Card.acceptedWorkerLevels.includes(lvl)) {
-        if (Card.assignedWorkers[levelKey] > 0) {
-          // Check if we have enough workers to remove
-          if (newState.workers[levelKey].assigned > 0) {
-            newState.workers[levelKey].assigned--
-            Card.assignedWorkers[levelKey]--
-            break
-          }
-        }
+      if (card.assignedWorkers[levelKey] > 0) {
+        newState.workers[levelKey].assigned--
+        card.assignedWorkers[levelKey]--
+        break
       }
     }
   }
