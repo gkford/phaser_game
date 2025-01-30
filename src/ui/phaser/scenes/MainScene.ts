@@ -165,10 +165,19 @@ export default class MainScene extends Phaser.Scene {
   }
 
   updateGame() {
-    const previousCards = JSON.parse(JSON.stringify(this.gameState.cards))
-    this.gameState = tickGame(this.gameState)
-    this.handlecardTransitions(previousCards, this.gameState.cards)
-    this.updateUI()
+    const previousCards = JSON.parse(JSON.stringify(this.gameState.cards));
+    const previousFood = this.gameState.resources.food;
+    
+    this.gameState = tickGame(this.gameState);
+    
+    // Check if we just hit 0 food
+    if (previousFood > 0 && this.gameState.resources.food === 0 && 
+        this.gameState.foodShortageProtection) {
+      this.showFoodShortagePopup();
+    }
+    
+    this.handlecardTransitions(previousCards, this.gameState.cards);
+    this.updateUI();
   }
 
   updateUI() {
