@@ -66,7 +66,8 @@ export function updateResources(state: GameState): GameState {
 
   let foodProduced = 0
   // Calculate food production multiplier from persistent upgrades
-  let foodMultiplier = Object.values(state.cards).reduce((mult, card) => {
+  let foodMultiplier = 1
+  foodMultiplier = Object.values(state.cards).reduce((mult, card) => {
     if (card.state === CardState.Discovered && 
         card.persistentUpgrade?.type === 'foodProduction') {
       return mult * card.persistentUpgrade.multiplier
