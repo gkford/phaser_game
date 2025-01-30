@@ -166,6 +166,79 @@ export function togglecardFocus(state: GameState, cardId: string): GameState {
   return newState
 }
 
+type WorkerAssignments = {
+  cardId: string;
+  workers: Record<WorkerLevelKey, number>;
+}
+
+function captureWorkerAssignments(state: GameState): WorkerAssignments[] {
+  return Object.entries(state.cards).map(([cardId, card]) => ({
+    cardId,
+    workers: { ...card.assignedWorkers }
+  }));
+}
+
+function removeAllWorkers(state: GameState): GameState {
+  const newState = cloneDeep(state);
+  
+  // Reset all card worker assignments
+  Object.values(newState.cards).forEach(card => {
+    Object.keys(card.assignedWorkers).forEach(level => {
+      const levelKey = level as WorkerLevelKey;
+      // Add workers back to unassigned pool
+      newState.workers[levelKey].assigned -= card.assignedWorkers[levelKey];
+      // Clear card assignment
+      card.assignedWorkers[levelKey] = 0;
+    });
+  });
+  
+  return newState;
+}
+
+function performWorkerUpgrade(state: GameState, fromLevel: WorkerLevelKey, toLevel: WorkerLevelKey, amount: number): GameState {
+  const newState = cloneDeep(state);
+  
+  // Remove workers from lower level
+  newState.workers[fromLevel].total -= amount;
+  // Add workers to higher level
+  newState.workers[toLevel].total += amount;
+  
+  return newState;
+}
+
+function redistributeWorkers(state: GameState, previousAssignments: WorkerAssignments[]): GameState {
+  const newState = cloneDeep(state);
+  
+  // Sort assignments by card acceptedWorkerLevels (cards that only accept higher levels should go last)
+  const sortedAssignments = [...previousAssignments].sort((a, b) => {
+    const cardA = newState.cards[a.cardId];
+    const cardB = newState.cards[b.cardId];
+    return Math.min(...cardA.acceptedWorkerLevels) - Math.min(...cardB.acceptedWorkerLevels);
+  });
+
+  // For each previous assignment
+  sortedAssignments.forEach(assignment => {
+    const card = newState.cards[assignment.cardId];
+    const totalWorkersNeeded = Object.values(assignment.workers).reduce((sum, count) => sum + count, 0);
+    let workersAssigned = 0;
+
+    // Try to assign workers, starting from lowest level the card accepts
+    card.acceptedWorkerLevels.sort((a, b) => a - b).forEach(level => {
+      const levelKey = (`level${level}` as WorkerLevelKey);
+      while (
+        workersAssigned < totalWorkersNeeded && 
+        newState.workers[levelKey].assigned < newState.workers[levelKey].total
+      ) {
+        newState.workers[levelKey].assigned++;
+        card.assignedWorkers[levelKey]++;
+        workersAssigned++;
+      }
+    });
+  });
+
+  return newState;
+}
+
 export function tickGame(state: GameState): GameState {
   let newState = updateResources(state)
   newState = updateResearch(newState)
