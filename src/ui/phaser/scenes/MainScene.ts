@@ -33,6 +33,11 @@ export default class MainScene extends Phaser.Scene {
       container.destroy()
     })
     
+    // Destroy resource text if it exists
+    if (this.resourceText) {
+      this.resourceText.destroy()
+    }
+    
     // Clear all our tracking objects
     this.cardContainers = {}
     this.cardTexts = {}
