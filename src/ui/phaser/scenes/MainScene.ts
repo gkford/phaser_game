@@ -67,11 +67,18 @@ export default class MainScene extends Phaser.Scene {
       align: 'left'
     })
 
-    // Sort cards by type
+    // Sort cards by type and filter thinking cards based on worker levels
     const taskCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'task')
     const thinkingCards = Object.entries(this.gameState.cards)
-      .filter(([_, card]) => card.type === 'thinking')
+      .filter(([_, card]) => {
+        if (card.type !== 'thinking') return false
+        // Only show level 1 thinking if we have level 1 workers
+        if (card.id === 'thinkingL1') return this.gameState.workers.level1.total > 0
+        // Only show level 2 thinking if we have level 2 workers
+        if (card.id === 'thinkingL2') return this.gameState.workers.level2.total > 0
+        return false
+      })
     const scienceCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'science')
 
