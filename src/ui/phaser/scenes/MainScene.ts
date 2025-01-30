@@ -281,7 +281,7 @@ Thought Rates:
 Food Economy:
 Production: ${totalFoodProduction.toFixed(1)}/sec
 Consumption: ${foodConsumption.toFixed(1)}/sec
-Net Change: ${excessFood.toFixed(1)}/sec`
+Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
   }
 
   getcardText(cardId: string): string {
