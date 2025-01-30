@@ -83,11 +83,15 @@ export function updateResearch(state: GameState): GameState {
   
   // Calculate thoughts per level
   const thoughtsByLevel = Object.values(newState.cards).reduce((acc, card) => {
-    Object.entries(card.assignedWorkers).forEach(([level, count]) => {
-      const levelKey = level as WorkerLevelKey
-      const thoughtRate = card.productionPerWorker.thoughts ?? 0
-      acc[levelKey] = (acc[levelKey] || 0) + (thoughtRate * count)
-    })
+    if (card.id === 'thinkingL1') {
+      // L1 thinking card: all workers contribute to L1 thoughts
+      const totalWorkers = card.assignedWorkers.level1 + card.assignedWorkers.level2
+      acc.level1 = (acc.level1 || 0) + (totalWorkers * (card.productionPerWorker.thoughts ?? 0))
+    } else if (card.id === 'thinkingL2') {
+      // L2 thinking card: only L2 workers contribute to L2 thoughts
+      acc.level2 = (acc.level2 || 0) + 
+        (card.assignedWorkers.level2 * (card.productionPerWorker.thoughts ?? 0))
+    }
     return acc
   }, {} as Record<WorkerLevelKey, number>)
 

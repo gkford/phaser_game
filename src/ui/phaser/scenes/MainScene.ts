@@ -218,17 +218,15 @@ export default class MainScene extends Phaser.Scene {
   getResourceText(): string {
     const food = Math.floor(this.gameState.resources.food)
 
-    const l1ThoughtRate = Object.values(this.gameState.cards).reduce(
-      (sum, t) =>
-        sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers.level1,
-      0
-    )
+    // L1 thoughts come from total workers on L1 thinking card
+    const l1Card = this.gameState.cards['thinkingL1']
+    const l1ThoughtRate = (l1Card.assignedWorkers.level1 + l1Card.assignedWorkers.level2) * 
+      (l1Card.productionPerWorker.thoughts ?? 0)
 
-    const l2ThoughtRate = Object.values(this.gameState.cards).reduce(
-      (sum, t) =>
-        sum + (t.productionPerWorker.thoughts ?? 0) * t.assignedWorkers.level2,
-      0
-    )
+    // L2 thoughts only come from L2 thinking card
+    const l2Card = this.gameState.cards['thinkingL2']
+    const l2ThoughtRate = l2Card.assignedWorkers.level2 * 
+      (l2Card.productionPerWorker.thoughts ?? 0)
 
     return `🍖 Food: ${food}
     | ${getWorkerLevelName('level1')}s: ${this.gameState.workers.level1.assigned}/${
