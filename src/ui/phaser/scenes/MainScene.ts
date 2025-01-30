@@ -256,7 +256,7 @@ export default class MainScene extends Phaser.Scene {
     let text = `\n${card.title} - ${getCardStateLabel(card.state)}`
 
     if (card.state === CardState.Discovered) {
-      text += `\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
+      text += `\n\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
     }
 
     if (card.state === CardState.Imagined) {
