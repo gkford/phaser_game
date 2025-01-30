@@ -9,6 +9,11 @@ export default defineConfig({
     build: {
         sourcemap: true,
         chunkSizeWarningLimit: 1500,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined
+            }
+        }
     },
     optimizeDeps: {
         include: ['phaser']
