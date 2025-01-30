@@ -11,11 +11,13 @@ export function createInitialGameState(): GameState {
     workers: {
       level1: { total: 10, assigned: 10 },
       level2: { total: 0, assigned: 0 },
-      level3: { total: 0, assigned: 0 },  // Initialize with zero values
-      level4: { total: 0, assigned: 0 },  // Initialize with zero values
+      level3: { total: 0, assigned: 0 },
+      level4: { total: 0, assigned: 0 },
     },
     cards: intialCards,
     currentResearchcardId: null,
+    foodShortageProtection: true,
+    isPaused: false,
   }
 }
 
