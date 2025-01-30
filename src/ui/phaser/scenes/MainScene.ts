@@ -394,8 +394,23 @@ export default class MainScene extends Phaser.Scene {
       }
     )
 
-    // Add Buttons on a new line
-    if (card.state === CardState.Discovered) {
+    // Add description for science cards when discovered
+    if (card.type === 'science' && card.state === CardState.Discovered && card.description) {
+      this.add.text(
+        xPos + 15,
+        yPos + 55,
+        card.description,
+        {
+          fontSize: '14px',
+          color: '#aaa',
+          wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
+          align: 'left'
+        }
+      )
+    }
+
+    // Only add worker assignment buttons for non-science cards
+    if (card.state === CardState.Discovered && card.type !== 'science') {
       this.buttons[`${cardId}-minus`] = this.add
         .text(xPos + 15, yPos + 55, '[-]', { fontSize: '16px', color: '#f00' })
         .setInteractive()

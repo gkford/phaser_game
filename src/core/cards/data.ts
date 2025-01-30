@@ -87,6 +87,7 @@ export const intialCards: Record<string, Card> = {
     title: '🤲 Non-verbal Communication',
     state: CardState.Unthoughtof,
     type: 'science',
+    description: "The development of gestures and facial expressions allows for basic communication between individuals, enabling better coordination and teaching.",
     assignedWorkers: {
       level1: 0,
       level2: 0,
@@ -100,7 +101,7 @@ export const intialCards: Record<string, Card> = {
     },
     prerequisites: ['thinkingL1'],
     isFocused: false,
-    acceptedWorkerLevels: [1, 2],
+    acceptedWorkerLevels: [],
     onDiscovery: {
       type: 'workerUpgrade',
       fromLevel: 'level1',

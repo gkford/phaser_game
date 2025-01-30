@@ -43,4 +43,5 @@ export interface Card {
   isFocused: boolean
   acceptedWorkerLevels: number[]
   onDiscovery?: CardEffect
+  description?: string
 }
