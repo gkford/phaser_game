@@ -57,7 +57,7 @@ export function reassignWorker(
 
 // Updates resource production based on assigned workers.
 export function updateResources(state: GameState): GameState {
-  const newState = cloneDeep(state);
+  let newState = cloneDeep(state);
   
   // Don't update if paused
   if (newState.isPaused) {
