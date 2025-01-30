@@ -80,48 +80,57 @@ export function updateResources(state: GameState): GameState {
 // Progresses research on the currently selected research Card.
 export function updateResearch(state: GameState): GameState {
   const newState = cloneDeep(state)
-  const thoughtsProduced = Object.values(newState.cards).reduce(
-    (sum, t) =>
-      sum +
-      (t.productionPerWorker.thoughts ?? 0) *
-        (t.assignedWorkers.level1 + t.assignedWorkers.level2),
-    0
-  )
+  
+  // Calculate thoughts per level
+  const thoughtsByLevel = Object.values(newState.cards).reduce((acc, card) => {
+    Object.entries(card.assignedWorkers).forEach(([level, count]) => {
+      const levelKey = level as WorkerLevelKey
+      const thoughtRate = card.productionPerWorker.thoughts ?? 0
+      acc[levelKey] = (acc[levelKey] || 0) + (thoughtRate * count)
+    })
+    return acc
+  }, {} as Record<WorkerLevelKey, number>)
 
-  // Handle actively researched Card (when clicking "Think About This")
+  // Handle actively researched card
   if (state.currentResearchcardId) {
     const researchCard = newState.cards[state.currentResearchcardId]
     if (researchCard.state === CardState.Imagined) {
-      researchCard.researchProgress.toDiscoveredCurrent += thoughtsProduced
-      if (
-        researchCard.researchProgress.toDiscoveredCurrent >=
-        researchCard.researchProgress.toDiscoveredRequired
-      ) {
+      // Only use thoughts from workers at or above minimum level
+      const minLevel = researchCard.minimumThinkingLevel || 1
+      const validThoughts = Object.entries(thoughtsByLevel).reduce((sum, [level, thoughts]) => {
+        const levelNum = parseInt(level.replace('level', ''))
+        return levelNum >= minLevel ? sum + thoughts : sum
+      }, 0)
+
+      researchCard.researchProgress.toDiscoveredCurrent += validThoughts
+      if (researchCard.researchProgress.toDiscoveredCurrent >= 
+          researchCard.researchProgress.toDiscoveredRequired) {
         researchCard.state = CardState.Discovered
       }
     }
   }
 
-  // Handle focused Card
-  const focusedcard = Object.values(newState.cards).find(
-    (Card) => Card.isFocused
-  )
-  if (focusedcard) {
-    if (focusedcard.state === CardState.Unthoughtof) {
-      focusedcard.researchProgress.toImaginedCurrent += thoughtsProduced
-      if (
-        focusedcard.researchProgress.toImaginedCurrent >=
-        focusedcard.researchProgress.toImaginedRequired
-      ) {
-        focusedcard.state = CardState.Imagined
+  // Handle focused card
+  const focusedCard = Object.values(newState.cards).find(card => card.isFocused)
+  if (focusedCard) {
+    // Similar logic for focused cards
+    const minLevel = focusedCard.minimumThinkingLevel || 1
+    const validThoughts = Object.entries(thoughtsByLevel).reduce((sum, [level, thoughts]) => {
+      const levelNum = parseInt(level.replace('level', ''))
+      return levelNum >= minLevel ? sum + thoughts : sum
+    }, 0)
+
+    if (focusedCard.state === CardState.Unthoughtof) {
+      focusedCard.researchProgress.toImaginedCurrent += validThoughts
+      if (focusedCard.researchProgress.toImaginedCurrent >= 
+          focusedCard.researchProgress.toImaginedRequired) {
+        focusedCard.state = CardState.Imagined
       }
-    } else if (focusedcard.state === CardState.Imagined) {
-      focusedcard.researchProgress.toDiscoveredCurrent += thoughtsProduced
-      if (
-        focusedcard.researchProgress.toDiscoveredCurrent >=
-        focusedcard.researchProgress.toDiscoveredRequired
-      ) {
-        focusedcard.state = CardState.Discovered
+    } else if (focusedCard.state === CardState.Imagined) {
+      focusedCard.researchProgress.toDiscoveredCurrent += validThoughts
+      if (focusedCard.researchProgress.toDiscoveredCurrent >= 
+          focusedCard.researchProgress.toDiscoveredRequired) {
+        focusedCard.state = CardState.Discovered
       }
     }
   }

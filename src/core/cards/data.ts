@@ -102,6 +102,7 @@ export const intialCards: Record<string, Card> = {
     prerequisites: ['thinkingL1'],
     isFocused: false,
     acceptedWorkerLevels: [],
+    minimumThinkingLevel: 1,
     onDiscovery: {
       type: 'workerUpgrade',
       fromLevel: 'level1',
@@ -130,6 +131,7 @@ export const intialCards: Record<string, Card> = {
     prerequisites: ['nonVerbalCommunication'],
     isFocused: false,
     acceptedWorkerLevels: [],
+    minimumThinkingLevel: 2,
     onDiscovery: {
       type: 'workerUpgrade',
       fromLevel: 'level1',

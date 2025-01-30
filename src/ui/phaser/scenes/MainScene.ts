@@ -230,8 +230,6 @@ export default class MainScene extends Phaser.Scene {
       0
     )
 
-    const totalThoughtRate = l1ThoughtRate + l2ThoughtRate
-
     return `🍖 Food: ${food}
     | ${getWorkerLevelName('level1')}s: ${this.gameState.workers.level1.assigned}/${
       this.gameState.workers.level1.total
@@ -240,10 +238,7 @@ export default class MainScene extends Phaser.Scene {
       this.gameState.workers.level2.total
     }
     | 🧠 ${getWorkerLevelName('level1')} Thought Rate: ${l1ThoughtRate.toFixed(1)}
-    | 🧠 ${getWorkerLevelName('level2')} Thought Rate: ${l2ThoughtRate.toFixed(1)}
-    | 🧠 Combined Thought Rate: ${totalThoughtRate.toFixed(
-      1
-    )} (* ${getWorkerLevelName('level2')} thinking is 1.5 each)`
+    | 🧠 ${getWorkerLevelName('level2')} Thought Rate: ${l2ThoughtRate.toFixed(1)}`
   }
 
   getcardText(cardId: string): string {
