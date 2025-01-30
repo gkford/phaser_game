@@ -45,7 +45,7 @@ export const intialCards: Record<string, Card> = {
   thinkingL2: {
     id: 'thinkingL2',
     title: `💡 ${getThinkingTitle('level2')}`,
-    state: CardState.Discovered,
+    state: CardState.Unthoughtof,
     type: 'thinking',
     assignedWorkers: {
       level1: 0,
