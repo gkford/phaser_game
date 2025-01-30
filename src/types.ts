@@ -4,7 +4,7 @@ export enum CardState {
   Discovered = 'DISCOVERED',
 }
 
-export type WorkerLevelKey = 'level1' | 'level2'
+export type WorkerLevelKey = 'level1' | 'level2' | 'level3' | 'level4'
 
 export interface GameState {
   resources: {
