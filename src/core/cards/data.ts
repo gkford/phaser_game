@@ -5,6 +5,7 @@ export const intialCards: Record<string, Card> = {
   foodGathering: {
     id: 'foodGathering',
     title: '🌾 Food Gathering',
+    description: "Gather food from plants (1.2 food per worker/sec)",
     state: CardState.Discovered,
     type: 'task',
     assignedWorkers: {
@@ -71,6 +72,7 @@ export const intialCards: Record<string, Card> = {
   hunting: {
     id: 'hunting',
     title: '🏹 Hunting',
+    description: "Hunt animals for food (1.5 food per worker/sec)", 
     state: CardState.Unthoughtof,
     type: 'task',
     assignedWorkers: {
@@ -155,9 +157,9 @@ export const intialCards: Record<string, Card> = {
   cooperativeHunting: {
     id: 'cooperativeHunting',
     title: '👥 Cooperative Hunting',
+    description: "Hunt together for better results (2.0 food per worker/sec)",
     state: CardState.Unthoughtof,
     type: 'task',
-    description: "Hunt together for better results",
     assignedWorkers: {
       level1: 0,
       level2: 0,
