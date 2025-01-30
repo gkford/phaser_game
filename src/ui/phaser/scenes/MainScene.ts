@@ -233,12 +233,26 @@ export default class MainScene extends Phaser.Scene {
 
     if (card.state === CardState.Discovered) {
       text += `\n\nL1: ${card.assignedWorkers.level1} | L2: ${card.assignedWorkers.level2}`
+      if (card.description) {
+        text += `\n${card.description}`
+      }
     }
 
     if (card.state === CardState.Imagined) {
       const progress = (card.researchProgress.toDiscoveredCurrent /
         card.researchProgress.toDiscoveredRequired) * 100
       text += ` | Research Progress: ${progress.toFixed(0)}%`
+      if (card.description) {
+        text += `\n${card.description}`
+      }
+    }
+
+    if (card.state === CardState.Unthoughtof && card.description) {
+      // Mask the description with question marks, preserving spaces
+      const maskedDesc = card.description.split('').map(char => 
+        char === ' ' ? ' ' : '?'
+      ).join('')
+      text += `\n${maskedDesc}`
     }
 
     return text
@@ -373,20 +387,6 @@ export default class MainScene extends Phaser.Scene {
     cardContainer.add(cardInfoText)
     this.cardTexts[cardId] = cardInfoText
 
-    // Add description for science cards (show for all states, not just discovered)
-    if (card.type === 'science' && card.description) {
-      this.add.text(
-        xPos + 15,
-        yPos + 55,
-        card.description,
-        {
-          fontSize: '14px',
-          color: card.state === CardState.Discovered ? '#fff' : '#aaa',
-          wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
-          align: 'left'
-        }
-      )
-    }
 
     // Create button container
     const buttonContainer = this.add.container(0, 130)
