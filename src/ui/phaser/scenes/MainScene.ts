@@ -27,6 +27,19 @@ export default class MainScene extends Phaser.Scene {
     this.gameState = createInitialGameState()
   }
 
+  private cleanupUI() {
+    // Destroy all existing card containers
+    Object.values(this.cardContainers).forEach(container => {
+      container.destroy()
+    })
+    
+    // Clear all our tracking objects
+    this.cardContainers = {}
+    this.cardTexts = {}
+    this.buttons = {}
+    this.cardPositions = {}
+  }
+
   private getColumnX(columnIndex: number): number {
     const columnWidth = window.innerWidth / 4;  // 4 columns
     return columnWidth * columnIndex + 20; // 20px padding from left
