@@ -110,6 +110,18 @@ export default class MainScene extends Phaser.Scene {
       align: 'left'
     })
 
+    // Food shortage toggle button
+    const toggleButton = this.add.text(20, 140, this.getFoodShortageButtonText(), {
+      fontSize: '16px',
+      color: '#fff',
+      backgroundColor: '#444444',
+      padding: { x: 10, y: 5 }
+    })
+    .setInteractive()
+    .on('pointerdown', () => this.toggleFoodShortageProtection());
+
+    this.buttons['foodShortageToggle'] = toggleButton;
+
     // Sort cards by type and filter thinking cards based on worker levels
     const taskCards = Object.entries(this.gameState.cards)
       .filter(([_, card]) => card.type === 'task')
@@ -371,6 +383,15 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
     return text
   }
 
+  private getFoodShortageButtonText(): string {
+    return `Food Shortage Protection: ${this.gameState.foodShortageProtection ? '✅ ON' : '❌ OFF'}`;
+  }
+
+  private toggleFoodShortageProtection(): void {
+    this.gameState.foodShortageProtection = !this.gameState.foodShortageProtection;
+    (this.buttons['foodShortageToggle'] as Phaser.GameObjects.Text).setText(this.getFoodShortageButtonText());
+  }
+
   private arePrerequisitesMet(cardId: string): boolean {
     const Card = this.gameState.cards[cardId]
     return Card.prerequisites.every(
@@ -478,6 +499,42 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
         const originalY = this.cardPositions[container.name];
         container.setY(originalY - this.scrollY);
     });
+  }
+
+  private showFoodShortagePopup() {
+    // Create semi-transparent background
+    const bg = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x000000, 0.7)
+      .setOrigin(0)
+      .setDepth(100);
+
+    // Create popup container
+    const popup = this.add.container(window.innerWidth/2, window.innerHeight/2)
+      .setDepth(101);
+
+    // Add text
+    const message = this.add.text(0, -50, 
+      'You have run out of food.\nAll workers have been moved to gathering food.', {
+      fontSize: '24px',
+      color: '#fff',
+      align: 'center'
+    }).setOrigin(0.5);
+
+    // Add button
+    const button = this.add.text(0, 50, 'I understand', {
+      fontSize: '20px',
+      backgroundColor: '#444',
+      padding: { x: 20, y: 10 },
+      color: '#fff'
+    })
+    .setOrigin(0.5)
+    .setInteractive()
+    .on('pointerdown', () => {
+      this.gameState.isPaused = false;
+      popup.destroy();
+      bg.destroy();
+    });
+
+    popup.add([message, button]);
   }
 
   private showPopup(message: string) {

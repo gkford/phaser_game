@@ -13,6 +13,8 @@ export interface GameState {
   workers: Record<WorkerLevelKey, { total: number; assigned: number }>
   cards: Record<string, Card>
   currentResearchcardId: string | null
+  foodShortageProtection: boolean
+  isPaused: boolean
 }
 
 export type CardEffect = {

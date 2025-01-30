@@ -55,6 +55,13 @@ export function reassignWorker(
 
 // Updates resource production based on assigned workers.
 export function updateResources(state: GameState): GameState {
+  const newState = cloneDeep(state);
+  
+  // Don't update if paused
+  if (newState.isPaused) {
+    return newState;
+  }
+
   let foodProduced = 0
   
   // Calculate food production multiplier from persistent upgrades
@@ -83,12 +90,43 @@ export function updateResources(state: GameState): GameState {
   const totalWorkers = state.workers.level1.total + state.workers.level2.total;
   foodProduced -= totalWorkers; // Each worker consumes 1 food/sec.
 
-  return {
-    ...state,
-    resources: {
-      food: state.resources.food + foodProduced,
-    },
+  newState.resources.food += foodProduced;
+
+  // Check for food shortage
+  if (newState.resources.food <= 0 && newState.foodShortageProtection) {
+    newState.resources.food = 0;
+    newState.isPaused = true;
+    newState = handleFoodShortage(newState);
   }
+
+  return newState;
+}
+
+function handleFoodShortage(state: GameState): GameState {
+  const newState = cloneDeep(state);
+  
+  // Remove all workers from their current tasks
+  Object.values(newState.cards).forEach(card => {
+    Object.entries(card.assignedWorkers).forEach(([level, count]) => {
+      const levelKey = level as WorkerLevelKey;
+      if (newState.workers[levelKey]) {
+        newState.workers[levelKey].assigned -= count;
+      }
+      card.assignedWorkers[levelKey] = 0;
+    });
+  });
+
+  // Assign all workers to food gathering
+  const foodGatheringCard = newState.cards['foodGathering'];
+  Object.entries(newState.workers).forEach(([level, workers]) => {
+    const levelKey = level as WorkerLevelKey;
+    if (foodGatheringCard.acceptedWorkerLevels.includes(parseInt(level.replace('level', '')))) {
+      foodGatheringCard.assignedWorkers[levelKey] = workers.total;
+      workers.assigned = workers.total;
+    }
+  });
+
+  return newState;
 }
 
 // Progresses research on the currently selected research Card.
