@@ -111,13 +111,20 @@ export default class MainScene extends Phaser.Scene {
 
       // Update focus button text if it exists
       if (this.buttons[`${cardId}-focus`]) {
-        const focusText = Card.isFocused ? '[Stop Focus]' : '[Focus Thinking]'
+        const focusText = Card.isFocused ? 'Stop Focus' : 'Focus Thinking'
         const prereqsMet = this.arePrerequisitesMet(cardId)
         this.buttons[`${cardId}-focus`].setText(focusText)
         this.buttons[`${cardId}-focus`].setColor(
           Card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666'
         )
         this.buttons[`${cardId}-focus`].setAlpha(prereqsMet ? 1 : 0.5)
+
+        // Update the button background if it exists
+        if (this.buttons[`${cardId}-focus-bg`]) {
+          this.buttons[`${cardId}-focus-bg`]
+            .setFillStyle(Card.isFocused ? 0x666600 : prereqsMet ? 0x333333 : 0x222222)
+            .setAlpha(prereqsMet ? 1 : 0.5)
+        }
 
         // Remove old listener if it exists
         this.buttons[`${cardId}-focus`].removeAllListeners()
@@ -443,21 +450,51 @@ export default class MainScene extends Phaser.Scene {
     }
 
     if (card.state === CardState.Imagined || card.state === CardState.Unthoughtof) {
-      const focusText = card.isFocused ? '[Stop Focus]' : '[Focus Thinking]'
+      const focusText = card.isFocused ? 'Stop Focus' : 'Focus Thinking'
       const prereqsMet = this.arePrerequisitesMet(cardId)
       const xOffset = card.state === CardState.Imagined ? xPos + 180 : xPos + 15
-      
+  
+      // Create background rectangle for button
+      const buttonWidth = 120
+      const buttonHeight = 30
+      const buttonBg = this.add.rectangle(
+        xOffset,
+        yPos + 110,
+        buttonWidth,
+        buttonHeight,
+        card.isFocused ? 0x666600 : prereqsMet ? 0x333333 : 0x222222
+      )
+      .setOrigin(0, 0)
+      .setAlpha(prereqsMet ? 1 : 0.5)
+
+      // Add text centered on the button
       this.buttons[`${cardId}-focus`] = this.add
-        .text(xOffset, yPos + 110, focusText, {
-          fontSize: '16px',
-          color: card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
-        })
+        .text(
+          xOffset + buttonWidth/2,
+          yPos + 110 + buttonHeight/2,
+          focusText,
+          {
+            fontSize: '16px',
+            color: card.isFocused ? '#ff0' : prereqsMet ? '#fff' : '#666',
+          }
+        )
+        .setOrigin(0.5, 0.5)
         .setAlpha(prereqsMet ? 1 : 0.5)
 
       if (prereqsMet) {
-        this.buttons[`${cardId}-focus`]
+        // Make the button background interactive
+        buttonBg
           .setInteractive()
           .on('pointerdown', () => this.handleToggleFocus(cardId))
+          .on('pointerover', () => {
+            buttonBg.setFillStyle(card.isFocused ? 0x888800 : 0x444444)
+          })
+          .on('pointerout', () => {
+            buttonBg.setFillStyle(card.isFocused ? 0x666600 : 0x333333)
+          })
+
+        // Store the background reference for later updates
+        this.buttons[`${cardId}-focus-bg`] = buttonBg
       }
     }
   }
