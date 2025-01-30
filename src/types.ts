@@ -15,6 +15,14 @@ export interface GameState {
   currentResearchcardId: string | null
 }
 
+export type CardEffect = {
+  type: 'workerUpgrade'
+  fromLevel: WorkerLevelKey
+  toLevel: WorkerLevelKey
+  amount: number
+  message: string
+}
+
 export interface Card {
   id: string
   title: string
@@ -34,4 +42,5 @@ export interface Card {
   prerequisites: string[]
   isFocused: boolean
   acceptedWorkerLevels: number[]
+  onDiscovery?: CardEffect
 }

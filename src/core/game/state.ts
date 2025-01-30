@@ -44,9 +44,12 @@ export function reassignWorker(
       const levelKey = ('level' + lvl) as WorkerLevelKey
       if (Card.acceptedWorkerLevels.includes(lvl)) {
         if (Card.assignedWorkers[levelKey] > 0) {
-          newState.workers[levelKey].assigned--
-          Card.assignedWorkers[levelKey]--
-          break
+          // Check if we have enough workers to remove
+          if (newState.workers[levelKey].assigned > 0) {
+            newState.workers[levelKey].assigned--
+            Card.assignedWorkers[levelKey]--
+            break
+          }
         }
       }
     }

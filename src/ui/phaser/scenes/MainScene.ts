@@ -297,11 +297,26 @@ export default class MainScene extends Phaser.Scene {
         oldcard.state === CardState.Imagined &&
         newcard.state === CardState.Discovered
       ) {
-        this.showPopup(
-          `You have discovered how to perform a new Card: ${formatcardTitle(
-            cardId
-          )}`
-        )
+        // Handle onDiscovery effects
+        if (newcard.onDiscovery) {
+          if (newcard.onDiscovery.type === 'workerUpgrade') {
+            const effect = newcard.onDiscovery;
+            // Update worker counts
+            this.gameState.workers[effect.fromLevel].total -= effect.amount;
+            this.gameState.workers[effect.fromLevel].assigned -= effect.amount;
+            this.gameState.workers[effect.toLevel].total += effect.amount;
+            this.gameState.workers[effect.toLevel].assigned += effect.amount;
+          }
+          // Show effect-specific message
+          this.showPopup(newcard.onDiscovery.message);
+        } else {
+          // Show default discovery message
+          this.showPopup(
+            `You have discovered how to perform a new Card: ${formatcardTitle(
+              cardId
+            )}`
+          )
+        }
       }
     }
   }
