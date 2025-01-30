@@ -394,15 +394,15 @@ export default class MainScene extends Phaser.Scene {
       }
     )
 
-    // Add description for science cards when discovered
-    if (card.type === 'science' && card.state === CardState.Discovered && card.description) {
+    // Add description for science cards (show for all states, not just discovered)
+    if (card.type === 'science' && card.description) {
       this.add.text(
         xPos + 15,
         yPos + 55,
         card.description,
         {
           fontSize: '14px',
-          color: '#aaa',
+          color: card.state === CardState.Discovered ? '#fff' : '#aaa',
           wordWrap: { width: cardWidth - 30, useAdvancedWrap: true },
           align: 'left'
         }

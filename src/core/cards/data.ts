@@ -87,7 +87,7 @@ export const intialCards: Record<string, Card> = {
     title: '🤲 Non-verbal Communication',
     state: CardState.Unthoughtof,
     type: 'science',
-    description: "The development of gestures and facial expressions allows for basic communication between individuals, enabling better coordination and teaching.",
+    description: "Converts 5 hominids into 5 mimics",
     assignedWorkers: {
       level1: 0,
       level2: 0,
