@@ -557,6 +557,7 @@ Net Change: ${excessFood.toFixed(1)}/sec${hasBonuses ? `\n${bonusesText}` : ''}`
         padding: { x: 10, y: 10 },
       })
       .setOrigin(0.5)
+      .setDepth(2000)
 
     this.time.addEvent({
       delay: 3000,
